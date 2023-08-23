@@ -1,11 +1,12 @@
 import { View, StyleSheet, Button } from 'react-native'
+import { ID } from 'appwrite'
 import { Formik } from 'formik'
 
 // import TextInput from 'components/input/TextInput'
 import SessionPage from '../components/layout/SessionPage'
 import Page from '../components/layout/Page'
 import TextInput from '../components/input/TextInput'
-import useAppwrite from 'src/functions/useAppwrite'
+import useAppwrite from '../functions/useAppwrite'
 import { DrawerNavigationProp, DrawerScreenProps } from '@react-navigation/drawer'
 import ParamList from './ParamList'
 //import TextInput from '@/components/input/TextInput'
@@ -23,11 +24,28 @@ type Props = DrawerScreenProps<ParamList, 'ListingEdit'>
 
 export default function ListingEditPage( { route }: Props ) {
 
-    const { db } = useAppwrite()
+    const { db, account } = useAppwrite()
 
-    const handleSubmit = () => {
-        if (!route.params.id) {
-
+    const handleSubmit = (values: FormValues) => {
+        // console.log(route)
+        console.log(account)
+        console.log(db)
+        console.log('submitting')
+        console.log(process.env)
+        if (!route.params?.id) {
+            account.getSession('current').then(console.log)
+            db.createDocument(
+                '64e5bca5774c43c6e4b8', 
+                '64e5bcac74d34020c488',
+                ID.unique(),
+                {
+                    title: values.title
+                }
+            ).then( res => {
+                console.log('Created listing', res)
+            }).catch( err => {
+                console.error('Could not create listing', err)
+            })
         }
     }
 
