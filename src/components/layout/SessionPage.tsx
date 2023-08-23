@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 
-import Page from 'components/layout/Page'
-import useCheckLogin from 'functions/useCheckLogin'
+import Page from './Page'
+import useCheckLogin from '../../functions/useCheckLogin'
 
 type Props = {}
 

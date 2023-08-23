@@ -14,15 +14,15 @@ import { Formik } from 'formik';
 import { Client, Account, ID } from 'appwrite'
 
 //Components
-import TextInput from './components/input/TextInput';
+import TextInput from './src/components/input/TextInput';
 
 //Pages
-import RegistrationPage from './pages/RegistrationPage';
-import LoginPage from './pages/LoginPage';
-import FeedPage from './pages/FeedPage';
-import MyListingsPage from './pages/MyListingsPage';
-import ListingEditPage from './pages/ListingEditPage';
-import ParamList from './pages/ParamList';
+import RegistrationPage from './src/pages/RegistrationPage';
+import LoginPage from './src/pages/LoginPage';
+import FeedPage from './src/pages/FeedPage';
+import MyListingsPage from './src/pages/MyListingsPage';
+import ListingEditPage from './src/pages/ListingEditPage';
+import ParamList from './src/pages/ParamList';
 
 //const Stack = createNativeStackNavigator<ParamList>();
 
