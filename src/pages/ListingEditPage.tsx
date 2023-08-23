@@ -6,6 +6,8 @@ import SessionPage from '../components/layout/SessionPage'
 import Page from '../components/layout/Page'
 import TextInput from '../components/input/TextInput'
 import useAppwrite from 'src/functions/useAppwrite'
+import { DrawerNavigationProp, DrawerScreenProps } from '@react-navigation/drawer'
+import ParamList from './ParamList'
 //import TextInput from '@/components/input/TextInput'
 
 
@@ -17,12 +19,16 @@ const initial_values: FormValues = {
     title: ''
 }
 
-export default function ListingEditPage() {
+type Props = DrawerScreenProps<ParamList, 'ListingEdit'>
+
+export default function ListingEditPage( { route }: Props ) {
 
     const { db } = useAppwrite()
 
     const handleSubmit = () => {
+        if (!route.params.id) {
 
+        }
     }
 
     return (
