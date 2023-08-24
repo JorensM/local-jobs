@@ -3,8 +3,12 @@ import { Formik } from 'formik'
 import TextInput from '../components/input/TextInput'
 import { ID } from 'appwrite'
 import useAppwrite from '../functions/useAppwrite'
+import { DrawerScreenProps } from '@react-navigation/drawer'
+import ParamList from './ParamList'
 
-export default function RegistrationPage() {
+type Props = DrawerScreenProps<ParamList>
+
+export default function RegistrationPage( { navigation }: Props) {
 
     const { account } = useAppwrite()
 
@@ -12,10 +16,12 @@ export default function RegistrationPage() {
         account.create(
           ID.unique(),
           values.email,
-          values.password
+          values.password,
+          values.name
         ).then(res => {
           console.log('Created account')
-          console.log(res)
+          //console.log(res)
+          navigation.navigate('Login')
         }).catch(err => {
           console.error('Could not create account')
           console.error(err)
@@ -29,7 +35,8 @@ export default function RegistrationPage() {
             <Formik
                 initialValues={{
                 email: '',
-                password: ''
+                password: '',
+                name: ''
                 }}
                 onSubmit={handleSubmit}
             >
@@ -41,6 +48,11 @@ export default function RegistrationPage() {
                             name='email'
                             formik={formik}
                             label='Email'
+                        />
+                        <TextInput
+                            name='name'
+                            formik={formik}
+                            label='Name'
                         />
                         <TextInput
                             name='password'

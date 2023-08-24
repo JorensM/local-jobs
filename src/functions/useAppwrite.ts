@@ -13,5 +13,5 @@ export default function useAppwrite(): {
         .setEndpoint('https://cloud.appwrite.io/v1')
         .setProject('64e4a62767a8fbeccac8');
 
-    return { client, account, db}
+    return { client, account, db }
 }

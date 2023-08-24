@@ -4,7 +4,10 @@ type ParamList = {
     Feed: undefined,
     MyListings: undefined,
     ListingEdit: {
-        id: number
+        id: string
+    }
+    Listing: {
+        id: string
     }
 }
 

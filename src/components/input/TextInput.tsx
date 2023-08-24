@@ -16,6 +16,7 @@ import { ComponentProps, useMemo, useState } from 'react';
 type Props = TextInputProps & {
     formik: any,
     name: string,
+    // style?: StyleProp<TextStyle>,
     label: string
 }
 
@@ -23,11 +24,14 @@ export default function TextInput( {
     formik, 
     label, 
     name,
+    style,
     ...props
 }: Props ) {
 
     const [ isFocused, setIsFocused ] = useState<boolean>(false)
 
+    console.log(style)
+    console.log()
     return (
         <View>
             <Text
@@ -36,7 +40,10 @@ export default function TextInput( {
                 { label }
             </Text>
             <NativeTextInput
-                style={styles.input}
+                style={{
+                    ...styles.input,
+                    ...(typeof style == 'object' ? style : {})
+                }}
                 onChangeText={formik.handleChange(name)}
                 onBlur={() => { formik.handleBlur(name); setIsFocused(false) }}
                 onFocus={() => setIsFocused(true)}

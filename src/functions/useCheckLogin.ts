@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 import useAppwrite from './useAppwrite';
 
 export default function useCheckLogin(
@@ -26,7 +27,9 @@ export default function useCheckLogin(
             })
     }
 
-    checkSession(logged_out_redirect, logged_in_redirect)
+    useEffect(() => {
+        checkSession(logged_out_redirect, logged_in_redirect)
+    }, [])    
 
     return { checkSession }
 }

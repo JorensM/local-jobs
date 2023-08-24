@@ -13,36 +13,44 @@ import ParamList from './ParamList'
 
 
 type FormValues = {
-    title: string
+    title: string,
+    description: string
 }
 
 const initial_values: FormValues = {
-    title: ''
+    title: '',
+    description: ''
 }
 
 type Props = DrawerScreenProps<ParamList, 'ListingEdit'>
 
-export default function ListingEditPage( { route }: Props ) {
+export default function ListingEditPage( { route, navigation }: Props ) {
 
     const { db, account } = useAppwrite()
 
-    const handleSubmit = (values: FormValues) => {
+    const handleSubmit = async (values: FormValues) => {
         // console.log(route)
         console.log(account)
         console.log(db)
         console.log('submitting')
         console.log(process.env)
         if (!route.params?.id) {
+            const acc = await account.get()
+            const id = acc.$id
             account.getSession('current').then(console.log)
             db.createDocument(
                 '64e5bca5774c43c6e4b8', 
                 '64e5bcac74d34020c488',
                 ID.unique(),
                 {
-                    title: values.title
+                    title: values.title,
+                    by_user: id,
+                    by_user_name: acc.name,
+                    description: values.description
                 }
             ).then( res => {
                 console.log('Created listing', res)
+                navigation.navigate('Feed')
             }).catch( err => {
                 console.error('Could not create listing', err)
             })
@@ -63,6 +71,15 @@ export default function ListingEditPage( { route }: Props ) {
                             name='title'
                             formik={formik}
                             label='Listing Title'
+                        />
+                        <TextInput
+                            name='description'
+                            label='Description'
+                            style={{
+                                height: 128
+                            }}
+                            multiline
+                            formik={formik}
                         />
                         <Button
                             onPress={() => formik.handleSubmit()}

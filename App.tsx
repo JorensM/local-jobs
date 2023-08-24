@@ -22,7 +22,9 @@ import LoginPage from './src/pages/LoginPage';
 import FeedPage from './src/pages/FeedPage';
 import MyListingsPage from './src/pages/MyListingsPage';
 import ListingEditPage from './src/pages/ListingEditPage';
+import ListingPage from './src/pages/ListingPage';
 import ParamList from './src/pages/ParamList';
+
 
 //const Stack = createNativeStackNavigator<ParamList>();
 
@@ -80,6 +82,10 @@ export default function App() {
         <Drawer.Screen
           name='ListingEdit'
           component={ListingEditPage}
+        />
+        <Drawer.Screen
+          name='Listing'
+          component={ListingPage}
         />
       </Drawer.Navigator>
     </NavigationContainer>
