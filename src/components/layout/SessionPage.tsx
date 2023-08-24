@@ -1,17 +1,26 @@
+//Core
 import { PropsWithChildren } from 'react'
 
+//Types
+import { PageProps } from './Page'
+
+//Components
 import Page from './Page'
+
+//Functions
 import useCheckLogin from '../../functions/useCheckLogin'
 
-type Props = {}
+type Props = PageProps & {}
 
-export default function SessionPage({ children }: PropsWithChildren<Props>) {
+export default function SessionPage({ children, ...props }: PropsWithChildren<PageProps>) {
 
     useCheckLogin('Login')
 
     return (
-        <Page>
-            {children}
+        <Page
+            { ...props }
+        >
+            { children }
         </Page>
     )
 }

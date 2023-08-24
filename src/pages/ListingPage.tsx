@@ -2,10 +2,14 @@
 import { 
     useCallback, 
     useEffect, 
+    useRef, 
     useState 
 } from 'react'
 import {
-    Text
+    Text,
+    View,
+    Button,
+    Pressable
 } from 'react-native'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 
@@ -21,19 +25,37 @@ import constant from '../../const'
 import { ID } from 'appwrite'
 import H1 from '../components/typography/H1'
 import Caption from '../components/typography/Caption'
+import Info from '../components/typography/Info'
+import IconButton from '../components/input/IconButton'
 
 type Props = DrawerScreenProps<ParamList>
 
-export default function ListingPage( { route }: Props) {
+export default function ListingPage( { route, navigation }: Props) {
 
-    const { db } = useAppwrite()
+    const { db, account } = useAppwrite()
 
     const [listing, setListing] = useState<ListingModel | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
+    const [isOwnListing, setIsOwnListing] = useState<boolean>(false)
 
     const isFocused = useIsFocused()
 
+    
+
+    const handleEditPress = () => {
+        console.log(isOwnListing)
+        if (isOwnListing) {
+            navigation.navigate('ListingEdit', { id: listing!.$id })
+        } else {
+            console.warn(`Can't edit listing that isn't your own!`)
+        }
+    }
+
+    const handleEditPressRef = useRef(handleEditPress)
+    handleEditPressRef.current = handleEditPress
+
     const fetchListing = () => {
+        setIsOwnListing(false)
         setLoading(true)
         if( route.params?.id ) {
             db.getDocument<ListingModel>(
@@ -41,7 +63,30 @@ export default function ListingPage( { route }: Props) {
                 constant.db.listings_id,
                 route.params.id
             )
-            .then( res => {
+            .then( async res => {
+                const current_user = await account.get()
+                const is_own = res.by_user == current_user.$id
+                console.log('setting isownlisting to ' + is_own)
+                setIsOwnListing(is_own)
+
+                if (is_own) {
+                    navigation.setOptions({
+                        headerRight: () => (
+                            <View
+                                style={{
+                                    paddingRight: 16
+                                }}
+                            >
+                                <IconButton
+                                    name='edit'
+                                    size={ 24 }
+                                    onPress={ handleEditPressRef.current }
+                                />
+                            </View>
+                        )
+                    })
+                }
+                
                 setListing(res)
                 setLoading(false)
             })
@@ -65,6 +110,9 @@ export default function ListingPage( { route }: Props) {
     useEffect(() => {
         if( !isFocused ) {
             setListing(null)
+            navigation.setOptions({
+                headerRight: () => null
+            })
         }
     }, [isFocused])
 
@@ -82,13 +130,29 @@ export default function ListingPage( { route }: Props) {
             <Caption>
                 By { listing?.by_user_name || '' }
             </Caption>
+            { isOwnListing ? 
+                <Info>
+                    This is your listing
+                </Info>
+            : null }
             <Text
                 style={{
-                    marginTop: 16
+                    marginTop: 8
                 }}
             >
                 { listing?.description || '' }
             </Text>
+            { !isOwnListing ? 
+                <Pressable
+                    style={{
+                        marginTop: 'auto'
+                    }}
+                >
+                    <Text>
+                        Contact
+                    </Text>
+                </Pressable>
+            : null }
         </Page>
     )
 }

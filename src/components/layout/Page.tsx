@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { Image } from 'expo-image'
 
-type Props = {
+export type PageProps = {
     loading?: boolean | null,
     error?: string | null
 }
@@ -11,7 +11,7 @@ export default function Page( {
     children,
     loading = false,
     error = null
-}: PropsWithChildren<Props> ) {
+}: PropsWithChildren<PageProps> ) {
     return (
         <View
             style={ styles.container }

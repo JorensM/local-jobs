@@ -3,17 +3,20 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Models } from 'appwrite';
 import { useState, useEffect, useCallback } from 'react';
 import { Text, Button, FlatList, View, StyleSheet, Pressable } from 'react-native'
+import humanize from 'humanize-duration'
 
 
 //Components
 import Page from '../components/layout/Page';
 import useAppwrite from '../functions/useAppwrite';
 import useCheckLogin from '../functions/useCheckLogin';
+import Caption from '../components/typography/Caption';
 
 //Constants
 import constant from '../../const';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import ParamList from './ParamList';
+import Description from '../components/typography/Description';
 
 type ListingModel = Models.Document & {
     by_user_name: string,
@@ -73,6 +76,29 @@ export default function FeedPage( { navigation }: Props) {
         fetchListings()
     }, [])
 
+    const humanizeTime = (ms: number) => {
+        return humanize(
+            ms,
+            {
+                largest: 2
+            }
+        )
+    }
+
+    /**
+     * Get time span from given time to current time in ms
+     * @param { number | string } time Time as a datetime string or a number in ms 
+     * @param { boolean } humanize Whether to humanize the output as a human readable string
+     * @returns { number | string } Number in ms if humanize is `false`, string if humanize is `true`
+     */
+    const getAge = (time: number | string, humanize = false): number | string => {
+        //console.log( time )
+        //console.log( new Date() )
+        //console.log( new Date(time) )
+        const age = new Date().getTime() - new Date(time).getTime()
+        return humanize ? humanizeTime(age) : age
+    }
+
     return (
         <Page>
             <Text>
@@ -93,12 +119,16 @@ export default function FeedPage( { navigation }: Props) {
                             
                             { item.title }
                         </Text>
-                        <Text>
-                            { item.description.slice(0, 100) }...
-                        </Text>
-                        <Text>
+                        <Caption>
                             By { item.by_user_name }
-                        </Text>
+                        </Caption>
+                        <Caption>
+                            { getAge(item.$createdAt, true) } ago
+                        </Caption>
+                        <Description>
+                            { item.description.slice(0, 100) }...
+                        </Description>
+                        
                         
                     </Pressable>
                 )}
