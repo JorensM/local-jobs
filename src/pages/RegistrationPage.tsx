@@ -20,7 +20,14 @@ export default function RegistrationPage( { navigation }: Props) {
           values.password,
           values.name
         ).then(res => {
-
+          account.createEmailSession(
+            values.email,
+            values.password
+          ).then(res => {
+            account.updatePrefs({
+              role: values.role
+            })
+          })
           console.log('Created account')
           //console.log(res)
           navigation.navigate('Login')
@@ -36,9 +43,10 @@ export default function RegistrationPage( { navigation }: Props) {
         <View style={styles.container}>
             <Formik
                 initialValues={{
-                email: '',
-                password: '',
-                name: ''
+                  email: '',
+                  password: '',
+                  name: '',
+                  role: null
                 }}
                 onSubmit={handleSubmit}
             >
@@ -75,6 +83,7 @@ export default function RegistrationPage( { navigation }: Props) {
                           ]}
                           placeholder='I am a...'
                           formik={formik}
+                          name='role'
                         />
                         <Button
                             onPress={() => formik.handleSubmit()}
