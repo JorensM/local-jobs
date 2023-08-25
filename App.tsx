@@ -6,7 +6,7 @@ import {
   View, 
   Button 
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, Link } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
@@ -52,6 +52,26 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator
         initialRouteName='Login'
+        // drawerContent={(props) => {
+        //   console.log(props)
+
+        //   const DrawerListItem = (href: string) => (
+        //     <Link
+        //       to
+        //     >
+            
+        //     </Link>
+        //   )
+
+        //   return (
+        //     <View
+        //       style={styles.drawer}
+        //     >
+        //       <Link to={{ screen: 'Feed'} }>Feed</Link>
+        //       <Link to={{ screen: 'MyListings' }}>My Listings</Link>
+        //     </View>
+        //   )
+        // }}
       >
         <Drawer.Screen 
           name='Register' 
@@ -77,15 +97,24 @@ export default function App() {
         />
         <Drawer.Screen
           name='MyListings'
+          options={{
+            title: 'My Listings'
+          }}
           component={MyListingsPage}
         />
         <Drawer.Screen
+          options={{
+            title: 'New Listing'
+          }}
           name='ListingEdit'
           component={ListingEditPage}
         />
         <Drawer.Screen
           name='Listing'
           component={ListingPage}
+          options={{
+            drawerItemStyle: { display: 'none' }
+          }}
         />
       </Drawer.Navigator>
     </NavigationContainer>
@@ -100,6 +129,12 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   form: {
+    gap: 16
+  },
+  drawer: {
+    width: '100%',
+    height: '100%',
+    padding: 24,
     gap: 16
   }
 });

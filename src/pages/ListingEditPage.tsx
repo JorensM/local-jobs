@@ -54,6 +54,8 @@ export default function ListingEditPage( { route, navigation }: Props ) {
             const acc = await account.get()
             const id = acc.$id
             account.getSession('current').then(console.log)
+            console.log('creating document')
+            //const listing_id = ID.unique()
             db.createDocument(
                 '64e5bca5774c43c6e4b8', 
                 '64e5bcac74d34020c488',
@@ -66,7 +68,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                 }
             ).then( res => {
                 console.log('Created listing', res)
-                afterSuccessfulSubmit( route.params.id )
+                afterSuccessfulSubmit( res.$id )
             }).catch( err => {
                 console.error('Could not create listing', err)
                 setError('Could not create listing')
@@ -94,8 +96,8 @@ export default function ListingEditPage( { route, navigation }: Props ) {
     useFocusEffect(
         useCallback(() => {
             console.log('focusing')
-            console.log(route.params.id)
-            if (route.params.id) {
+            console.log(route.params?.id)
+            if (route.params?.id) {
                 db.getDocument<ListingModel>(
                     constant.db.id,
                     constant.db.listings_id,

@@ -139,6 +139,7 @@ export default function ListingPage( { route, navigation }: Props) {
                 style={{
                     marginTop: 8
                 }}
+                selectable
             >
                 { listing?.description || '' }
             </Text>

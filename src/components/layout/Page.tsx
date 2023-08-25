@@ -20,16 +20,20 @@ export default function Page( {
                 loading || error ? 
                 (
                     <View style={styles.message_container}>
-                        <Text>
+                        <Text
+                            style={{
+                                textAlign: 'center'
+                            }}
+                        >
                             {
-                                loading ?
-                                    'loading'
+                                error ?
+                                    'An error has occured: ' + error
                                     // <Image 
                                     //     source='spinner.gif'
                                     //     placeholder={null}
                                     // />
-                                :
-                                    'An error has occured: ' + error
+                                : 'Loading'
+                                    
                             }
                         </Text>
                     </View>
