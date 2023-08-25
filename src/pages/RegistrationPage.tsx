@@ -5,6 +5,7 @@ import { ID } from 'appwrite'
 import useAppwrite from '../functions/useAppwrite'
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import ParamList from './ParamList'
+import Dropdown from '../components/input/Dropdown'
 
 type Props = DrawerScreenProps<ParamList>
 
@@ -19,6 +20,7 @@ export default function RegistrationPage( { navigation }: Props) {
           values.password,
           values.name
         ).then(res => {
+
           console.log('Created account')
           //console.log(res)
           navigation.navigate('Login')
@@ -59,6 +61,20 @@ export default function RegistrationPage( { navigation }: Props) {
                             formik={formik}
                             label='Password'
                             secureTextEntry={true}
+                        />
+                        <Dropdown
+                          data={[
+                            {
+                              label: 'Recruiter',
+                              value: 'recruiter'
+                            },
+                            {
+                              label: 'Performer',
+                              value: 'performer'
+                            }
+                          ]}
+                          placeholder='I am a...'
+                          formik={formik}
                         />
                         <Button
                             onPress={() => formik.handleSubmit()}

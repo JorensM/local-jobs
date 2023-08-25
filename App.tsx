@@ -6,9 +6,9 @@ import {
   View, 
   Button 
 } from 'react-native';
-import { NavigationContainer, Link } from '@react-navigation/native';
+import { NavigationContainer, Link, NavigationProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
 import { Formik } from 'formik';
 import { Client, Account, ID } from 'appwrite'
@@ -24,6 +24,7 @@ import MyListingsPage from './src/pages/MyListingsPage';
 import ListingEditPage from './src/pages/ListingEditPage';
 import ListingPage from './src/pages/ListingPage';
 import ParamList from './src/pages/ParamList';
+import useLogin from './src/functions/useLogin';
 
 
 //const Stack = createNativeStackNavigator<ParamList>();
@@ -31,6 +32,9 @@ import ParamList from './src/pages/ParamList';
 const Drawer = createDrawerNavigator<ParamList>()
 
 export default function App() {
+
+  //Hooks
+  const { logout } = useLogin()
 
   // const handleRegisterSubmit = (values: any) => {
   //   account.create(
@@ -48,30 +52,70 @@ export default function App() {
   //   console.log(values)
   // }
 
+  const handleLogoutPress = (navigation: NavigationProp<any>) => {
+    logout()
+  }
+
   return (
     <NavigationContainer>
       <Drawer.Navigator
         initialRouteName='Login'
-        // drawerContent={(props) => {
-        //   console.log(props)
+        drawerContent={(props) => {
+          //console.log(props)
+          return (
+            <View
+              style={{
+                height: '100%'
+              }}
+            >
+              <DrawerContentScrollView
+                // style={{
+                //   height: 
+                // }}
+              >
+                <DrawerItemList {...props} />
+              </DrawerContentScrollView>
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <DrawerItem
+                  label='Log out'
+                  onPress={() => {
+                    logout()
+                      .finally(() => {
+                        props.navigation.navigate('Login')
+                      })
 
-        //   const DrawerListItem = (href: string) => (
-        //     <Link
-        //       to
-        //     >
+                  }}
+                />
+              </View>
+              
+            </View>
             
-        //     </Link>
-        //   )
+              
+              
+            
+          )
+          // const DrawerListItem = (href: string) => (
+          //   <Link
+          //     to
+          //   >
+            
+          //   </Link>
+          // )
 
-        //   return (
-        //     <View
-        //       style={styles.drawer}
-        //     >
-        //       <Link to={{ screen: 'Feed'} }>Feed</Link>
-        //       <Link to={{ screen: 'MyListings' }}>My Listings</Link>
-        //     </View>
-        //   )
-        // }}
+          // return (
+          //   <View
+          //     style={styles.drawer}
+          //   >
+          //     <Link to={{ screen: 'Feed'} }>Feed</Link>
+          //     <Link to={{ screen: 'MyListings' }}>My Listings</Link>
+          //   </View>
+          // )
+        }}
       >
         <Drawer.Screen 
           name='Register' 
