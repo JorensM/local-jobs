@@ -101,9 +101,6 @@ export default function FeedPage( { navigation }: Props) {
 
     return (
         <Page>
-            <Text>
-                Feed page
-            </Text>
             <FlatList
                 style={styles.listings_list}
                 ItemSeparatorComponent={() => <View style={{height: 8}} />}

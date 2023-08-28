@@ -25,6 +25,8 @@ import ListingEditPage from './src/pages/ListingEditPage';
 import ListingPage from './src/pages/ListingPage';
 import ParamList from './src/pages/ParamList';
 import useLogin from './src/functions/useLogin';
+import useCheckLogin from './src/functions/useCheckLogin';
+import useAppwrite from './src/functions/useAppwrite';
 
 
 //const Stack = createNativeStackNavigator<ParamList>();
@@ -35,6 +37,7 @@ export default function App() {
 
   //Hooks
   const { logout } = useLogin()
+  const { getCurrentUser } = useAppwrite()
 
   // const handleRegisterSubmit = (values: any) => {
   //   account.create(
@@ -61,7 +64,6 @@ export default function App() {
       <Drawer.Navigator
         initialRouteName='Login'
         drawerContent={(props) => {
-          //console.log(props)
           return (
             <View
               style={{

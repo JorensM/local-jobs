@@ -1,20 +1,25 @@
 import { PropsWithChildren } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, ViewProps, StyleSheetProperties, ViewStyle, StyleProp } from 'react-native'
 import { Image } from 'expo-image'
 
-export type PageProps = {
+export type PageProps = ViewProps & {
     loading?: boolean | null,
-    error?: string | null
+    error?: string | null,
+    style?: any
 }
 
 export default function Page( { 
     children,
     loading = false,
-    error = null
+    error = null,
+    style = {},
 }: PropsWithChildren<PageProps> ) {
     return (
         <View
-            style={ styles.container }
+            style={{
+                ...styles.container,
+                ...(style ? style : {})
+            }}
         >
             {
                 loading || error ? 

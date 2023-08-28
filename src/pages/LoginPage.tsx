@@ -47,7 +47,11 @@ export default function LoginPage( { navigation }: Props) {
     }
 
     return (
-        <Page>
+        <Page
+            style={{
+                gap: 8
+            }}
+        >
             <Formik
                 initialValues={initial_values}
                 onSubmit={handleSubmit}
@@ -75,9 +79,21 @@ export default function LoginPage( { navigation }: Props) {
                     </View>
                 )}
             </Formik>
-            <Link to={{
-                screen: 'Register'
-            }}>
+            <Link 
+                style={{
+                    borderColor: 'green',
+                    borderWidth: 1,
+                    width: '100%',
+                    padding: 8,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    textAlignVertical: 'center'
+                }}
+                to={{
+                    screen: 'Register'
+                }}
+            >
                 Register
             </Link>
         </Page>
