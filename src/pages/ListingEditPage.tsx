@@ -1,4 +1,4 @@
-import { View, StyleSheet, Button } from 'react-native'
+import { View, StyleSheet, Button, Platform } from 'react-native'
 import { ID } from 'appwrite'
 import { Formik } from 'formik'
 
@@ -13,6 +13,8 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import { useCallback, useEffect, useState } from 'react'
 import constant from '../../const'
 import ListingModel from '../types/ListingModel'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import private_var from '../../private'
 //import TextInput from '@/components/input/TextInput'
 
 
@@ -155,6 +157,26 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                             multiline
                             formik={formik}
                         />
+                        {Platform.OS === 'web' ? 
+                            <TextInput
+                                name='location'
+                                label='Location'
+                                formik={formik}
+                            />
+                        : 
+                            <GooglePlacesAutocomplete
+                                placeholder='Location'
+                                onPress={(data, details = null) => {
+                                    // 'details' is provided when fetchDetails = true
+                                    console.log(data, details);
+                                }}
+                                query={{
+                                    key: private_var.api_keys.google.places,
+                                    language: 'en'
+                                }}
+                            />
+                        }
+                        
                         <Button
                             onPress={() => formik.handleSubmit()}
                             title='Save'

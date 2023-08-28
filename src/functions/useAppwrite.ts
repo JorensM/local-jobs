@@ -1,5 +1,5 @@
 import { Client, Account, Databases, Models } from 'appwrite'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useCheckLogin from './useCheckLogin'
 
 export default function useAppwrite(fetch_user_interval: number = 2000): {
@@ -25,15 +25,18 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
         .setEndpoint('https://cloud.appwrite.io/v1')
         .setProject('64e4a62767a8fbeccac8');
 
-    account.getSession('current')
-        .then( res => {
-            //console.log('aaa')
-            fetchCurrentUser()
-        })
-        .catch( err => {
-            //console.log('bbb')
-            console.warn('Could not retrieve session', err)
-        })
+    // useEffect(() => {
+
+    // }, [])
+    // account.getSession('current')
+    //     .then( res => {
+    //         //console.log('aaa')
+    //         fetchCurrentUser()
+    //     })
+    //     .catch( err => {
+    //         //console.log('bbb')
+    //         console.warn('Could not retrieve session', err)
+    //     })
 
     // account.get()
     // .then( res => { account_obj = res })
