@@ -1,12 +1,18 @@
 import { Client, Account, Databases, Models } from 'appwrite'
+import { useState } from 'react'
 import useCheckLogin from './useCheckLogin'
 
-export default function useAppwrite(): {
+export default function useAppwrite(fetch_user_interval: number = 2000): {
     client: Client, 
     account: Account,
     db: Databases,
-    getCurrentUser: () => Promise<Models.User<Models.Preferences>>
+    //currentUser:
+    currentUser: Models.User<Models.Preferences> | null,
+    fetchCurrentUser: () => void
 } {
+    //State
+    const [ currentUser, setCurrentUser ] = useState<Models.User<Models.Preferences> | null>(null)
+
     const client = new Client()
     const account = new Account(client)
     const db = new Databases(client)
@@ -22,7 +28,7 @@ export default function useAppwrite(): {
     account.getSession('current')
         .then( res => {
             //console.log('aaa')
-            getCurrentUser()
+            fetchCurrentUser()
         })
         .catch( err => {
             //console.log('bbb')
@@ -35,23 +41,31 @@ export default function useAppwrite(): {
     //     console.error('Could not retrieve current user account: ', err)
     // })
 
-    const getCurrentUser = async () => {
-        if( account_obj ) {
+    const fetchCurrentUser = async () => {
+        //if( account_obj ) {
             //console.log('ccc')
-            return account_obj
-        } else {
+            //return account_obj
+        //} else {
             //let acc// = account.get()
-            try {
-                //console.log('ddd')
-                const acc = account.get()
-                return acc
-            } catch ( err ) {
-                console.warn('Could not retrieve current user account')
-                return null
-            }
-
+        try {
+            //console.log('ddd')
+            const acc = await account.get()
+            setCurrentUser(acc)
+        } catch ( err ) {
+            console.warn('Could not retrieve current user account')
+            setCurrentUser(null)
         }
+
+        //}
     }
 
-    return { client, account, db, getCurrentUser }
+    // if (fetch_user_interval > 0) {
+    //     setInterval(() => {
+    //         fetchCurrentUser()
+    //     }, fetch_user_interval)
+    // }
+
+    
+
+    return { client, account, db, currentUser, fetchCurrentUser }
 }

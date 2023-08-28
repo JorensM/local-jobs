@@ -6,6 +6,7 @@ import {
   View, 
   Button 
 } from 'react-native';
+import { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer, Link, NavigationProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
@@ -29,7 +30,10 @@ import useCheckLogin from './src/functions/useCheckLogin';
 import useAppwrite from './src/functions/useAppwrite';
 
 
+
 //const Stack = createNativeStackNavigator<ParamList>();
+
+
 
 const Drawer = createDrawerNavigator<ParamList>()
 
@@ -37,7 +41,72 @@ export default function App() {
 
   //Hooks
   const { logout } = useLogin()
-  const { getCurrentUser } = useAppwrite()
+  const { currentUser, fetchCurrentUser } = useAppwrite()
+
+  const [ drawerContent, setDrawerContent ] = useState()
+
+  useEffect(() => {
+    /*
+      Time in ms of how often session information should be retrieved
+    */
+    const fetch_user_interval = 4000
+
+    setInterval(() => {
+      fetchCurrentUser()
+    }, fetch_user_interval)
+  }, [])
+
+  const drawer_content_user = useCallback( (props: any) => (
+    <View
+      style={{
+        height: '100%'
+      }}
+    >
+      <DrawerContentScrollView
+        // style={{
+        //   height: 
+        // }}
+      >
+        <DrawerItemList {...props} />
+      </DrawerContentScrollView>
+      <View
+        style={{
+          flexGrow: 1,
+          justifyContent: 'flex-end'
+        }}
+      >
+        <DrawerItem
+          label='Log out'
+          onPress={() => {
+            logout()
+              .finally(() => {
+                props.navigation.navigate('Login')
+              })
+
+          }}
+        />
+      </View>
+      
+    </View>
+  ), [])
+    
+  const drawer_content_guest = useCallback(() => (
+    <View
+      style={{
+        height: '100%'
+      }}
+    >
+      <DrawerItem
+        label='Login'
+        onPress={() => {}}
+      />
+
+      <DrawerItem
+        label='Register'
+        onPress={() => {}}
+      />
+    </View>
+  ), [])
 
   // const handleRegisterSubmit = (values: any) => {
   //   account.create(
@@ -64,43 +133,59 @@ export default function App() {
       <Drawer.Navigator
         initialRouteName='Login'
         drawerContent={(props) => {
-          return (
-            <View
-              style={{
-                height: '100%'
-              }}
-            >
-              <DrawerContentScrollView
-                // style={{
-                //   height: 
-                // }}
-              >
-                <DrawerItemList {...props} />
-              </DrawerContentScrollView>
+          if (currentUser) {
+            return (
               <View
                 style={{
-                  flexGrow: 1,
-                  justifyContent: 'flex-end'
+                  height: '100%'
+                }}
+              >
+                <DrawerContentScrollView
+                  // style={{
+                  //   height: 
+                  // }}
+                >
+                  <DrawerItemList {...props} />
+                </DrawerContentScrollView>
+                <View
+                  style={{
+                    flexGrow: 1,
+                    justifyContent: 'flex-end'
+                  }}
+                >
+                  <DrawerItem
+                    label='Log out'
+                    onPress={() => {
+                      logout()
+                        .finally(() => {
+                          props.navigation.navigate('Login')
+                        })
+
+                    }}
+                  />
+                </View>
+                
+              </View>
+            )
+          } else {
+            return (
+              <View 
+                style={{
+                  height: '100%'
                 }}
               >
                 <DrawerItem
-                  label='Log out'
-                  onPress={() => {
-                    logout()
-                      .finally(() => {
-                        props.navigation.navigate('Login')
-                      })
+                  label='Login'
+                  onPress={() => {}}
+                />
 
-                  }}
+                <DrawerItem
+                  label='Register'
+                  onPress={() => {}}
                 />
               </View>
-              
-            </View>
-            
-              
-              
-            
-          )
+            )
+          }
           // const DrawerListItem = (href: string) => (
           //   <Link
           //     to

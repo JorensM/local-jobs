@@ -15,8 +15,8 @@ export default function useLogin() {
                 })
                 .catch(err => {
                     reject(err)
-                    //console.error('An error occured while logging out', err)
-                    //console.error(err)
+                    console.error('An error occured while logging out', err)
+                    console.error(err)
                 })
                 .finally(() => {
                     checkSession('Login')
