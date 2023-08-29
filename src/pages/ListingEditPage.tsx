@@ -157,25 +157,27 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                             multiline
                             formik={formik}
                         />
-                        {Platform.OS === 'web' ? 
-                            <TextInput
-                                name='location'
-                                label='Location'
-                                formik={formik}
-                            />
-                        : 
-                            <GooglePlacesAutocomplete
-                                placeholder='Location'
-                                onPress={(data, details = null) => {
-                                    // 'details' is provided when fetchDetails = true
-                                    console.log(data, details);
-                                }}
-                                query={{
-                                    key: private_var.api_keys.google.places,
-                                    language: 'en'
-                                }}
-                            />
-                        }
+                        <GooglePlacesAutocomplete
+                            styles={{
+                                container: {
+                                    marginBottom: 32
+                                }
+                                
+                            }}
+                            placeholder='Location'
+                            onPress={(data, details = null) => {
+                                // 'details' is provided when fetchDetails = true
+                                console.log(data, details);
+                            }}
+                            query={{
+                                key: private_var.api_keys.google.places,
+                                language: 'en'
+                            }}
+                            requestUrl={{
+                                url: 'https://corsproxy.io/?https://maps.googleapis.com/maps/api',
+                                useOnPlatform: 'all'
+                            }}
+                        />
                         
                         <Button
                             onPress={() => formik.handleSubmit()}
