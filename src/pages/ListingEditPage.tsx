@@ -1,31 +1,37 @@
+//Core
+import { useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Button, Platform } from 'react-native'
+import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+import { DrawerScreenProps } from '@react-navigation/drawer'
 import { ID } from 'appwrite'
 import { Formik } from 'formik'
 
-// import TextInput from 'components/input/TextInput'
-import SessionPage from '../components/layout/SessionPage'
-import Page from '../components/layout/Page'
-import TextInput from '../components/input/TextInput'
-import useAppwrite from '../functions/useAppwrite'
-import { DrawerNavigationProp, DrawerScreenProps } from '@react-navigation/drawer'
-import ParamList from './ParamList'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native'
-import { useCallback, useEffect, useState } from 'react'
-import constant from '../../const'
+//Types
 import ListingModel from '../types/ListingModel'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import private_var from '../../private'
-//import TextInput from '@/components/input/TextInput'
+import ParamList from './ParamList'
+
+//Functions
+import useAppwrite from '../functions/useAppwrite'
+
+//Components
+import TextInput from '../components/input/TextInput'
+import LocationInput from '../components/input/LocationInput'
+import SessionPage from '../components/layout/SessionPage'
+
+//Constants
+import constant from '../../const'
 
 
 type FormValues = {
     title: string,
-    description: string
+    description: string,
+    location: string
 }
 
 const initial_values: FormValues = {
     title: '',
-    description: ''
+    description: '',
+    location: ''
 }
 
 type Props = DrawerScreenProps<ParamList, 'ListingEdit'>
@@ -110,7 +116,8 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                     console.log(listing)
                     setInitialValues({
                         description: listing.description,
-                        title: listing.title
+                        title: listing.title,
+                        location: 'location' //#TODO add actual location from id
                     })
                     //initial_values.description = listing.description
                     //initial_values.title = listing.title
@@ -157,28 +164,10 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                             multiline
                             formik={formik}
                         />
-                        <GooglePlacesAutocomplete
-                            styles={{
-                                container: {
-                                    marginBottom: 32
-                                }
-                                
-                            }}
-                            placeholder='Location'
-                            onPress={(data, details = null) => {
-                                // 'details' is provided when fetchDetails = true
-                                console.log(data, details);
-                            }}
-                            query={{
-                                key: private_var.api_keys.google.places,
-                                language: 'en'
-                            }}
-                            requestUrl={{
-                                url: 'https://corsproxy.io/?https://maps.googleapis.com/maps/api',
-                                useOnPlatform: 'all'
-                            }}
+                        <LocationInput
+                            name='location'
+                            formik={formik}
                         />
-                        
                         <Button
                             onPress={() => formik.handleSubmit()}
                             title='Save'
