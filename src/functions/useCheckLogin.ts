@@ -3,19 +3,21 @@ import { useEffect } from 'react';
 import useAppwrite from './useAppwrite';
 
 export default function useCheckLogin(
-    logged_out_redirect?: string,
-    logged_in_redirect?: string,
+    logged_out_redirect?: string | null,
+    logged_in_redirect?: string | null,
     prevent_navigation: boolean = false
 ) {
     const { account } = useAppwrite()
-    const _navigation = prevent_navigation ? useNavigation<any>() : null
+    const _navigation = prevent_navigation ? null : useNavigation<any>()
 
-    const checkSession = (log_out_redirect?: string, log_in_redirect?: string) => {
+    const checkSession = (log_out_redirect?: string | null, log_in_redirect?: string | null) => {
         account.getSession('current')
             .then(res => {
                 console.log('retrieved session')
                 console.log(res)
                 if (logged_in_redirect && !prevent_navigation) {
+                    console.log('navigating')
+                    console.log(_navigation)
                     _navigation.navigate(logged_in_redirect)
                 }
             })

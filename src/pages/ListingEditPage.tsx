@@ -47,6 +47,9 @@ export default function ListingEditPage( { route, navigation }: Props ) {
 
     const handleSubmit = async (values: FormValues) => {
 
+        //console.log(values)
+
+        //return
         const afterSuccessfulSubmit = (listing_id: string) => {
             navigation.navigate('Listing', {
                 id: listing_id
@@ -64,7 +67,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
             account.getSession('current').then(console.log)
             console.log('creating document')
             //const listing_id = ID.unique()
-            db.createDocument(
+            db.createDocument<ListingModel>(
                 '64e5bca5774c43c6e4b8', 
                 '64e5bcac74d34020c488',
                 ID.unique(),
@@ -72,7 +75,8 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                     title: values.title,
                     by_user: id,
                     by_user_name: acc.name,
-                    description: values.description
+                    description: values.description,
+                    location_id: values.location
                 }
             ).then( res => {
                 console.log('Created listing', res)

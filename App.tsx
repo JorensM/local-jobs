@@ -8,11 +8,8 @@ import {
 } from 'react-native';
 import { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer, Link, NavigationProp } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import { StatusBar } from 'expo-status-bar';
-import { Formik } from 'formik';
-import { Client, Account, ID } from 'appwrite'
+import { Loader as GoogleMapsLoader } from "@googlemaps/js-api-loader"
 
 //Components
 import TextInput from './src/components/input/TextInput';
@@ -28,6 +25,8 @@ import ParamList from './src/pages/ParamList';
 import useLogin from './src/functions/useLogin';
 import useCheckLogin from './src/functions/useCheckLogin';
 import useAppwrite from './src/functions/useAppwrite';
+import { PlacesContext } from './src/state/PlacesContext';
+import private_var from './private';
 
 
 
@@ -43,6 +42,9 @@ export default function App() {
   const { logout } = useLogin()
   const { currentUser, fetchCurrentUser } = useAppwrite()
 
+
+  //State
+  const [ placesAPI, setPlacesAPI ] = useState<any>(null)
   const [ drawerContent, setDrawerContent ] = useState()
 
   useEffect(() => {
@@ -54,6 +56,18 @@ export default function App() {
     setInterval(() => {
       fetchCurrentUser()
     }, fetch_user_interval)
+
+    const maps_loader = new GoogleMapsLoader({
+      apiKey: private_var.api_keys.google.places
+    })
+
+    maps_loader.importLibrary('geocoding')
+      .then(places => {
+        //console.log('places: ')
+        //console.log(places)
+        setPlacesAPI(places)
+      })
+      .catch(console.log)
   }, [])
 
   const drawer_content_user = useCallback( (props: any) => (
@@ -129,127 +143,128 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        initialRouteName='Login'
-        drawerContent={(props) => {
-          if (currentUser) {
-            return (
-              <View
-                style={{
-                  height: '100%'
-                }}
-              >
-                <DrawerContentScrollView
-                  // style={{
-                  //   height: 
-                  // }}
-                >
-                  <DrawerItemList {...props} />
-                </DrawerContentScrollView>
+    <PlacesContext.Provider value={placesAPI}>
+      <NavigationContainer>
+        <Drawer.Navigator
+          initialRouteName='Login'
+          drawerContent={(props) => {
+            if (currentUser) {
+              return (
                 <View
                   style={{
-                    flexGrow: 1,
-                    justifyContent: 'flex-end'
+                    height: '100%'
+                  }}
+                >
+                  <DrawerContentScrollView
+                    // style={{
+                    //   height: 
+                    // }}
+                  >
+                    <DrawerItemList {...props} />
+                  </DrawerContentScrollView>
+                  <View
+                    style={{
+                      flexGrow: 1,
+                      justifyContent: 'flex-end'
+                    }}
+                  >
+                    <DrawerItem
+                      label='Log out'
+                      onPress={() => {
+                        logout()
+                          .finally(() => {
+                            props.navigation.navigate('Login')
+                          })
+
+                      }}
+                    />
+                  </View>
+                  
+                </View>
+              )
+            } else {
+              return (
+                <View 
+                  style={{
+                    height: '100%'
                   }}
                 >
                   <DrawerItem
-                    label='Log out'
-                    onPress={() => {
-                      logout()
-                        .finally(() => {
-                          props.navigation.navigate('Login')
-                        })
+                    label='Login'
+                    onPress={() => {}}
+                  />
 
-                    }}
+                  <DrawerItem
+                    label='Register'
+                    onPress={() => {}}
                   />
                 </View>
-                
-              </View>
-            )
-          } else {
-            return (
-              <View 
-                style={{
-                  height: '100%'
-                }}
-              >
-                <DrawerItem
-                  label='Login'
-                  onPress={() => {}}
-                />
+              )
+            }
+            // const DrawerListItem = (href: string) => (
+            //   <Link
+            //     to
+            //   >
+              
+            //   </Link>
+            // )
 
-                <DrawerItem
-                  label='Register'
-                  onPress={() => {}}
-                />
-              </View>
-            )
-          }
-          // const DrawerListItem = (href: string) => (
-          //   <Link
-          //     to
-          //   >
-            
-          //   </Link>
-          // )
-
-          // return (
-          //   <View
-          //     style={styles.drawer}
-          //   >
-          //     <Link to={{ screen: 'Feed'} }>Feed</Link>
-          //     <Link to={{ screen: 'MyListings' }}>My Listings</Link>
-          //   </View>
-          // )
-        }}
-      >
-        <Drawer.Screen 
-          name='Register' 
-          component={RegistrationPage}
-          options={{
-            drawerItemStyle: { display: 'none' }
+            // return (
+            //   <View
+            //     style={styles.drawer}
+            //   >
+            //     <Link to={{ screen: 'Feed'} }>Feed</Link>
+            //     <Link to={{ screen: 'MyListings' }}>My Listings</Link>
+            //   </View>
+            // )
           }}
-        />
-        <Drawer.Screen 
-          name='Login' 
-          component={LoginPage}
-          options={{
-            drawerItemStyle: { display: 'none' }
-          }}
-        />
-        <Drawer.Screen 
-          name='Feed' 
-          component={FeedPage}
-          // options={{
-          //   headerBackVisible: false,
-          //   headerLeft: undefined
-          // }}
-        />
-        <Drawer.Screen
-          name='MyListings'
-          options={{
-            title: 'My Listings'
-          }}
-          component={MyListingsPage}
-        />
-        <Drawer.Screen
-          options={{
-            title: 'New Listing'
-          }}
-          name='ListingEdit'
-          component={ListingEditPage}
-        />
-        <Drawer.Screen
-          name='Listing'
-          component={ListingPage}
-          options={{
-            drawerItemStyle: { display: 'none' }
-          }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
-    
+        >
+          <Drawer.Screen 
+            name='Register' 
+            component={RegistrationPage}
+            options={{
+              drawerItemStyle: { display: 'none' }
+            }}
+          />
+          <Drawer.Screen 
+            name='Login' 
+            component={LoginPage}
+            options={{
+              drawerItemStyle: { display: 'none' }
+            }}
+          />
+          <Drawer.Screen 
+            name='Feed' 
+            component={FeedPage}
+            // options={{
+            //   headerBackVisible: false,
+            //   headerLeft: undefined
+            // }}
+          />
+          <Drawer.Screen
+            name='MyListings'
+            options={{
+              title: 'My Listings'
+            }}
+            component={MyListingsPage}
+          />
+          <Drawer.Screen
+            options={{
+              title: 'New Listing'
+            }}
+            name='ListingEdit'
+            component={ListingEditPage}
+          />
+          <Drawer.Screen
+            name='Listing'
+            component={ListingPage}
+            options={{
+              drawerItemStyle: { display: 'none' }
+            }}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </PlacesContext.Provider>
   );
 }
 
