@@ -37,9 +37,9 @@ const initial_values: FormValues = {
     location_name: ''
 }
 
-type Props = DrawerScreenProps<ParamList, 'ListingEdit'>
+type Props = DrawerScreenProps<ParamList, 'NewListing'>
 
-export default function ListingEditPage( { route, navigation }: Props ) {
+export default function NewListingPage( { route, navigation }: Props ) {
 
     const { db, account } = useAppwrite()
 
@@ -68,7 +68,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
         console.log(db)
         console.log('submitting')
         console.log(process.env)
-        if (!route.params?.id) {
+        //if (!route.params?.id) {
             const acc = await account.get()
             const id = acc.$id
             account.getSession('current').then(console.log)
@@ -93,26 +93,26 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                 console.error('Could not create listing', err)
                 setError('Could not create listing')
             })
-        } else {
-            db.updateDocument<ListingModel>(
-                constant.db.id,
-                constant.db.listings_id,
-                route.params.id,
-                {
-                    title: values.title,
-                    description: values.description,
-                    location_id: values.location_id,
-                    location_name: values.location_name
-                }
-            )
-            .then( res => {
-                afterSuccessfulSubmit(route.params.id)
-            })
-            .catch( err => {
-                console.error('Could not update listing', err)
-                setError('Could not update listing')
-            })
-        }
+        // } else {
+        //     db.updateDocument<ListingModel>(
+        //         constant.db.id,
+        //         constant.db.listings_id,
+        //         route.params.id,
+        //         {
+        //             title: values.title,
+        //             description: values.description,
+        //             location_id: values.location_id,
+        //             location_name: values.location_name
+        //         }
+        //     )
+        //     .then( res => {
+        //         afterSuccessfulSubmit(route.params.id)
+        //     })
+        //     .catch( err => {
+        //         console.error('Could not update listing', err)
+        //         setError('Could not update listing')
+        //     })
+        // }
     }
 
     useFocusEffect(
@@ -148,7 +148,6 @@ export default function ListingEditPage( { route, navigation }: Props ) {
 
     useEffect(() => {
         if (!isFocused) {
-            navigation.setParams({ id: null })
             setInitialValues(initial_values)
         }
     }, [ isFocused ])

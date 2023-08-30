@@ -1,6 +1,6 @@
 //Core
 import { useFocusEffect } from '@react-navigation/native';
-import { Models } from 'appwrite';
+import { Models, Query } from 'appwrite';
 import { useState, useEffect, useCallback } from 'react';
 import { Text, Button, FlatList, View, StyleSheet, Pressable } from 'react-native'
 import humanize from 'humanize-duration'
@@ -12,17 +12,15 @@ import useAppwrite from '../functions/useAppwrite';
 import useCheckLogin from '../functions/useCheckLogin';
 import Caption from '../components/typography/Caption';
 
+//Types
+import ListingModel from '../types/ListingModel'
+
 //Constants
 import constant from '../../const';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import ParamList from './ParamList';
 import Description from '../components/typography/Description';
-
-type ListingModel = Models.Document & {
-    by_user_name: string,
-    title: string,
-    description: string,
-}
+import ListingSmall from '../components/ListingSmall';
 
 type Props = DrawerScreenProps<ParamList>
 
@@ -57,7 +55,10 @@ export default function FeedPage( { navigation }: Props) {
     const fetchListings = () => {
         db.listDocuments<ListingModel>(
             constant.db.id,
-            constant.db.listings_id
+            constant.db.listings_id,
+            [
+                Query.orderDesc('$createdAt')
+            ]
         ).then( async (res) => {
             console.log(res)
             setListings(res.documents)
@@ -80,6 +81,8 @@ export default function FeedPage( { navigation }: Props) {
         return humanize(
             ms,
             {
+                round: true,
+                units: ["y", "mo", "w", "d", "h", "m"],
                 largest: 2
             }
         )
@@ -105,29 +108,8 @@ export default function FeedPage( { navigation }: Props) {
                 style={styles.listings_list}
                 ItemSeparatorComponent={() => <View style={{height: 8}} />}
                 data={listings}
-                renderItem={({ item }) => (
-                    <Pressable
-                        style={ styles.listing_item }
-                        onPress={ () => handleListingPress( item.$id ) }
-                    >
-                        <Text
-                            style={styles.title}
-                        >
-                            
-                            { item.title }
-                        </Text>
-                        <Caption>
-                            By { item.by_user_name }
-                        </Caption>
-                        <Caption>
-                            { getAge(item.$createdAt, true) } ago
-                        </Caption>
-                        <Description>
-                            { item.description.slice(0, 100) }...
-                        </Description>
-                        
-                        
-                    </Pressable>
+                renderItem={({ item }: { item: ListingModel}) => (
+                    <ListingSmall item={item}/>
                 )}
             />
             <Button

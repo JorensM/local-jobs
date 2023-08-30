@@ -1,5 +1,5 @@
 //Core
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Pressable, Text, StyleSheet } from 'react-native'
 
@@ -10,12 +10,17 @@ import ListingModel from '../types/ListingModel'
 
 //Functions
 import getAge from '../functions/getAge'
+import usePlacesAPI from '../functions/usePlacesAPI'
 
 type Props = {
     item: ListingModel
 }
 
 export default function ListingSmall( { item }: Props ) {
+
+    const { getPlaceByID } = usePlacesAPI()
+
+    const [ locationStr, setLocationStr ] = useState<string>('')
 
     const navigation = useNavigation<any>()
 
@@ -24,6 +29,25 @@ export default function ListingSmall( { item }: Props ) {
         navigation.navigate('Listing', {
             id: item.$id
         })
+    }, [])
+
+    const fetchLocationStr = () => {
+        // if (!item.location_id) {
+        //     return
+        // }
+        // getPlaceByID(item.location_id)
+        //     .then((res: string)  => {
+        //         setLocationStr(res)
+        //     })
+        //     .catch(err => {
+        //         console.error('Could not fetch location by ID' + item.location_id, err)
+        //     })
+    }
+
+    useEffect(() => {
+        // if (item.location_id) {
+        //     fetchLocationStr()
+        // }
     }, [])
 
     return (
@@ -40,6 +64,12 @@ export default function ListingSmall( { item }: Props ) {
             <Caption>
                 By { item.by_user_name }
             </Caption>
+            { item.location_name ? 
+                <Caption>
+                    { item.location_name }
+                </Caption>
+            : null }
+            
             <Caption>
                 { getAge(item.$createdAt, true) } ago
             </Caption>

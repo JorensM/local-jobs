@@ -12,7 +12,7 @@ import ListingSmall from '../components/ListingSmall'
 export default function MyListingsPage() {
 
     //Hooks
-    const { db, account, getCurrentUser } = useAppwrite()
+    const { db, account, currentUser } = useAppwrite()
 
     //State
     const [ listings, setListings ] = useState<ListingModel[]>([])
@@ -27,7 +27,7 @@ export default function MyListingsPage() {
 
         setLoading(true)
 
-        const user = await getCurrentUser()
+        const user = currentUser!
         const user_id = user.$id
 
         console.log('user id:', user_id)

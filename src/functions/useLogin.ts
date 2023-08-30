@@ -3,7 +3,7 @@ import useCheckLogin from './useCheckLogin'
 
 export default function useLogin() {
 
-    const { checkSession } = useCheckLogin('Login')
+    const { checkSession } = useCheckLogin('Login', undefined, true)
     const { account } = useAppwrite()
 
     const logout = () => {
