@@ -32,22 +32,22 @@ export default function ListingSmall( { item }: Props ) {
     }, [])
 
     const fetchLocationStr = () => {
-        if (!item.location_id) {
-            return
-        }
-        getPlaceByID(item.location_id)
-            .then((res: string)  => {
-                setLocationStr(res)
-            })
-            .catch(err => {
-                console.error('Could not fetch location by ID' + item.location_id, err)
-            })
+        // if (!item.location_id) {
+        //     return
+        // }
+        // getPlaceByID(item.location_id)
+        //     .then((res: string)  => {
+        //         setLocationStr(res)
+        //     })
+        //     .catch(err => {
+        //         console.error('Could not fetch location by ID' + item.location_id, err)
+        //     })
     }
 
     useEffect(() => {
-        if (item.location_id) {
-            fetchLocationStr()
-        }
+        // if (item.location_id) {
+        //     fetchLocationStr()
+        // }
     }, [])
 
     return (
@@ -64,9 +64,9 @@ export default function ListingSmall( { item }: Props ) {
             <Caption>
                 By { item.by_user_name }
             </Caption>
-            { item.location_id ? 
+            { item.location_name ? 
                 <Caption>
-                    { locationStr }
+                    { item.location_name }
                 </Caption>
             : null }
             

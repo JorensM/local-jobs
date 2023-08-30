@@ -130,6 +130,11 @@ export default function ListingPage( { route, navigation }: Props) {
             <Caption>
                 By { listing?.by_user_name || '' }
             </Caption>
+            { listing?.location_name ?
+                <Caption>
+                    { listing.location_name }
+                </Caption>
+            : null }
             { isOwnListing ? 
                 <Info>
                     This is your listing

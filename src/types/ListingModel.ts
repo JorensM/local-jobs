@@ -6,6 +6,7 @@ type ListingModel = Models.Document & {
     title: string,
     description: string,
     location_id?: string,
+    location_name?: string
 }
 
 export default ListingModel

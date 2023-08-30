@@ -1,6 +1,6 @@
-import { GooglePlaceData, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteProps, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete'
 import { useField, useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 //Constants
 import private_var from '../../../private'
@@ -8,10 +8,11 @@ import private_var from '../../../private'
 type Props = {
     name: string,
     formik: any,
-    placeholder?: string
+    placeholder?: string,
+    onChange: (details: GooglePlaceData) => void
 }
 
-export default function LocationInput( { formik, name, ...props }: Props ) {
+export default function LocationInput( { formik, name, placeholder, onChange, ...props }: Props ) {
 
     const [value, setValue] = useState<any>(null)
 
@@ -25,6 +26,9 @@ export default function LocationInput( { formik, name, ...props }: Props ) {
         //event.target.value = item.value
         //setValue(item.value)
         setFieldValue(name, data.place_id)
+        if (onChange) {
+            onChange(data)
+        }
     }
 
     return (
@@ -34,7 +38,7 @@ export default function LocationInput( { formik, name, ...props }: Props ) {
                     marginBottom: 32
                 }
             }}
-            placeholder={props.placeholder || 'Location'}
+            placeholder={placeholder || 'Location'}
             onPress={(data, details = null) => handleChange(data)}
             query={{
                 key: private_var.api_keys.google.places,
@@ -44,6 +48,7 @@ export default function LocationInput( { formik, name, ...props }: Props ) {
                 url: 'https://corsproxy.io/?https://maps.googleapis.com/maps/api',
                 useOnPlatform: 'all'
             }}
+            
         />
     )
 }

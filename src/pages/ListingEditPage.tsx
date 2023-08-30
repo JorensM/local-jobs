@@ -1,5 +1,5 @@
 //Core
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { View, StyleSheet, Button, Platform } from 'react-native'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import { DrawerScreenProps } from '@react-navigation/drawer'
@@ -20,6 +20,7 @@ import SessionPage from '../components/layout/SessionPage'
 
 //Constants
 import constant from '../../const'
+import { GooglePlaceData } from 'react-native-google-places-autocomplete'
 
 
 type FormValues = {
@@ -45,9 +46,11 @@ export default function ListingEditPage( { route, navigation }: Props ) {
     const [ initialValues, setInitialValues ] = useState<FormValues>(initial_values)
     const isFocused = useIsFocused()
 
+    const [ locationDetails, setLocationDetails ] = useState<GooglePlaceData | null>(null)
+
     const handleSubmit = async (values: FormValues) => {
 
-        //console.log(values)
+        //console.log(locationDetails)
 
         //return
         const afterSuccessfulSubmit = (listing_id: string) => {
@@ -76,7 +79,8 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                     by_user: id,
                     by_user_name: acc.name,
                     description: values.description,
-                    location_id: values.location
+                    location_id: values.location,
+                    location_name: locationDetails?.description || 'unknown'
                 }
             ).then( res => {
                 console.log('Created listing', res)
@@ -171,6 +175,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                         <LocationInput
                             name='location'
                             formik={formik}
+                            onChange={setLocationDetails}
                         />
                         <Button
                             onPress={() => formik.handleSubmit()}
