@@ -148,7 +148,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
 
     useEffect(() => {
         if (!isFocused) {
-            navigation.setParams({ id: null })
+            navigation.setParams({ id: undefined })
             setInitialValues(initial_values)
         }
     }, [ isFocused ])

@@ -9,9 +9,13 @@ import {
     Text,
     View,
     Button,
-    Pressable
+    Pressable,
+    StyleSheet,
+    Platform
 } from 'react-native'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+import Modal from 'react-native-modal'
+import { CardField } from '@stripe/stripe-react-native'
 
 //Types
 import ListingModel from '../types/ListingModel'
@@ -27,18 +31,22 @@ import H1 from '../components/typography/H1'
 import Caption from '../components/typography/Caption'
 import Info from '../components/typography/Info'
 import IconButton from '../components/input/IconButton'
+import PaymentForm from '../components/forms/PaymentForm'
 
 type Props = DrawerScreenProps<ParamList>
 
 export default function ListingPage( { route, navigation }: Props) {
 
+    //Hooks
     const { db, account } = useAppwrite()
+    const isFocused = useIsFocused()
 
+    //State
     const [listing, setListing] = useState<ListingModel | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [isOwnListing, setIsOwnListing] = useState<boolean>(false)
-
-    const isFocused = useIsFocused()
+    const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
+    
 
     
 
@@ -116,6 +124,10 @@ export default function ListingPage( { route, navigation }: Props) {
         }
     }, [isFocused])
 
+    const handleContactPress = () => {
+        setShowPaymentModal(true)
+    }
+
     // useEffect(() => {
     //     setLoading(false)
     // }, [ listing ])
@@ -151,14 +163,55 @@ export default function ListingPage( { route, navigation }: Props) {
             { !isOwnListing ? 
                 <Pressable
                     style={{
-                        marginTop: 'auto'
+                        marginTop: 'auto',
+                        borderWidth: 1,
+                        borderColor: 'blue',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 16,
+                        backgroundColor: 'white'
                     }}
+
+                    onPress={handleContactPress}
                 >
-                    <Text>
+                    <Text
+                        style={{
+                            color: 'blue'
+                        }}
+                    >
                         Contact
                     </Text>
                 </Pressable>
             : null }
+            <Modal
+                // transparent={true}
+                isVisible={showPaymentModal}
+                onBackdropPress={() => setShowPaymentModal(false)}
+                // onRequestClose={() => setShowPaymentModal(false)}
+            >   
+                <View
+                    style={styles.modal_content}
+                >
+                    <PaymentForm
+
+                    />
+                </View>
+            </Modal>
         </Page>
     )
 }
+
+const styles = StyleSheet.create({
+    modal_overlay: {
+        height: '100%',
+        width: '100%',
+        opacity: 0.5
+    },
+    modal_content: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        // width: '80%'
+    }
+})
