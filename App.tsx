@@ -10,6 +10,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer, Link, NavigationProp } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { Loader as GoogleMapsLoader } from "@googlemaps/js-api-loader"
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 //Functions
 import useCheckLogin from './src/functions/useCheckLogin';
@@ -49,8 +50,8 @@ export default function App() {
 
 
   //State
-  const [ placesAPI, setPlacesAPI ] = useState<any>(null)
-  const [ drawerContent, setDrawerContent ] = useState()
+  // const [ placesAPI, setPlacesAPI ] = useState<any>(null)
+  // const [ drawerContent, setDrawerContent ] = useState()
 
   useEffect(() => {
     /*
@@ -62,70 +63,19 @@ export default function App() {
       fetchCurrentUser()
     }, fetch_user_interval)
 
-    const maps_loader = new GoogleMapsLoader({
-      apiKey: private_var.api_keys.google.places
-    })
+    //#NOTE: Possibly a loop caused when using the maps code below
+    // const maps_loader = new GoogleMapsLoader({
+    //   apiKey: private_var.api_keys.google.places
+    // })
 
-    maps_loader.importLibrary('geocoding')
-      .then(places => {
-        //console.log('places: ')
-        //console.log(places)
-        setPlacesAPI(places)
-      })
-      .catch(console.log)
+    // maps_loader.importLibrary('geocoding')
+    //   .then(places => {
+    //     //console.log('places: ')
+    //     //console.log(places)
+    //     setPlacesAPI(places)
+    //   })
+    //   .catch(console.log)
   }, [])
-
-  const drawer_content_user = useCallback( (props: any) => (
-    <View
-      style={{
-        height: '100%'
-      }}
-    >
-      <DrawerContentScrollView
-        // style={{
-        //   height: 
-        // }}
-      >
-        <DrawerItemList {...props} />
-      </DrawerContentScrollView>
-      <View
-        style={{
-          flexGrow: 1,
-          justifyContent: 'flex-end'
-        }}
-      >
-        <DrawerItem
-          label='Log out'
-          onPress={() => {
-            logout()
-              .finally(() => {
-                props.navigation.navigate('Login')
-              })
-
-          }}
-        />
-      </View>
-      
-    </View>
-  ), [])
-    
-  const drawer_content_guest = useCallback(() => (
-    <View
-      style={{
-        height: '100%'
-      }}
-    >
-      <DrawerItem
-        label='Login'
-        onPress={() => {}}
-      />
-
-      <DrawerItem
-        label='Register'
-        onPress={() => {}}
-      />
-    </View>
-  ), [])
 
   // const handleRegisterSubmit = (values: any) => {
   //   account.create(
@@ -143,12 +93,19 @@ export default function App() {
   //   console.log(values)
   // }
 
-  const handleLogoutPress = (navigation: NavigationProp<any>) => {
-    logout()
-  }
+  // const handleLogoutPress = (navigation: NavigationProp<any>) => {
+  //   logout()
+  // }
 
   return (
-    <PlacesContext.Provider value={placesAPI}>
+    // <PlacesContext.Provider value={placesAPI}>
+    <StripeProvider
+      publishableKey={'pk_test_51IsVKBGzVxrDUiCoswQCpPVrP81REBPngmYwbhWVyx89fBFDupveqPXGLWQiyZZbzqeBXphcps4VhPzwxCBk5mtc00zJo3d9kh'}
+      // merchantIdentifier="merchant.identifier" // required for Apple Pay
+      // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+    >
+
+    
       <NavigationContainer>
         <Drawer.Navigator
           initialRouteName='Login'
@@ -279,7 +236,8 @@ export default function App() {
           />
         </Drawer.Navigator>
       </NavigationContainer>
-    </PlacesContext.Provider>
+    </StripeProvider>
+    // </PlacesContext.Provider>
   );
 }
 

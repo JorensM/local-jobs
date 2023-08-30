@@ -15,7 +15,6 @@ import {
 } from 'react-native'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import Modal from 'react-native-modal'
-import { CardField } from '@stripe/stripe-react-native'
 
 //Types
 import ListingModel from '../types/ListingModel'
