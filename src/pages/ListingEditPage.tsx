@@ -26,7 +26,7 @@ import { GooglePlaceData } from 'react-native-google-places-autocomplete'
 type FormValues = {
     title: string,
     description: string,
-    location: string
+    location?: string
 }
 
 const initial_values: FormValues = {
@@ -47,7 +47,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
     const isFocused = useIsFocused()
 
     const [ locationDetails, setLocationDetails ] = useState<GooglePlaceData | null>(null)
-
+    
     const handleSubmit = async (values: FormValues) => {
 
         //console.log(locationDetails)
@@ -125,7 +125,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                     setInitialValues({
                         description: listing.description,
                         title: listing.title,
-                        location: 'location' //#TODO add actual location from id
+                        location: listing.location_id //#TODO add actual location from id
                     })
                     //initial_values.description = listing.description
                     //initial_values.title = listing.title
@@ -176,6 +176,7 @@ export default function ListingEditPage( { route, navigation }: Props ) {
                             name='location'
                             formik={formik}
                             onChange={setLocationDetails}
+                            value={locationValue}
                         />
                         <Button
                             onPress={() => formik.handleSubmit()}

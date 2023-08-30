@@ -1,6 +1,6 @@
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteProps, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete'
 import { useField, useFormikContext } from 'formik'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 //Constants
 import private_var from '../../../private'
@@ -21,6 +21,7 @@ export default function LocationInput( { formik, name, placeholder, onChange, ..
     const { setFieldValue } = useFormikContext()
 
     const handleChange = (data: GooglePlaceData) => {
+        console.log('changed to: ', data)
         //const event: any = {}
         //event.target.name = name
         //event.target.value = item.value
@@ -29,6 +30,10 @@ export default function LocationInput( { formik, name, placeholder, onChange, ..
         if (onChange) {
             onChange(data)
         }
+    }
+
+    const handleTextInputChange = (e: any) => {
+        setValue(e.currentTarget.value)
     }
 
     return (
@@ -47,6 +52,10 @@ export default function LocationInput( { formik, name, placeholder, onChange, ..
             requestUrl={{
                 url: 'https://corsproxy.io/?https://maps.googleapis.com/maps/api',
                 useOnPlatform: 'all'
+            }}
+            textInputProps={{
+                value: value,
+                onChange: handleTextInputChange
             }}
             
         />
