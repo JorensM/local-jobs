@@ -11,8 +11,13 @@ import { NavigationContainer, Link, NavigationProp } from '@react-navigation/nat
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { Loader as GoogleMapsLoader } from "@googlemaps/js-api-loader"
 
+//Functions
+import useCheckLogin from './src/functions/useCheckLogin';
+import useAppwrite from './src/functions/useAppwrite';
+
 //Components
 import TextInput from './src/components/input/TextInput';
+import { PlacesContext } from './src/state/PlacesContext';
 
 //Pages
 import RegistrationPage from './src/pages/RegistrationPage';
@@ -21,11 +26,11 @@ import FeedPage from './src/pages/FeedPage';
 import MyListingsPage from './src/pages/MyListingsPage';
 import ListingEditPage from './src/pages/ListingEditPage';
 import ListingPage from './src/pages/ListingPage';
+import NewListingPage from './src/pages/NewListingPage';
 import ParamList from './src/pages/ParamList';
 import useLogin from './src/functions/useLogin';
-import useCheckLogin from './src/functions/useCheckLogin';
-import useAppwrite from './src/functions/useAppwrite';
-import { PlacesContext } from './src/state/PlacesContext';
+
+//Constants
 import private_var from './private';
 
 
@@ -250,11 +255,21 @@ export default function App() {
           />
           <Drawer.Screen
             options={{
-              title: 'New Listing'
+              title: 'New Listing',
             }}
             name='ListingEdit'
             component={ListingEditPage}
+            // options={{
+            //   drawerItemStyle: { display: 'none' }
+            // }}
           />
+          {/* <Drawer.Screen
+            options={{
+              title: 'New Listing',
+            }}
+            name='NewListing'
+            component={NewListingPage}
+          /> */}
           <Drawer.Screen
             name='Listing'
             component={ListingPage}

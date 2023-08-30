@@ -6,17 +6,19 @@ import { useState, useRef, useEffect } from 'react'
 import private_var from '../../../private'
 
 type Props = {
-    name: string,
+    id_name: string,
+    name_name: string,
     formik: any,
     placeholder?: string,
-    onChange: (details: GooglePlaceData) => void
+    onChange?: (details: GooglePlaceData) => void
 }
 
-export default function LocationInput( { formik, name, placeholder, onChange, ...props }: Props ) {
+export default function LocationInput( { formik, name_name, id_name, placeholder, onChange, ...props }: Props ) {
 
     const [value, setValue] = useState<any>(null)
 
-    const [field] = useField(name)
+    const [field] = useField(id_name)
+    const [ name_field ] = useField(name_name)
 
     const { setFieldValue } = useFormikContext()
 
@@ -26,14 +28,17 @@ export default function LocationInput( { formik, name, placeholder, onChange, ..
         //event.target.name = name
         //event.target.value = item.value
         //setValue(item.value)
-        setFieldValue(name, data.place_id)
+        setFieldValue(id_name, data.place_id)
+        setFieldValue(name_name, data.description)
+        setValue(data.description)
         if (onChange) {
             onChange(data)
         }
     }
 
     const handleTextInputChange = (e: any) => {
-        setValue(e.currentTarget.value)
+        console.log(e)
+        setFieldValue(name_name, e.target.value)
     }
 
     return (
@@ -54,7 +59,7 @@ export default function LocationInput( { formik, name, placeholder, onChange, ..
                 useOnPlatform: 'all'
             }}
             textInputProps={{
-                value: value,
+                value: name_field.value,
                 onChange: handleTextInputChange
             }}
             

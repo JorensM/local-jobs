@@ -6,6 +6,7 @@ type ParamList = {
     ListingEdit: {
         id: string
     }
+    NewListing: undefined,
     Listing: {
         id: string
     }
