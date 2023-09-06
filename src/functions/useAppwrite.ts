@@ -9,7 +9,7 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     functions: Functions,
     //currentUser:
     currentUser: Models.User<Models.Preferences> | null,
-    fetchCurrentUser: () => void
+    fetchCurrentUser: () => Promise<Models.User<Models.Preferences> | null> 
 } {
     //State
     const [ currentUser, setCurrentUser ] = useState<Models.User<Models.Preferences> | null>(null)
@@ -46,20 +46,26 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     //     console.error('Could not retrieve current user account: ', err)
     // })
 
-    const fetchCurrentUser = async () => {
+    const fetchCurrentUser = (): Promise<any> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                //console.log('ddd')
+                const acc = await account.get()
+                //console.log(acc)
+                setCurrentUser(acc)
+                resolve(acc)
+            } catch ( err ) {
+                console.warn('Could not retrieve current user account')
+                setCurrentUser(null)
+                reject('Could not retrieve current user account')
+            }
+        })
         //if( account_obj ) {
             //console.log('ccc')
             //return account_obj
         //} else {
             //let acc// = account.get()
-        try {
-            //console.log('ddd')
-            const acc = await account.get()
-            setCurrentUser(acc)
-        } catch ( err ) {
-            console.warn('Could not retrieve current user account')
-            setCurrentUser(null)
-        }
+        
 
         //}
     }

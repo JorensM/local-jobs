@@ -33,19 +33,25 @@ import Info from '../components/typography/Info'
 import IconButton from '../components/input/IconButton'
 import Button from '../components/input/Button'
 //import PaymentForm from '../components/forms/PaymentForm'
+import { StripeProvider } from '@stripe/stripe-react-native'
+
+console.log('stripe: ')
+console.log(StripeProvider)
 
 //Constants
 import constant from '../../const'
 import { Query } from 'appwrite'
+import Stripe from 'stripe'
 
 type Props = DrawerScreenProps<ParamList>
 
-let useStripe: any = null
+let _useStripe: any = null
 
 if (Platform.OS !== 'web') {
     import('@stripe/stripe-react-native')
         .then(module => {
-            useStripe = module.useStripe
+            console.log('abc')
+            _useStripe = module.useStripe
         })
         .catch(err => {
             console.error('Could not dynamically import stripe module', err)
@@ -56,14 +62,19 @@ if (Platform.OS !== 'web') {
 export default function ListingPage( { route, navigation }: Props) {
 
     //Hooks
-    const { db, account, currentUser } = useAppwrite()
+    const { db, account, currentUser, functions, fetchCurrentUser } = useAppwrite()
     const isFocused = useIsFocused()
+
+    const [error, setError] = useState<string>('')
+
+    let useStripe: any = null;
 
     let presentPaymentSheet: ((options?: PresentOptions | undefined) => Promise<PresentPaymentSheetResult>) | null = null
     let initPaymentSheet: ((params: SetupParams) => Promise<InitPaymentSheetResult>) | null = null
 
-    if (useStripe) {
+    if (_useStripe) {
         console.log('using stripe')
+        useStripe = _useStripe
         const { initPaymentSheet: _init, presentPaymentSheet: _present } = useStripe()
         presentPaymentSheet = _present
         initPaymentSheet = _init
@@ -78,6 +89,31 @@ export default function ListingPage( { route, navigation }: Props) {
     const [showPaymentStatusModal, setShowPaymentStatusModal] = useState<boolean>(false)
     const [paymentStatus, setPaymentStatus] = useState<'success' | 'fail' | 'not-made'>('not-made')
     
+    const initializePaymentSheet = (current_user_id: string) => {
+        return new Promise((resolve, reject) => {
+            if(useStripe) {
+                if (!listing?.by_user || !current_user_id) {
+                    throw new Error('Could not initialize stripe payment sheet: listing.by_user and currentUser.$id must be defined')
+                }
+                functions.createExecution(
+                    'stripe-contact-payment-intent',
+                    JSON.stringify({
+                        contact_id: listing!.by_user,
+                        user_id: current_user_id
+                    })
+                ).then(res => {
+                    console.log(res)
+                }).catch(err => {
+                    console.error('Could not initialize payment sheet:', err)
+                    setError('Could not initialize payment sheet: ' + err)
+                })
+            } else {
+                console.warn('Stripe API not supported on web')
+                reject('Stripe API not supported on web')
+            }
+        })
+        
+    }
 
     useEffect(() => {
         if (initPaymentSheet) {
@@ -100,20 +136,20 @@ export default function ListingPage( { route, navigation }: Props) {
     }
 
     const handlePaymentMade = () => {
-        setShowPaymentModal(false)
-        db.listDocuments(
-            constant.db.id,
-            constant.db.users_id,
-            [
-                Query.equal('user_id', [currentUser!.$id])
-            ]
-        )
-            .then( res => {
-                const user_data = res.documents[0];
-            })
-            .catch( err => {
-                console.error('Could not fetch user from DB:', err)
-            })
+        // setShowPaymentModal(false)
+        // db.listDocuments(
+        //     constant.db.id,
+        //     constant.db.users_id,
+        //     [
+        //         Query.equal('user_id', [currentUser!.$id])
+        //     ]
+        // )
+        //     .then( res => {
+        //         const user_data = res.documents[0];
+        //     })
+        //     .catch( err => {
+        //         console.error('Could not fetch user from DB:', err)
+        //     })
         // db.updateDocument(
         //     constant.db.id,
         //     constant.db.users_id,
@@ -198,13 +234,35 @@ export default function ListingPage( { route, navigation }: Props) {
         }
     }, [isFocused])
 
-    const handleContactPress = () => {
+    const handleContactPress = async () => {
         //console.log('presenting payment sheet')
         // if (presentPaymentSheet) {
         //     presentPaymentSheet()
             
         // }
-        setShowPaymentModal(true)
+        //console.log('abc')
+        //console.log(process.env)
+        if(useStripe) {
+            fetchCurrentUser()
+            .then(user => {
+                console.log('before sheet: ')
+                console.log(listing)
+                console.log('current user:')
+                console.log(user)
+                initializePaymentSheet(user!.$id)
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    setError('Could not initialize payment sheet: ' + err)
+                })
+            })
+            
+            
+        } else if (process.env.NODE_ENV !== 'production'){
+            setShowPaymentModal(true)
+        }
+        
     }
 
     // useEffect(() => {
@@ -214,6 +272,7 @@ export default function ListingPage( { route, navigation }: Props) {
     return (
         <Page
             loading={loading}
+            error={error}
         >
             <H1>
                 { listing?.title || '' }
@@ -271,15 +330,20 @@ export default function ListingPage( { route, navigation }: Props) {
                 <View
                     style={styles.modal_content}
                 >
-                    <Button
-                        onPress={handlePaymentMade}
-                        label='Test payment (no payment actually made)'
-                    />
-                    <Button
-                        onPress={handlePaymentFailed}
-                        label='Test payment fail (no payment actually made)'
-                        variant='warn'
-                    />
+                    { process.env.NODE_ENV !== 'production' ?
+                        <>
+                            <Button
+                                onPress={handlePaymentMade}
+                                label='Test payment (no payment actually made)'
+                            />
+                            <Button
+                                onPress={handlePaymentFailed}
+                                label='Test payment fail (no payment actually made)'
+                                variant='warn'
+                            />
+                        </>
+                    : <Text>Payments are not supported on web</Text>}
+                    
                 </View>
             </Modal>
             <Modal

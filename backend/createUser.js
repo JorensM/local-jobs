@@ -9,13 +9,8 @@
 */
 const sdk = require('node-appwrite')
 const constants = require('./const.js')
+const { hasKeys } = require('./util.js')
 
-function hasKeys(obj, keys) {
-    const obj_keys = Object.keys(obj)
-    return keys.every(key => {
-        return obj_keys.includes(key)
-    })
-}
 
 module.exports = async (req, res) => {
 
