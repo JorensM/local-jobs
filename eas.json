@@ -5,12 +5,23 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_DB_ID": "64e5bca5774c43c6e4b8",
+        "EXPI_PUBLIC_LISTINGS_ID": "64e5bcac74d34020c488"
+      }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_DB_ID": "64e5bca5774c43c6e4b8",
+        "EXPI_PUBLIC_LISTINGS_ID": "64e5bcac74d34020c488"
       }
     },
     "production": {}

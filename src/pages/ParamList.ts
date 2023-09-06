@@ -9,7 +9,8 @@ type ParamList = {
     NewListing: undefined,
     Listing: {
         id: string
-    }
+    },
+    Contacts: undefined
 }
 
 export default ParamList

@@ -97,13 +97,11 @@ export default function App() {
   //   logout()
   // }
 
+  //console.log('env var: ', process.env)
+
   return (
     // <PlacesContext.Provider value={placesAPI}>
-    <StripeProvider
-      publishableKey={'pk_test_51IsVKBGzVxrDUiCoswQCpPVrP81REBPngmYwbhWVyx89fBFDupveqPXGLWQiyZZbzqeBXphcps4VhPzwxCBk5mtc00zJo3d9kh'}
-      // merchantIdentifier="merchant.identifier" // required for Apple Pay
-      // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
-    >
+    
 
     
       <NavigationContainer>
@@ -153,12 +151,12 @@ export default function App() {
                 >
                   <DrawerItem
                     label='Login'
-                    onPress={() => {}}
+                    onPress={() => props.navigation.navigate('Login')}
                   />
 
                   <DrawerItem
                     label='Register'
-                    onPress={() => {}}
+                    onPress={() => props.navigation.navigate('Register')}
                   />
                 </View>
               )
@@ -236,7 +234,6 @@ export default function App() {
           />
         </Drawer.Navigator>
       </NavigationContainer>
-    </StripeProvider>
     // </PlacesContext.Provider>
   );
 }

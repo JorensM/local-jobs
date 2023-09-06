@@ -6,30 +6,64 @@ import useAppwrite from '../functions/useAppwrite'
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import ParamList from './ParamList'
 import Dropdown from '../components/input/Dropdown'
+import constant from '../../const'
 
 type Props = DrawerScreenProps<ParamList>
 
 export default function RegistrationPage( { navigation }: Props) {
 
-    const { account } = useAppwrite()
+    const { account, db } = useAppwrite()
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = async (values: any) => {
+        // const exec = await functions.createExecution(
+        //   'create-user',
+        //   JSON.stringify({
+        //     email: values.email,
+        //     password: values.password,
+        //     name: values.name,
+        //     role: values.role
+        //   })
+        // )
+        // console.log(exec)
         account.create(
           ID.unique(),
           values.email,
           values.password,
           values.name
-        ).then(res => {
-          account.createEmailSession(
-            values.email,
-            values.password
-          ).then(res => {
-            account.updatePrefs({
+        ).then( async (res) => {
+          try {
+            await account.createEmailSession(
+              values.email,
+              values.password
+            )
+          }
+          catch ( err ) {
+            console.error('Error while creating account:', err)
+          }
+          try {
+            await account.updatePrefs({
               role: values.role
             })
-          })
-          console.log('Created account')
-          //console.log(res)
+          }
+          catch ( err ) {
+            console.error('Error while creating account:', err)
+          }
+          try {
+            const acc = await account.get()
+            await db.createDocument(
+              constant.db.id,
+              constant.db.users_id,
+              ID.unique(),
+              {
+                contacts: [],
+                user_id: acc.$id
+              }
+            )
+          }
+          catch ( err ) {
+            console.error('Error while creating account:', err)
+          }
+
           navigation.navigate('Login')
         }).catch(err => {
           console.error('Could not create account')

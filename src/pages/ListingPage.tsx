@@ -8,45 +8,86 @@ import {
 import {
     Text,
     View,
-    Button,
     Pressable,
     StyleSheet,
     Platform
 } from 'react-native'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+import { DrawerScreenProps } from '@react-navigation/drawer'
 import Modal from 'react-native-modal'
+import { InitPaymentSheetResult, PresentPaymentSheetResult, SetupIntent } from '@stripe/stripe-react-native'
+import { PresentOptions, SetupParams } from '@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet'
+
+//Hooks
+import useAppwrite from '../functions/useAppwrite'
 
 //Types
+import ParamList from './ParamList'
 import ListingModel from '../types/ListingModel'
 
 //Components
 import Page from '../components/layout/Page'
-import useAppwrite from '../functions/useAppwrite'
-import { DrawerScreenProps } from '@react-navigation/drawer'
-import ParamList from './ParamList'
-import constant from '../../const'
-import { ID } from 'appwrite'
 import H1 from '../components/typography/H1'
 import Caption from '../components/typography/Caption'
 import Info from '../components/typography/Info'
 import IconButton from '../components/input/IconButton'
-import PaymentForm from '../components/forms/PaymentForm'
+import Button from '../components/input/Button'
+//import PaymentForm from '../components/forms/PaymentForm'
+
+//Constants
+import constant from '../../const'
+import { Query } from 'appwrite'
 
 type Props = DrawerScreenProps<ParamList>
+
+let useStripe: any = null
+
+if (Platform.OS !== 'web') {
+    import('@stripe/stripe-react-native')
+        .then(module => {
+            useStripe = module.useStripe
+        })
+        .catch(err => {
+            console.error('Could not dynamically import stripe module', err)
+        })
+}
+
 
 export default function ListingPage( { route, navigation }: Props) {
 
     //Hooks
-    const { db, account } = useAppwrite()
+    const { db, account, currentUser } = useAppwrite()
     const isFocused = useIsFocused()
+
+    let presentPaymentSheet: ((options?: PresentOptions | undefined) => Promise<PresentPaymentSheetResult>) | null = null
+    let initPaymentSheet: ((params: SetupParams) => Promise<InitPaymentSheetResult>) | null = null
+
+    if (useStripe) {
+        console.log('using stripe')
+        const { initPaymentSheet: _init, presentPaymentSheet: _present } = useStripe()
+        presentPaymentSheet = _present
+        initPaymentSheet = _init
+    }
+    // const { initPaymentSheet, presentPaymentSheet } = useStripe()
 
     //State
     const [listing, setListing] = useState<ListingModel | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [isOwnListing, setIsOwnListing] = useState<boolean>(false)
     const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
+    const [showPaymentStatusModal, setShowPaymentStatusModal] = useState<boolean>(false)
+    const [paymentStatus, setPaymentStatus] = useState<'success' | 'fail' | 'not-made'>('not-made')
     
 
+    useEffect(() => {
+        if (initPaymentSheet) {
+            initPaymentSheet({
+                merchantDisplayName: 'hello',
+                setupIntentClientSecret: 'test'
+            })
+        }
+        
+    }, [])
     
 
     const handleEditPress = () => {
@@ -56,6 +97,34 @@ export default function ListingPage( { route, navigation }: Props) {
         } else {
             console.warn(`Can't edit listing that isn't your own!`)
         }
+    }
+
+    const handlePaymentMade = () => {
+        setShowPaymentModal(false)
+        db.listDocuments(
+            constant.db.id,
+            constant.db.users_id,
+            [
+                Query.equal('user_id', [currentUser!.$id])
+            ]
+        )
+            .then( res => {
+                const user_data = res.documents[0];
+            })
+            .catch( err => {
+                console.error('Could not fetch user from DB:', err)
+            })
+        // db.updateDocument(
+        //     constant.db.id,
+        //     constant.db.users_id,
+
+        // )
+        //setPaymentStatus('success')
+    }
+
+    const handlePaymentFailed = () => {
+        setShowPaymentModal(false)
+        setPaymentStatus('fail')
     }
 
     const handleEditPressRef = useRef(handleEditPress)
@@ -107,6 +176,12 @@ export default function ListingPage( { route, navigation }: Props) {
         
     }
 
+    useEffect(() => {
+        if (paymentStatus !== 'not-made') {
+            setShowPaymentStatusModal(true)
+        }
+    }, [paymentStatus])
+
     useFocusEffect(
         useCallback(() => {
             console.log('fetching listing by id ' + route.params?.id)
@@ -124,6 +199,11 @@ export default function ListingPage( { route, navigation }: Props) {
     }, [isFocused])
 
     const handleContactPress = () => {
+        //console.log('presenting payment sheet')
+        // if (presentPaymentSheet) {
+        //     presentPaymentSheet()
+            
+        // }
         setShowPaymentModal(true)
     }
 
@@ -191,9 +271,37 @@ export default function ListingPage( { route, navigation }: Props) {
                 <View
                     style={styles.modal_content}
                 >
-                    <PaymentForm
-
+                    <Button
+                        onPress={handlePaymentMade}
+                        label='Test payment (no payment actually made)'
                     />
+                    <Button
+                        onPress={handlePaymentFailed}
+                        label='Test payment fail (no payment actually made)'
+                        variant='warn'
+                    />
+                </View>
+            </Modal>
+            <Modal
+                // transparent={true}
+                isVisible={showPaymentStatusModal}
+                onBackdropPress={() => setShowPaymentStatusModal(false)}
+                // onRequestClose={() => setShowPaymentModal(false)}
+            >   
+                <View
+                    style={styles.modal_content}
+                >
+                    <Text>
+                        { paymentStatus == 'success' ? 
+                            'Successfully made payment'
+                            : 'Payment failed'
+                        }
+                    </Text>
+                    { paymentStatus == 'success' ? 
+                        <Button
+                            label='View contact'
+                        />
+                    : null }
                 </View>
             </Modal>
         </Page>
@@ -211,6 +319,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 4,
+        padding: 16,
+        gap: 8
         // width: '80%'
     }
 })

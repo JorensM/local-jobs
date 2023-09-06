@@ -1,4 +1,4 @@
-import { Client, Account, Databases, Models } from 'appwrite'
+import { Client, Account, Databases, Functions, Models } from 'appwrite'
 import { useEffect, useState } from 'react'
 import useCheckLogin from './useCheckLogin'
 
@@ -6,6 +6,7 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     client: Client, 
     account: Account,
     db: Databases,
+    functions: Functions,
     //currentUser:
     currentUser: Models.User<Models.Preferences> | null,
     fetchCurrentUser: () => void
@@ -16,6 +17,7 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     const client = new Client()
     const account = new Account(client)
     const db = new Databases(client)
+    const functions = new Functions(client)
 
     let account_obj: any = null;
 
@@ -70,5 +72,5 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
 
     
 
-    return { client, account, db, currentUser, fetchCurrentUser }
+    return { client, account, db, functions, currentUser, fetchCurrentUser }
 }

@@ -22,11 +22,16 @@ export default function useCheckLogin(
                 }
             })
             .catch(err => {
-                console.error('Could not retrieve session')
-                console.error(err)
-                if (logged_out_redirect && !prevent_navigation) {
+                if (
+                    err.code == 401 && 
+                    logged_out_redirect && 
+                    !prevent_navigation
+                ) {
                     _navigation.navigate(logged_out_redirect)
+                } else {
+                    console.error('Could not retrieve session:', err)
                 }
+                
             })
     }
 
