@@ -7,10 +7,11 @@ export default function useCheckLogin(
     logged_in_redirect?: string | null,
     prevent_navigation: boolean = false
 ) {
-    const { account } = useAppwrite()
+    const { account, currentUser } = useAppwrite()
     const _navigation = prevent_navigation ? null : useNavigation<any>()
 
     const checkSession = (log_out_redirect?: string | null, log_in_redirect?: string | null) => {
+        //if(!currentUser)
         account.getSession('current')
             .then(res => {
                 console.log('retrieved session')
@@ -28,7 +29,7 @@ export default function useCheckLogin(
                     !prevent_navigation
                 ) {
                     _navigation.navigate(logged_out_redirect)
-                } else {
+                } else if ( err.code !== 401 ){
                     console.error('Could not retrieve session:', err)
                 }
                 

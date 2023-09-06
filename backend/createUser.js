@@ -8,6 +8,8 @@
 } 
 */
 const sdk = require('node-appwrite')
+const constants = require('./const.js')
+
 function hasKeys(obj, keys) {
     const obj_keys = Object.keys(obj)
     return keys.every(key => {
@@ -18,8 +20,9 @@ function hasKeys(obj, keys) {
 module.exports = async (req, res) => {
 
     const client = new sdk.Client()
-
+    
     const users = new sdk.Users(client)
+    const db = new sdk.Databases(client)
 
     if (
         !req.variables['APPWRITE_FUNCTION_ENDPOINT'] ||
@@ -58,11 +61,30 @@ module.exports = async (req, res) => {
             data.password,
             data.name,
         )
-            .then(usr_res => {
-                res.json({
-                    success: true,
-                    msg: 'created user ' + data.email
+            .then(user => {
+                db.createDocument(
+                    constants.db.id,
+                    constants.db.users_id,
+                    sdk.ID.unique(),
+                    {
+                        user_id: user.$id,
+                        contacts: [],
+                        role: data.role
+                    }
+                )
+                .then(doc => {
+                    res.json({
+                        success: true,
+                        msg: 'created user ' + data.email + ' as ' + data.role
+                    })
                 })
+                // .catch(err => {
+                //     res.json({
+                //         success: false,
+                //         msg: 'Could not create user: DB error: ' + err.message
+                //     })
+                // })
+                
             })
             .catch(err => {
                 res.json({

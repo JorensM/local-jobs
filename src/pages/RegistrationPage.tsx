@@ -1,80 +1,73 @@
-import { Text, View, StyleSheet, Button } from 'react-native'
+//Core
+import { useContext, useState } from 'react'
+import { 
+  View, 
+  StyleSheet, 
+  Button } 
+  from 'react-native'
 import { Formik } from 'formik'
-import TextInput from '../components/input/TextInput'
-import { ID } from 'appwrite'
-import useAppwrite from '../functions/useAppwrite'
 import { DrawerScreenProps } from '@react-navigation/drawer'
+import { Snackbar } from 'react-native-paper'
+
+//State
+import SnackbarContext from '../functions/SnackbarProvider'
+
+//Hooks
+import useAppwrite from '../functions/useAppwrite'
+
+//Types
 import ParamList from './ParamList'
+
+//Components
+import Page from '../components/layout/Page'
+import TextInput from '../components/input/TextInput'
 import Dropdown from '../components/input/Dropdown'
-import constant from '../../const'
 
 type Props = DrawerScreenProps<ParamList>
 
 export default function RegistrationPage( { navigation }: Props) {
 
-    const { account, db } = useAppwrite()
+    const { account, db, functions } = useAppwrite()
+
+    const [showSnackbar, setShowSnackbar] = useState<boolean>(false)
+
+    const { createSnackbar } = useContext(SnackbarContext)
+
+    const [error, setError] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleSubmit = async (values: any) => {
-        // const exec = await functions.createExecution(
-        //   'create-user',
-        //   JSON.stringify({
-        //     email: values.email,
-        //     password: values.password,
-        //     name: values.name,
-        //     role: values.role
-        //   })
-        // )
+        setLoading(true)
+        functions.createExecution(
+          'create-user',
+          JSON.stringify({
+            email: values.email,
+            password: values.password,
+            name: values.name,
+            role: values.role
+          })
+        )
+          .then(res => {
+            if(res.statusCode == 200) {
+              console.log('Created account for ' + values.email)
+              createSnackbar('Your account has been created!')
+            } else {
+              console.error('Could not create user:', res)
+              setError(JSON.parse(res.response).msg)
+            }
+            
+          })
+          .finally(() => {
+            setLoading(false)
+          })
         // console.log(exec)
-        account.create(
-          ID.unique(),
-          values.email,
-          values.password,
-          values.name
-        ).then( async (res) => {
-          try {
-            await account.createEmailSession(
-              values.email,
-              values.password
-            )
-          }
-          catch ( err ) {
-            console.error('Error while creating account:', err)
-          }
-          try {
-            await account.updatePrefs({
-              role: values.role
-            })
-          }
-          catch ( err ) {
-            console.error('Error while creating account:', err)
-          }
-          try {
-            const acc = await account.get()
-            await db.createDocument(
-              constant.db.id,
-              constant.db.users_id,
-              ID.unique(),
-              {
-                contacts: [],
-                user_id: acc.$id
-              }
-            )
-          }
-          catch ( err ) {
-            console.error('Error while creating account:', err)
-          }
-
-          navigation.navigate('Login')
-        }).catch(err => {
-          console.error('Could not create account')
-          console.error(err)
-        })
-        console.log('submitted')
-        console.log(values)
       }
 
     return (
-        <View style={styles.container}>
+        <Page
+          error={error}
+          loading={loading}
+        >
             <Formik
                 initialValues={{
                   email: '',
@@ -120,14 +113,20 @@ export default function RegistrationPage( { navigation }: Props) {
                           name='role'
                         />
                         <Button
-                            onPress={() => formik.handleSubmit()}
+                            onPress={() => createSnackbar('Hello!')/*formik.handleSubmit()*/}
                             title='Register'
                         />
                         {/* <Button onPress={handleSubmit} title="Submit" /> */}
                     </View>
                 )}
             </Formik>
-        </View>
+            <Snackbar
+              visible={showSnackbar}
+              onDismiss={() => setShowSnackbar(false)}
+            >
+              Account created!
+            </Snackbar>
+        </Page>
     )
 }
 
