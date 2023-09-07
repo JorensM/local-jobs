@@ -1,6 +1,22 @@
-import { PropsWithChildren } from 'react'
-import { View, StyleSheet, Text, ViewProps, StyleSheetProperties, ViewStyle, StyleProp } from 'react-native'
-import { Image } from 'expo-image'
+//Core
+import {
+    PropsWithChildren, 
+    useEffect, 
+    useState } from 'react'
+import { 
+    View, 
+    StyleSheet, 
+    Text, 
+    ViewProps, 
+    StyleSheetProperties, 
+    ViewStyle, 
+    StyleProp, 
+    Modal 
+} from 'react-native'
+
+//Components
+import Info from '../typography/Info'
+import Caption from '../typography/Caption'
 
 export type PageProps = ViewProps & {
     loading?: boolean | null,
@@ -8,12 +24,43 @@ export type PageProps = ViewProps & {
     style?: any
 }
 
+const loading_debounce_ms = 50
+
+let loading_timeout: NodeJS.Timeout | null = null
+
 export default function Page( { 
     children,
     loading = false,
     error = null,
     style = {},
 }: PropsWithChildren<PageProps> ) {
+
+    const [showLoading, setShowLoading] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (loading) {
+            if (!loading_timeout) {
+                loading_timeout = setTimeout(() => {
+                    setShowLoading(true)
+                }, loading_debounce_ms)
+            } else {
+                clearTimeout(loading_timeout)
+                loading_timeout = setTimeout(() => {
+                    setShowLoading(true)
+                }, loading_debounce_ms)
+            }
+            
+        } else {
+            setShowLoading(false)
+            if (loading_timeout) {
+                console.log('clearing timeout')
+                clearTimeout(loading_timeout)
+            }
+        }
+
+        console.log('loading changed to', loading)
+    }, [ loading ])
+
     return (
         <View
             style={{
@@ -22,7 +69,7 @@ export default function Page( {
             }}
         >
             {
-                loading || error ? 
+                error ? 
                 (
                     <View style={styles.message_container}>
                         <Text
@@ -42,9 +89,32 @@ export default function Page( {
                             }
                         </Text>
                     </View>
-                ) : 
-                children
+                ) : showLoading ?
+                    <Modal
+                        visible={true}
+                        transparent={true}
+                    >
+                        <View
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                                // opacity: 0.2,
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Info
+                                variant='dark'
+                            >
+                                Loading
+                            </Info>
+                        </View>
+                    </Modal>
+                : null
             }
+
+            { !error ? children : null }
             
         </View>
     )

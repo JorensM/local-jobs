@@ -1,10 +1,22 @@
 import { Text, StyleSheet } from 'react-native'
 import { PropsWithChildren } from 'react';
 
-export default function Info({ children }: PropsWithChildren<{}>) {
+type InfoProps = {
+    variant?: 'default' | 'dark'
+}
+
+const color_map = {
+    default: 'orange',
+    dark: 'black'
+}
+
+export default function Info({ children, variant = 'default' }: PropsWithChildren<InfoProps>) {
+
     return (
         <Text
-            style={ styles.info }
+            style={{
+                color: color_map[variant]
+            }}
         >
             { children }
         </Text>

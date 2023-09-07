@@ -41,7 +41,7 @@ console.log(StripeProvider)
 //Constants
 import constant from '../../const'
 import { Query } from 'appwrite'
-import Stripe from 'stripe'
+//import { PaymentIntent } from 'stripe'
 
 type Props = DrawerScreenProps<ParamList>
 
@@ -56,6 +56,13 @@ if (Platform.OS !== 'web') {
         .catch(err => {
             console.error('Could not dynamically import stripe module', err)
         })
+}
+
+type PaymentIntentResponse = {
+    paymentIntent: string,
+    emphemeralKey: string,
+    customer: string,
+    publishableKey: string
 }
 
 
@@ -88,6 +95,7 @@ export default function ListingPage( { route, navigation }: Props) {
     const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
     const [showPaymentStatusModal, setShowPaymentStatusModal] = useState<boolean>(false)
     const [paymentStatus, setPaymentStatus] = useState<'success' | 'fail' | 'not-made'>('not-made')
+    const [contactButtonText, setContactButtonText] = useState<'Loading' | 'Contact'>('Contact')
     
     const initializePaymentSheet = (current_user_id: string) => {
         return new Promise((resolve, reject) => {
@@ -101,11 +109,28 @@ export default function ListingPage( { route, navigation }: Props) {
                         contact_id: listing!.by_user,
                         user_id: current_user_id
                     })
-                ).then(res => {
+                ).then(async (res) => {
+                    const { paymentIntent, emphemeralKey, customer, publishableKey }: PaymentIntentResponse = JSON.parse(res.response)
+                    const { error: err } = await initPaymentSheet!({
+                        merchantDisplayName: 'Local Jobs',
+                        customerId: customer,
+                        customerEphemeralKeySecret: emphemeralKey,
+                        paymentIntentClientSecret: paymentIntent
+                    })
+                    if (err) {
+                        throw new Error(err.message)
+                    }
+                    resolve(true)
                     console.log(res)
-                }).catch(err => {
-                    console.error('Could not initialize payment sheet:', err)
-                    setError('Could not initialize payment sheet: ' + err)
+                })
+                .catch(err => {
+                    reject(err)
+                    //console.error('Could not initialize payment sheet:', err)
+                    //setError('Could not initialize payment sheet: ' + err)
+                })
+                .finally(() => {
+                    setLoading(false)
+                    setContactButtonText('Contact')
                 })
             } else {
                 console.warn('Stripe API not supported on web')
@@ -122,7 +147,6 @@ export default function ListingPage( { route, navigation }: Props) {
                 setupIntentClientSecret: 'test'
             })
         }
-        
     }, [])
     
 
@@ -243,20 +267,29 @@ export default function ListingPage( { route, navigation }: Props) {
         //console.log('abc')
         //console.log(process.env)
         if(useStripe) {
+            setLoading(true)
+            setContactButtonText('Loading')
             fetchCurrentUser()
-            .then(user => {
-                console.log('before sheet: ')
-                console.log(listing)
-                console.log('current user:')
-                console.log(user)
-                initializePaymentSheet(user!.$id)
-                .then(res => {
-                    console.log(res)
+                .then(user => {
+                    console.log('before sheet: ')
+                    //console.log(listing)
+                    //console.log('current user:')
+                    //console.log(user)
+                    initializePaymentSheet(user!.$id)
+                        .then(async (res) => {
+                            console.log('presenting payment sheet')
+                            const {error: err} = await presentPaymentSheet!()
+                            if( error ) {
+                                throw new Error(err?.message)
+                            }
+                            //console.log(res)
+                        })
+                        .catch(err => {
+                            console.error('Could not initialize payment sheet:', err)
+                            setError('Could not initialize payment sheet: ' + err)
+                        })
                 })
-                .catch(err => {
-                    setError('Could not initialize payment sheet: ' + err)
-                })
-            })
+                
             
             
         } else if (process.env.NODE_ENV !== 'production'){
@@ -317,7 +350,7 @@ export default function ListingPage( { route, navigation }: Props) {
                             color: 'blue'
                         }}
                     >
-                        Contact
+                        { contactButtonText }
                     </Text>
                 </Pressable>
             : null }
