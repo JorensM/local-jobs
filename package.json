@@ -21,6 +21,7 @@
     "expo-status-bar": "~1.6.0",
     "formik": "^2.4.3",
     "humanize-duration": "^3.29.0",
+    "node-appwrite": "^10.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.72.4",
