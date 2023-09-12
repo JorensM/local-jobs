@@ -4,11 +4,6 @@ const { hasKeys } = require('./util.js')
 
 module.exports = async (req, res) => {
 
-    //console.log('req: ')
-    //console.log(req)
-
-    //res.json(req)
-
     const stripe = require('stripe')(req.variables['STRIPE_TEST_SECRET'])
 
     if(!req.variables['STRIPE_TEST_SECRET']) {

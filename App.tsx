@@ -10,7 +10,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer, Link, NavigationProp } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { Loader as GoogleMapsLoader } from "@googlemaps/js-api-loader"
-import { StripeProvider } from '@stripe/stripe-react-native';
 import { PaperProvider } from 'react-native-paper';
 
 //Functions

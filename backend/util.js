@@ -4,7 +4,7 @@ module.exports = {
         return keys.every(key => {
             return obj_keys.includes(key)
         })
-    }
+    },
     createClient: (req, sdk) => {
         const client = new sdk.Client()
 

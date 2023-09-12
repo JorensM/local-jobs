@@ -33,10 +33,10 @@ import Info from '../components/typography/Info'
 import IconButton from '../components/input/IconButton'
 import Button from '../components/input/Button'
 //import PaymentForm from '../components/forms/PaymentForm'
-import { StripeProvider } from '@stripe/stripe-react-native'
+// import { StripeProvider } from '@stripe/stripe-react-native'
 
-console.log('stripe: ')
-console.log(StripeProvider)
+// console.log('stripe: ')
+// console.log(StripeProvider)
 
 //Constants
 import constant from '../../const'

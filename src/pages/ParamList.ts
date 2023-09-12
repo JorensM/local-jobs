@@ -10,7 +10,10 @@ type ParamList = {
     Listing: {
         id: string
     },
-    Contacts: undefined
+    Contacts: undefined,
+    Profile: {
+        id: string
+    }
 }
 
 export default ParamList
