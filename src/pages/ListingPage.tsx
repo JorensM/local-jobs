@@ -160,7 +160,7 @@ export default function ListingPage( { route, navigation }: Props) {
     }
 
     const handlePaymentMade = () => {
-        // setShowPaymentModal(false)
+        //setShowPaymentModal(false)
         // db.listDocuments(
         //     constant.db.id,
         //     constant.db.users_id,
@@ -179,7 +179,7 @@ export default function ListingPage( { route, navigation }: Props) {
         //     constant.db.users_id,
 
         // )
-        //setPaymentStatus('success')
+        // setPaymentStatus('success')
     }
 
     const handlePaymentFailed = () => {

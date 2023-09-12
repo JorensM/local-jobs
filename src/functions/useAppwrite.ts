@@ -1,6 +1,12 @@
+//Core
 import { Client, Account, Databases, Functions, Models } from 'appwrite'
-import { useEffect, useState } from 'react'
-import useCheckLogin from './useCheckLogin'
+import { useContext, useState } from 'react'
+
+
+//State
+import SessionContext from '../state/SessionContext'
+//Types
+import { Session } from '../types/Session'
 
 export default function useAppwrite(fetch_user_interval: number = 2000): {
     client: Client, 
@@ -9,10 +15,14 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     functions: Functions,
     //currentUser:
     currentUser: Models.User<Models.Preferences> | null,
-    fetchCurrentUser: () => Promise<Models.User<Models.Preferences> | null> 
+    fetchCurrentUser: () => Promise<Models.User<Models.Preferences> | null>,
+    currentSession: Session | null 
 } {
     //State
     const [ currentUser, setCurrentUser ] = useState<Models.User<Models.Preferences> | null>(null)
+    const { session, setSession } = useContext(SessionContext)
+
+    //console.log('5: ', session)
 
     const client = new Client()
     const account = new Account(client)
@@ -49,14 +59,25 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     const fetchCurrentUser = (): Promise<any> => {
         return new Promise(async (resolve, reject) => {
             try {
+                console.log('fetching user')
                 //console.log('ddd')
                 const acc = await account.get()
+                console.log('user: ', acc)
                 //console.log(acc)
                 setCurrentUser(acc)
+                console.log('setting session to: ', {
+                    ...session,
+                    user: acc
+                })
+                setSession({
+                    ...session,
+                    user: acc
+                })
                 resolve(acc)
             } catch ( err ) {
                 console.warn('Could not retrieve current user account')
                 setCurrentUser(null)
+                setSession(null)
                 reject('Could not retrieve current user account')
             }
         })
@@ -76,7 +97,13 @@ export default function useAppwrite(fetch_user_interval: number = 2000): {
     //     }, fetch_user_interval)
     // }
 
-    
-
-    return { client, account, db, functions, currentUser, fetchCurrentUser }
+    return { 
+        client, 
+        account, 
+        db, 
+        functions, 
+        currentUser, 
+        fetchCurrentUser, 
+        currentSession: session
+    }
 }
