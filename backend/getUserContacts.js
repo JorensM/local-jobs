@@ -23,10 +23,16 @@ module.exports = async (req, res) => {
         }, 400)
     }
 
+    console.log(data.id)
+    console.log(typeof data.id)
+
     const user_docs = await db.listDocuments(
         constants.db.id,
         constants.db.users_id,
-        sdk.Query.equal('user_id', data.id)
+        [
+            sdk.Query.equal('user_id', [data.id])
+        ]
+        
     )
 
     if (user_docs.length < 1) {
@@ -36,15 +42,17 @@ module.exports = async (req, res) => {
         }, 400)
     }
 
-    const contact_ids = user_docs[0].contacts
+    const contact_ids = user_docs.documents[0].contacts
 
     users.list(
-        sdk.Query.equal('$id', contacts)
+        [
+            sdk.Query.equal('$id', contact_ids)
+        ]
     )
     .then(contacts => {
         res.json({
             success: true,
-            data: contacts
+            data: contacts.users
         }, 200)
     })
     .catch(err => {

@@ -1,17 +1,19 @@
+//Core
 import { useState, useCallback } from 'react';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { useFocusEffect as _useFocusEffect } from '@react-navigation/native';
+import { FlatList } from 'react-native';
 
 //Components
 import SessionPage from '../components/layout/SessionPage';
+import UserSmall from '../components/UserSmall';
 
 //Functions
 import useAppwrite from '../functions/useAppwrite';
 
 //Types
 import ParamList from './ParamList'
-import { useFocusEffect as _useFocusEffect } from '@react-navigation/native';
-import { FlatList } from 'react-native-gesture-handler';
-import UserSmall from '../components/UserSmall';
+import PublicUserModel from '../types/PublicUserModel';
 
 
 const useFocusEffect = (fn: Function) => {
@@ -37,7 +39,7 @@ export default function ContactsPage( {}: ProfilePageProps) {
     //currentUser is deprecated
     const { db, functions, currentUser, currentSession } = useAppwrite()
 
-    const [ contacts, setContacts ] = useState<string[]>([])
+    const [ contacts, setContacts ] = useState<PublicUserModel[]>([])
 
     const fetchContacts = () => {
         console.log('current user: ', currentSession)
@@ -47,7 +49,8 @@ export default function ContactsPage( {}: ProfilePageProps) {
                     id: currentSession.user.$id
                 }))
                 .then( res => {
-                    setContacts(JSON.parse(res.response))
+                    console.log(res)
+                    setContacts(JSON.parse(res.response).data)
                 })
                 .catch( err => {
                     console.error(err)
@@ -66,7 +69,7 @@ export default function ContactsPage( {}: ProfilePageProps) {
     return (
         <SessionPage>
             <FlatList
-                data={test_data}
+                data={contacts}
                 renderItem={({item}) => (
                     <UserSmall
                         user={item}

@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Text
 } from 'react-native'
+import PublicUserModel from '../types/PublicUserModel'
 
 type AvatarProps = ComponentProps<typeof Image> & {
 
@@ -27,11 +28,7 @@ const Avatar = ( { style, ...props }: AvatarProps) => {
 }
 
 type UserSmallProps = {
-    user: {
-        $id: string,
-        profile_picture: string,
-        $name: string
-    }
+    user: PublicUserModel
 }
 
 export default function UserSmall( { user }: UserSmallProps) {
@@ -70,7 +67,7 @@ export default function UserSmall( { user }: UserSmallProps) {
                 }}
             >
                 <Text>
-                    {user.$name}
+                    {user.name}
                 </Text>
             </View>
         </Pressable>
