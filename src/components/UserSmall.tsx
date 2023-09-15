@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import { ComponentProps } from 'react'
 import { 
     Image,
@@ -33,8 +34,12 @@ type UserSmallProps = {
 
 export default function UserSmall( { user }: UserSmallProps) {
 
-    const handleUserPress = () => {
+    const navigation = useNavigation()
 
+    const handleUserPress = () => {
+        navigation.navigate('Listing', {
+            id: user.$id
+        })
     }
 
     return (
