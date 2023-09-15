@@ -16,6 +16,7 @@ import { PaperProvider } from 'react-native-paper';
 //Functions
 import useCheckLogin from './src/functions/useCheckLogin';
 import useAppwrite from './src/functions/useAppwrite';
+import useLogin from './src/functions/useLogin';
 
 //Components
 import TextInput from './src/components/input/TextInput';
@@ -30,8 +31,9 @@ import ListingEditPage from './src/pages/ListingEditPage';
 import ListingPage from './src/pages/ListingPage';
 import ContactsPage from './src/pages/ContactsPage';
 import NewListingPage from './src/pages/NewListingPage';
+import ProfilePage from './src/pages/ProfilePage';
 import ParamList from './src/pages/ParamList';
-import useLogin from './src/functions/useLogin';
+
 
 //Constants
 import private_var from './private';
@@ -237,6 +239,13 @@ export default function App() {
                   name='NewListing'
                   component={NewListingPage}
                 /> */}
+                <Drawer.Screen
+                  name='Profile'
+                  component={ProfilePage}
+                  options={{
+                    drawerItemStyle: { display: 'none' }
+                  }}
+                />
                 <Drawer.Screen
                   name='Listing'
                   component={ListingPage}

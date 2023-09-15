@@ -37,7 +37,7 @@ export default function UserSmall( { user }: UserSmallProps) {
     const navigation = useNavigation()
 
     const handleUserPress = () => {
-        navigation.navigate('Listing', {
+        navigation.navigate('Profile', {
             id: user.$id
         })
     }

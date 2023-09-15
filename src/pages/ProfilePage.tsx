@@ -17,7 +17,7 @@ import H1 from '../components/typography/H1'
 
 type ProfilePageProps = DrawerScreenProps<ParamList>
 
-export default function ProfilePage( {}: ProfilePageProps) {
+export default function ProfilePage( { route }: ProfilePageProps) {
 
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
@@ -27,13 +27,19 @@ export default function ProfilePage( {}: ProfilePageProps) {
     const [user, setUser] = useState<UserModel | null>(null)
 
     const fetchUser = () => {
-        functions.createExecution('get-public-profile')
+        setLoading(true)
+        functions.createExecution('get-public-profile', JSON.stringify({
+            id: route.params!.id
+        }))
             .then(res => {
-                setUser(user)
+                setUser(JSON.parse(res.response).data)
             })
             .catch(err => {
                 console.error(err)
                 setError(err)
+            })
+            .finally(() => {
+                setLoading(false)
             })
     }
 
@@ -48,7 +54,7 @@ export default function ProfilePage( {}: ProfilePageProps) {
             loading={loading}
             error={error}
         >
-            <H1></H1>
+            <H1>{user?.name}</H1>
         </Page>
     )    
     
