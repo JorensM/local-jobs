@@ -1,3 +1,5 @@
+const private = require('./private.js')
+
 module.exports = {
     hasKeys: (obj, keys) => {
         const obj_keys = Object.keys(obj)
@@ -9,15 +11,16 @@ module.exports = {
         const client = new sdk.Client()
 
         if (
-            !req.variables['APPWRITE_FUNCTION_ENDPOINT'] ||
-            !req.variables['APPWRITE_FUNCTION_API_KEY']
+            !private?.appwrite?.project_id ||
+            !private?.appwrite?.endpoint ||
+            !private?.appwrite?.api_key
         ) {
-            throw new Error("Environment variables are not set. Function cannot use Appwrite SDK.");
+            throw new Error("private variables are not set. Function cannot use Appwrite SDK.");
         } else {
             client
-                .setEndpoint(req.variables['APPWRITE_FUNCTION_ENDPOINT'])
-                .setProject(req.variables['APPWRITE_FUNCTION_PROJECT_ID'])
-                .setKey(req.variables['APPWRITE_FUNCTION_API_KEY'])
+                .setEndpoint(private.appwrite.endpoint)
+                .setProject(private.appwrite.project_id)
+                .setKey(private.appwrite.api_key)
             return client;
         }
     }
