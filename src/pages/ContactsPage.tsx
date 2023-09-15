@@ -26,7 +26,7 @@ const test_data = [
     {
         profile_picture: require('/assets/user.png'),
         $id: '1',
-        $name: 'Test User'
+        $name: 'Test Userbbbb'
     }
 ]
 

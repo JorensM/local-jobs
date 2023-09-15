@@ -11,11 +11,18 @@ type AvatarProps = ComponentProps<typeof Image> & {
 
 }
 
-const Avatar = ( { ...props }: AvatarProps) => {
+const Avatar = ( { style, ...props }: AvatarProps) => {
     return (
         <Image
+            style={{
+                borderRadius: 100,
+                borderWidth: 1,
+                borderColor: 'black',
+                ...style as object
+            }}
             { ...props }
         />
+        
     )
 }
 
@@ -52,7 +59,8 @@ export default function UserSmall( { user }: UserSmallProps) {
                     // width={100}
                     height={100}
                     style={{
-                        height: '100%'
+                        height: 48,
+                        width: 48
                     }}
                 />
             </View>

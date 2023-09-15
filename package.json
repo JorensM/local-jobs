@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@expo/metro-runtime": "^2.2.8",
     "@types/google.maps": "^3.54.0",
     "@types/humanize-duration": "^3.27.1",
     "@types/react": "~18.2.14",
