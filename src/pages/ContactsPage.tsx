@@ -10,6 +10,8 @@ import useAppwrite from '../functions/useAppwrite';
 //Types
 import ParamList from './ParamList'
 import { useFocusEffect as _useFocusEffect } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
+import UserSmall from '../components/UserSmall';
 
 
 const useFocusEffect = (fn: Function) => {
@@ -19,6 +21,13 @@ const useFocusEffect = (fn: Function) => {
         }, [])
     )
 }
+
+const test_data = [
+    {
+        profile_picture: 'icon.png',
+        $id: '1'
+    }
+]
 
 type ProfilePageProps = DrawerScreenProps<ParamList>
 
@@ -55,7 +64,14 @@ export default function ContactsPage( {}: ProfilePageProps) {
 
     return (
         <SessionPage>
-            
+            <FlatList
+                data={test_data}
+                renderItem={({item}) => (
+                    <UserSmall
+                        user={item}
+                    />
+                )}
+            />
         </SessionPage>
     )
 }
