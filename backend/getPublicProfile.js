@@ -4,7 +4,6 @@ const sdk = require('node-appwrite')
 const { createClient } = require('./util')
 
 module.exports = (req, res) => {
-
     const client = createClient(req, sdk)
     const users = new sdk.Users(client)
 
@@ -13,22 +12,22 @@ module.exports = (req, res) => {
     if (!data.id) {
         res.json({
             success: false,
-            message: 'ID not specified'
+            message: 'ID not specified',
         }, 400)
     }
 
     users.get(data.id)
-        .then(user => {
+        .then((user) => {
             res.json({
                 success: true,
-                data: user
+                data: { $id } = user
             })
         })
         .catch(err => {
             res.json({
                 success: false,
                 message: 'Error: ' + err
-            })
+            }, 400)
         })
 
 }
