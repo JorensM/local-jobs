@@ -24,8 +24,9 @@ const useFocusEffect = (fn: Function) => {
 
 const test_data = [
     {
-        profile_picture: 'icon.png',
-        $id: '1'
+        profile_picture: require('/assets/user.png'),
+        $id: '1',
+        $name: 'Test User'
     }
 ]
 

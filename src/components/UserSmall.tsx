@@ -3,7 +3,8 @@ import {
     Image,
     Pressable,
     View,
-    StyleSheet
+    StyleSheet,
+    Text
 } from 'react-native'
 
 type AvatarProps = ComponentProps<typeof Image> & {
@@ -14,16 +15,15 @@ const Avatar = ( { ...props }: AvatarProps) => {
     return (
         <Image
             { ...props }
-        >
-
-        </Image>
+        />
     )
 }
 
 type UserSmallProps = {
     user: {
         $id: string,
-        profile_picture: string
+        profile_picture: string,
+        $name: string
     }
 }
 
@@ -49,6 +49,11 @@ export default function UserSmall( { user }: UserSmallProps) {
                     source={{
                         uri: user.profile_picture
                     }}
+                    // width={100}
+                    height={100}
+                    style={{
+                        height: '100%'
+                    }}
                 />
             </View>
             <View
@@ -56,7 +61,9 @@ export default function UserSmall( { user }: UserSmallProps) {
                     ...styles.user_small_right
                 }}
             >
-
+                <Text>
+                    {user.$name}
+                </Text>
             </View>
         </Pressable>
     )
@@ -65,9 +72,12 @@ export default function UserSmall( { user }: UserSmallProps) {
 const styles = StyleSheet.create({
     user_small_container: {
         width: '100%',
+        height: 64,
+        flexDirection: 'row'
     },
     user_small_left: {
-        width: '24%'
+        width: '24%',
+        height: '100%'
     },
     user_small_right: {
         flexGrow: 1
