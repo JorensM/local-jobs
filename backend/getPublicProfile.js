@@ -18,9 +18,19 @@ module.exports = (req, res) => {
 
     users.get(data.id)
         .then((user) => {
+
+            const output = { $id, name } = user
+
             res.json({
                 success: true,
-                data: { $id } = user
+                data: {
+                    id: user.$id,
+                    name: user.name
+                }
+                // data: {
+                //     $id: user.$id,
+                //     name: user.name
+                // }
             })
         })
         .catch(err => {
