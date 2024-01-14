@@ -1,18 +1,20 @@
-//Core
+// Core
 import { useState, useEffect, useCallback } from 'react';
 import { Text, Button, FlatList, View, StyleSheet, Pressable } from 'react-native'
 // import humanize from 'humanize-duration'
 
 
-//Components
+// Components
 import Page from '#components/layout/Page';
 import Caption from '#components/typography/Caption';
 import Description from '#components/typography/Description';
 import ListingSmall from '#components/ListingSmall';
-import Listing from '#types/ListingModel';
+
+// Hooks
 import useListings from '#hooks/useListings';
 
-//Types
+// Types
+import Listing from '#types/ListingModel';
 //import ListingModel from '../types/ListingModel'
 
 //Constants
