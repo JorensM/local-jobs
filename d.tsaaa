@@ -1,4 +1,0 @@
-import { Client, Account } from 'appwrite'
-
-declare var client: Client
-declare var account: Account
