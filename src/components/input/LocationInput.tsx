@@ -3,7 +3,7 @@ import { useField, useFormikContext } from 'formik'
 import { useState, useRef, useEffect } from 'react'
 
 //Constants
-import private_var from '../../../private'
+//import private_var from '@'
 
 type Props = {
     id_name: string,
@@ -41,28 +41,28 @@ export default function LocationInput( { formik, name_name, id_name, placeholder
         setFieldValue(name_name, e.target.value)
     }
 
-    return (
-        <GooglePlacesAutocomplete
-            styles={{
-                container: {
-                    marginBottom: 32
-                }
-            }}
-            placeholder={placeholder || 'Location'}
-            onPress={(data, details = null) => handleChange(data)}
-            query={{
-                key: private_var.api_keys.google.places,
-                language: 'en'
-            }}
-            requestUrl={{
-                url: 'https://corsproxy.io/?https://maps.googleapis.com/maps/api',
-                useOnPlatform: 'all'
-            }}
-            textInputProps={{
-                value: name_field.value,
-                onChange: handleTextInputChange
-            }}
+    return (<></>
+        // <GooglePlacesAutocomplete
+        //     styles={{
+        //         container: {
+        //             marginBottom: 32
+        //         }
+        //     }}
+        //     placeholder={placeholder || 'Location'}
+        //     onPress={(data, details = null) => handleChange(data)}
+        //     query={{
+        //         key: private_var.api_keys.google.places,
+        //         language: 'en'
+        //     }}
+        //     requestUrl={{
+        //         url: 'https://corsproxy.io/?https://maps.googleapis.com/maps/api',
+        //         useOnPlatform: 'all'
+        //     }}
+        //     textInputProps={{
+        //         value: name_field.value,
+        //         onChange: handleTextInputChange
+        //     }}
             
-        />
+        // />
     )
 }
