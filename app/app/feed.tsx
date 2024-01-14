@@ -1,5 +1,4 @@
 //Core
-import { useFocusEffect } from '@react-navigation/native';
 import { useState, useEffect, useCallback } from 'react';
 import { Text, Button, FlatList, View, StyleSheet, Pressable } from 'react-native'
 // import humanize from 'humanize-duration'
@@ -11,6 +10,7 @@ import Caption from '#components/typography/Caption';
 import Description from '#components/typography/Description';
 import ListingSmall from '#components/ListingSmall';
 import Listing from '#types/ListingModel';
+import useListings from '#hooks/useListings';
 
 //Types
 //import ListingModel from '../types/ListingModel'
@@ -21,7 +21,9 @@ import Listing from '#types/ListingModel';
 
 export default function FeedPage() {
 
-    const [listings, setListings] = useState<Listing[]>([])
+    const listings = useListings();
+
+    const [listingsData, setListingsData] = useState<Listing[]>([])
 
     const handleLogoutPress = () => {
         // account.deleteSession('current')
@@ -43,7 +45,10 @@ export default function FeedPage() {
         // })
     }
 
-    const fetchListings = () => {
+    const fetchListings = async () => {
+        const listings_data = await listings.fetchListings();
+        console.log('listings: ')
+        console.log(listings_data)
         // db.listDocuments<ListingModel>(
         //     constant.db.id,
         //     constant.db.listings_id,
@@ -57,12 +62,6 @@ export default function FeedPage() {
         //     console.error('Could not retrieve listings', err)
         // })
     }
-
-    useFocusEffect(
-        useCallback(() => {
-            fetchListings()
-        }, [])
-    )
 
     useEffect(() => {
         fetchListings()
@@ -98,7 +97,7 @@ export default function FeedPage() {
             <FlatList
                 style={styles.listings_list}
                 ItemSeparatorComponent={() => <View style={{height: 8}} />}
-                data={listings}
+                data={listingsData}
                 renderItem={({ item }: { item: Listing}) => (
                     <ListingSmall item={item}/>
                 )}
