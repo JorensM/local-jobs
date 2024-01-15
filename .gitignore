@@ -36,3 +36,5 @@ yarn-error.*
 .env
 const.ts
 private.ts
+
+app/android
