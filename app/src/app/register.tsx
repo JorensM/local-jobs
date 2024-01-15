@@ -2,13 +2,14 @@ import { Text, View, StyleSheet, Button } from 'react-native'
 import { Formik } from 'formik'
 import TextInput from '#components/input/TextInput'
 import Dropdown from '#components/input/Dropdown'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import button from '#styles/button'
 import * as Yup from 'yup'
 
 // Types
 import { UserRole } from '#types/User'
 import useAuth from '#hooks/useAuth'
+import { toastError, toastSuccess } from '#misc/toast'
 
 type FormValues = {
     email: string,
@@ -32,9 +33,20 @@ export default function RegisterPage() {
 
     const handleSubmit = async ({ email, password, name, role} : FormValues) => {
 
-        const success = await auth.register(email, password, name, role)
 
-        console.log(success ? 'Registered successfully!' : 'Could not register')
+        try {
+          const success = await auth.register(email, password, name, role)
+
+          if(success) {
+            toastSuccess('Your account has been created!', ' A confirmation email has been sent to ' + email);
+            router.replace('/')
+          }
+        } catch (err: any) {
+          toastError('Could not register')
+        }
+      
+
+        
         // account.create(
         //   ID.unique(),
         //   values.email,

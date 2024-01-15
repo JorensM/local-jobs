@@ -38,7 +38,7 @@ export default function FeedPage() {
     const handleLogoutPress = async () => {
 
         auth.logout();
-        router.replace('/login')
+        router.replace('/')
 
         // account.deleteSession('current')
         //     .then(res => {

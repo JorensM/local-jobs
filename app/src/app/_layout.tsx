@@ -1,14 +1,22 @@
-import useAuth from '#hooks/useAuth';
-import AuthContext from '#state/AuthContext';
-import { User } from '#types/User';
-import { router } from 'expo-router';
-import { Drawer } from 'expo-router/drawer';
-import { usePathname } from 'expo-router/src/hooks';
+// Core
 import { useEffect, useMemo, useState } from 'react';
+import { router, usePathname } from 'expo-router';
+import { Drawer } from 'expo-router/drawer';
+import Toast, { SuccessToast, ToastConfig, ErrorToast } from 'react-native-toast-message';
+
+// Hooks
+import useAuth from '#hooks/useAuth';
+
+// Types
+import { User } from '#types/User';
+
+// State
+import AuthContext from '#state/AuthContext';
+import toast_config from '#constants/toast_config';
 
 export const unstable_settings = {
   // Ensure any route can link back to `/`
-  initialRouteName: 'login',
+  initialRouteName: '/login',
 };
 
 type Routes = {
@@ -21,7 +29,7 @@ type Routes = {
 
 // Routes that should be available when user is not signed in
 const guest_routes: Routes = {
-  'login': {
+  'index': {
     label: 'Login',
   },
   'register': {
@@ -56,9 +64,7 @@ const user_routes: Routes = {
 
 // Routes that are hidden from navigation
 const hidden_routes: Routes = {
-  'index': {
-    label: 'Home'
-  }
+  
 }
 
 const isUserRoute = (name: string) => {
@@ -202,6 +208,7 @@ export default function Layout() {
       }}
     >
       <CustomDrawer />
+      <Toast config={toast_config}/>
     </AuthContext.Provider>
   );
 }
