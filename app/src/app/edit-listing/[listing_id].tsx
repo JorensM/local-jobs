@@ -1,7 +1,7 @@
 // Core
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { View, StyleSheet, Button, Platform } from 'react-native'
-import { useLocalSearchParams, usePathname } from 'expo-router'
+import { router, useLocalSearchParams, usePathname } from 'expo-router'
 // import { Formik } from 'formik'
 
 // Types
@@ -62,6 +62,15 @@ export default function ListingEditPage() {
     }
 
     const handleSubmit = async (values: FormValues) => {
+
+        const success = await listings.updateListing({
+            ...values,
+            id: parseInt(listing_id as string)
+        })
+
+        if(success) {
+            router.replace('listings/' + listing_id)
+        }
 
         //console.log(values)
 

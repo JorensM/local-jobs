@@ -1,5 +1,5 @@
 import supabase from '#misc/supabase'
-import { Listing, ListingNew } from '#types/Listing'
+import { Listing, ListingNew, ListingUpdate } from '#types/Listing'
 
 type ListingFetchOptions = {
     page: number,
@@ -36,7 +36,7 @@ export default function useListings() {
         return data[0] as Listing;
     }
 
-    const createListing = async(listing: ListingNew) => {
+    const createListing = async (listing: ListingNew) => {
         const { error } = await supabase
             .from('listings')
             .insert(listing)
@@ -48,9 +48,23 @@ export default function useListings() {
         return true;
     }
 
+    const updateListing = async (listing: ListingUpdate) => {
+        const { error } = await supabase
+            .from('listings')
+            .update(listing)
+            .eq('id', listing.id)
+
+        if (error) {
+            throw error
+        }
+
+        return true;
+    }
+
     return {
         fetchListings,
         fetchListing,
-        createListing
+        createListing,
+        updateListing
     }
 }
