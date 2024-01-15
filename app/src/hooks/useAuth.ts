@@ -42,25 +42,23 @@ export default function useAuth() {
     }
 
     const fetchUser = async () => {
-        console.log(context.setUser)
         const { data: { user }, error } = await supabase.auth.getUser();
 
         if(error?.status == 401) {
             return false
         } else if(error) {
-            console.log('err here')
             throw error
         }
         
-        context.setUser(
-            user ? {
-                id: user.id,
-                role: user.user_metadata.role,
-                name: user.user_metadata.name
-            } : null
-        )
+        const user_parsed = user ? {
+            id: user.id,
+            role: user.user_metadata.role,
+            name: user.user_metadata.name
+        } : null
 
-        return user;
+        context.setUser(user_parsed)
+
+        return user_parsed;
     }
 
     const register = async (email: string, password: string, name: string, role: UserRole) => {

@@ -1,6 +1,7 @@
 // Core
 import { useState, useEffect, useCallback } from 'react';
 import { Text, Button, FlatList, View, StyleSheet, Pressable } from 'react-native'
+import { router } from 'expo-router';
 // import humanize from 'humanize-duration'
 
 
@@ -11,12 +12,14 @@ import Description from '#components/typography/Description';
 import ListingSmall from '#components/ListingSmall';
 
 // Hooks
+import useAuth from '#hooks/useAuth';
 import useListings from '#hooks/useListings';
+import useFocusEffect from '#hooks/useFocusEffect';
 
 // Types
 import { Listing } from '#types/Listing';
-import useAuth from '#hooks/useAuth';
-import { router } from 'expo-router';
+
+
 //import ListingModel from '../types/ListingModel'
 
 //Constants
@@ -28,7 +31,9 @@ export default function FeedPage() {
     const listings = useListings();
     const auth = useAuth();
 
-    const [listingsData, setListingsData] = useState<Listing[]>([])
+    const [listingsData, setListingsData] = useState<Listing[]>([]);
+
+    const [loading, setLoading] = useState<boolean>(true);
 
     const handleLogoutPress = async () => {
 
@@ -48,6 +53,9 @@ export default function FeedPage() {
     }
 
     const handleListingPress = (id: string) => {
+
+        router.replace('/listings/' + id)
+
         // console.log('listing button press: ' + id)
         // navigation.navigate('Listing', {
         //     id: id
@@ -55,7 +63,11 @@ export default function FeedPage() {
     }
 
     const fetchListings = async () => {
+        setLoading(true);
         const listings_data = await listings.fetchListings();
+        console.log(listings_data)
+        setListingsData(listings_data);
+        setLoading(false);
         // db.listDocuments<ListingModel>(
         //     constant.db.id,
         //     constant.db.listings_id,
@@ -70,9 +82,9 @@ export default function FeedPage() {
         // })
     }
 
-    useEffect(() => {
+    useFocusEffect(() => {
         fetchListings()
-    }, [])
+    })
 
     const humanizeTime = (ms: number) => {
         // return humanize(
@@ -100,13 +112,18 @@ export default function FeedPage() {
     // }
 
     return (
-        <Page>
+        <Page
+            loading={loading}
+        >
             <FlatList
                 style={styles.listings_list}
                 ItemSeparatorComponent={() => <View style={{height: 8}} />}
                 data={listingsData}
                 renderItem={({ item }: { item: Listing}) => (
-                    <ListingSmall item={item}/>
+                    <ListingSmall 
+                        item={item}
+                        onPress={() => handleListingPress(item.id)}
+                    />
                 )}
             />
             <Button

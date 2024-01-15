@@ -14,9 +14,10 @@ import { Listing } from '#types/Listing'
 
 type Props = {
     item: Listing
+    onPress: () => void
 }
 
-export default function ListingSmall( { item }: Props ) {
+export default function ListingSmall( { item, onPress }: Props ) {
 
     //const { getPlaceByID } = usePlacesAPI()
 
@@ -53,7 +54,7 @@ export default function ListingSmall( { item }: Props ) {
     return (
         <Pressable
             style={ styles.listing_item }
-            onPress={ handleListingPress }
+            onPress={ onPress }
         >
             <Text
                 style={styles.title}

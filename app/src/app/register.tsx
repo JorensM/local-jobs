@@ -81,17 +81,14 @@ export default function RegisterPage() {
                     >
                         <TextInput
                             name='email'
-                            formik={formik}
                             label='Email'
                         />
                         <TextInput
                             name='name'
-                            formik={formik}
                             label='Name'
                         />
                         <TextInput
                             name='password'
-                            formik={formik}
                             label='Password'
                             secureTextEntry={true}
                         />
@@ -107,7 +104,7 @@ export default function RegisterPage() {
                             }
                           ]}
                           placeholder='I am a...'
-                          formik={formik}
+                          formik={formik} // Should remove this and use useField instead
                           name='role'
                         />
                         <Button

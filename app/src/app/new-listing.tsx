@@ -45,6 +45,9 @@ export default function NewListingPage() {
     
     const handleSubmit = async (values: ListingFormValues) => {
 
+        console.log(values)
+        console.log(auth.user!.id)
+
         const success = await listings.createListing({
             ...values,
             user_id: auth.user!.id,

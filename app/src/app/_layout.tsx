@@ -25,10 +25,13 @@ const user_routes: string[] = [
 ]
 
 // Routes that are hidden from navigation
-const hidden_routes: string[] = [
-  'index',
-  'edit-listing'
-]
+const hidden_routes: {
+  [name: string]: string // Key should be name of the route, and value should be title
+} = {
+  'index': 'Home',
+  'edit-listing': 'Edit Listing',
+  'listings/[listing_id]': ''
+}
 
 // These must be non-component functions because for some reason otherwise the drawer
 // doesn't register these items
@@ -50,11 +53,12 @@ const renderDrawerItem = (name: string, label: string, hide = false, title?: str
 }
 
 // Same as with renderDrawerItem
-const renderHiddenRoute = (name: string) => {
+const renderHiddenRoute = (name: string, title: string) => {
   return (
       <Drawer.Screen
         name={name}
         options={{
+          title,
           drawerItemStyle: {
             display: 'none'
           }
@@ -68,9 +72,14 @@ const CustomDrawer = () => {
 
   const auth = useAuth()
 
+  useEffect(() => {
+    auth.fetchUser()
+  }, [])
+
   // Check if drawer item should be hidden depending on whether
   // The user is logged in or not
   const shouldHideItem = (name: string) => {
+    // console.log(auth.user)
     if(
       (user_routes.includes(name) && auth.user) ||
       (guest_routes.includes(name) && !auth.user)) {
@@ -101,8 +110,8 @@ const CustomDrawer = () => {
         }
 
         {/* Hidden routes */}
-        {hidden_routes.map(route_name => {
-          return renderHiddenRoute(route_name)
+        {Object.entries(hidden_routes).map(([route_name, route_title]) => {
+          return renderHiddenRoute(route_name, route_title)
         })}
       </Drawer>
   )
@@ -118,6 +127,7 @@ export default function Layout() {
 
   const validateSession = async () => {
     const user = await auth.fetchUser();
+    // console.log(user)
     if(!user && user_routes.includes(pathname.substring(1))) {
       console.log('Your session has expired, please log in')
       router.replace('/login')
