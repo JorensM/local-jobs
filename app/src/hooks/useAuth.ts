@@ -1,11 +1,20 @@
-import supabase from '#misc/supabase'
+import { useContext, useState } from 'react';
+
+// Types
 import { UserRole } from '#types/User';
 import { User } from '#/types/User'
-import { useState } from 'react';
+
+// State
+import AuthContext from '#state/AuthContext';
+
+// Misc
+import supabase from '#misc/supabase'
 
 export default function useAuth() {
 
-    const [user, setUser] = useState<User | null>(null)
+    //const [user, setUser] = useState<User | null>(null)
+
+    const context = useContext(AuthContext)
 
     const login = async (email: string, password: string) => {
         const { error } = await supabase.auth.signInWithPassword({
@@ -14,7 +23,7 @@ export default function useAuth() {
         })
 
         if (error){
-            return false;
+            throw error
         }
 
         fetchUser();
@@ -22,21 +31,36 @@ export default function useAuth() {
         return true;
     }
 
-    const fetchUser = async () => {
-        const { data: { user }, error } = await supabase.auth.getUser();
+    const logout = async () => {
+        const { error } = await supabase.auth.signOut();
 
-        if(error) {
+        if (error) {
             throw error
         }
 
+        return true;
+    }
 
+    const fetchUser = async () => {
+        console.log(context.setUser)
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if(error?.status == 401) {
+            return false
+        } else if(error) {
+            console.log('err here')
+            throw error
+        }
         
-        setUser(
+        context.setUser(
             user ? {
                 id: user.id,
-                role: user.user_metadata.role
+                role: user.user_metadata.role,
+                name: user.user_metadata.name
             } : null
         )
+
+        return user;
     }
 
     const register = async (email: string, password: string, name: string, role: UserRole) => {
@@ -58,9 +82,10 @@ export default function useAuth() {
     }
 
     return {
-        user,
+        user: context.user,
         fetchUser,
         login,
-        register
+        logout,
+        register,
     }
 }

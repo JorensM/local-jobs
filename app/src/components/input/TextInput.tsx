@@ -16,14 +16,12 @@ import React, { ChangeEvent, ComponentProps, useMemo, useState } from 'react';
 
 
 type Props = TextInputProps & {
-    formik: any,
     name: string,
     // style?: StyleProp<TextStyle>,
     label: string
 }
 
 export default function TextInput( { 
-    formik, 
     label, 
     name,
     style,
@@ -33,8 +31,6 @@ export default function TextInput( {
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
 
     const [field, meta, helpers] = useField<any>(name);
-
-    console.log(formik.errors)
 
     return (
         <View>
@@ -52,21 +48,21 @@ export default function TextInput( {
                     console.log('changing')
                     field.onChange(name)(value)/*e.nativeEvent.text)*/;
                 }/*formik.handleChange(name)*/}
-                onBlur={() => { 
-                    field.onBlur(name)(null)
+                onBlur={(e) => { 
+                    field.onBlur(name)(e)
                     setIsFocused(false)
                 }}
                 onFocus={() => setIsFocused(true)}
                 value={field.value}
                 {...props}
             />
-            {formik.errors[name] ? 
+            {meta.error ? 
                 <Text
                     style={{
                         color: 'red'
                     }}
                 >
-                    {formik.errors[name]}
+                    {meta.error}
                 </Text>
             : null}
             

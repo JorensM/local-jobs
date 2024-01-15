@@ -14,7 +14,9 @@ import ListingSmall from '#components/ListingSmall';
 import useListings from '#hooks/useListings';
 
 // Types
-import Listing from '#types/ListingModel';
+import { Listing } from '#types/Listing';
+import useAuth from '#hooks/useAuth';
+import { router } from 'expo-router';
 //import ListingModel from '../types/ListingModel'
 
 //Constants
@@ -24,10 +26,15 @@ import Listing from '#types/ListingModel';
 export default function FeedPage() {
 
     const listings = useListings();
+    const auth = useAuth();
 
     const [listingsData, setListingsData] = useState<Listing[]>([])
 
-    const handleLogoutPress = () => {
+    const handleLogoutPress = async () => {
+
+        auth.logout();
+        router.replace('/login')
+
         // account.deleteSession('current')
         //     .then(res => {
         //         console.log(res)
@@ -49,8 +56,6 @@ export default function FeedPage() {
 
     const fetchListings = async () => {
         const listings_data = await listings.fetchListings();
-        console.log('listings: ')
-        console.log(listings_data)
         // db.listDocuments<ListingModel>(
         //     constant.db.id,
         //     constant.db.listings_id,

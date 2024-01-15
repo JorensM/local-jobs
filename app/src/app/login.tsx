@@ -71,12 +71,10 @@ export default function LoginPage() {
                     >
                         <TextInput
                             name='email'
-                            formik={formik}
                             label='Email'
                         />
                         <TextInput
                             name='password'
-                            formik={formik}
                             label='Password'
                             secureTextEntry={true}
                         />

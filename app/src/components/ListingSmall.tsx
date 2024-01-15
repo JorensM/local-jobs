@@ -6,14 +6,14 @@ import { Pressable, Text, StyleSheet } from 'react-native'
 //Components
 import Caption from './typography/Caption'
 import Description from './typography/Description'
-import ListingModel from '../types/ListingModel'
+import { Listing } from '#types/Listing'
 
 //Functions
 //import getAge from '#functions/getAge'
 //import usePlacesAPI from '../functions/usePlacesAPI'
 
 type Props = {
-    item: ListingModel
+    item: Listing
 }
 
 export default function ListingSmall( { item }: Props ) {
@@ -62,13 +62,13 @@ export default function ListingSmall( { item }: Props ) {
                 { item.title }
             </Text>
             <Caption>
-                By { item.by_user_name }
+                By { item.user_name }
             </Caption>
-            { item.location_name ? 
+            {/* { item.location_name ? 
                 <Caption>
                     { item.location_name }
                 </Caption>
-            : null }
+            : null } */}
             
             <Caption>
                 {/* { getAge(item.$createdAt, true) } ago */}

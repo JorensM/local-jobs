@@ -1,8 +1,9 @@
-// //Core
-// import { PropsWithChildren, useCallback } from 'react'
+// Core
+import React, { PropsWithChildren } from 'react'
 
-// //Types
-// import { PageProps } from '../layout copy/Page'
+// Components
+import Page, { PageProps } from '#/components/layout/Page'
+
 
 // //Components
 // import Page from '../layout copy/Page'
@@ -12,25 +13,25 @@
 // import useAppwrite from '../../functions/useAppwrite'
 // import { useFocusEffect } from '@react-navigation/native'
 
-// type Props = PageProps & {}
+type Props = PageProps & {}
 
-// export default function SessionPage({ children, ...props }: PropsWithChildren<PageProps>) {
+export default function SessionPage({ children, ...props }: PropsWithChildren<Props>) {
 
-//     useCheckLogin('Login')
+    // useCheckLogin('Login')
 
-//     const { fetchCurrentUser } = useAppwrite()
+    // const { fetchCurrentUser } = useAppwrite()
 
-//     // useFocusEffect(
-//     //     useCallback(() => {
-//     //         fetchCurrentUser()
-//     //     }, [])
-//     // )
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         fetchCurrentUser()
+    //     }, [])
+    // )
 
-//     return (
-//         <Page
-//             { ...props }
-//         >
-//             { children }
-//         </Page>
-//     )
-// }
+    return (
+        <Page
+            { ...props }
+        >
+            { children }
+        </Page>
+    )
+}

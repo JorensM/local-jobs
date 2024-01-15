@@ -13,7 +13,7 @@ type Props = {
     //onChange?: (details: GooglePlaceData) => void
 }
 
-// export default function LocationInput( { formik, name_name, id_name, placeholder, onChange, ...props }: Props ) {
+export default function LocationInput( { formik, name_name, id_name, placeholder, /*onChange,*/ ...props }: Props ) {
 
 //     const [value, setValue] = useState<any>(null)
 
@@ -65,4 +65,4 @@ type Props = {
             
 //         // />
 //     )
-// }
+}

@@ -117,31 +117,31 @@ export default function NewListingPage( { route, navigation }: Props ) {
 
     useFocusEffect(
         useCallback(() => {
-            console.log('focusing')
-            console.log(route.params?.id)
-            if (route.params?.id) {
-                db.getDocument<ListingModel>(
-                    constant.db.id,
-                    constant.db.listings_id,
-                    route.params.id
-                )
-                .then( listing => {
-                    console.log('retrieved listing')
-                    console.log(listing)
-                    setInitialValues({
-                        description: listing.description,
-                        title: listing.title,
-                        location_id: listing.location_id || '',
-                        location_name: listing.location_name || ''//#TODO add actual location from id
-                    })
-                    //initial_values.description = listing.description
-                    //initial_values.title = listing.title
-                })
-                .catch( err => {
-                    console.error('Could not retrieve document by id ' + route.params.id, err)
-                    setError('Could not retrieve document')
-                })
-            }
+            // console.log('focusing')
+            // console.log(route.params?.id)
+            // if (route.params?.id) {
+            //     db.getDocument<ListingModel>(
+            //         constant.db.id,
+            //         constant.db.listings_id,
+            //         route.params.id
+            //     )
+            //     .then( listing => {
+            //         console.log('retrieved listing')
+            //         console.log(listing)
+            //         setInitialValues({
+            //             description: listing.description,
+            //             title: listing.title,
+            //             location_id: listing.location_id || '',
+            //             location_name: listing.location_name || ''//#TODO add actual location from id
+            //         })
+            //         //initial_values.description = listing.description
+            //         //initial_values.title = listing.title
+            //     })
+            //     .catch( err => {
+            //         console.error('Could not retrieve document by id ' + route.params.id, err)
+            //         setError('Could not retrieve document')
+            //     })
+            // }
             //initial_values.description = 'ABCDDD'
         }, [route])
     )
@@ -167,7 +167,6 @@ export default function NewListingPage( { route, navigation }: Props ) {
                     >
                         <TextInput
                             name='title'
-                            formik={formik}
                             label='Listing Title'
                         />
                         <TextInput
@@ -177,7 +176,6 @@ export default function NewListingPage( { route, navigation }: Props ) {
                                 height: 128
                             }}
                             multiline
-                            formik={formik}
                         />
                         <LocationInput
                             id_name='location_id'
