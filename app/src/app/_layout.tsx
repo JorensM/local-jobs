@@ -30,14 +30,6 @@ const hidden_routes: string[] = [
   'edit-listing'
 ]
 
-
-type DrawerItemProps = {
-  name: string,
-  label: string,
-  title?: string,
-  hide?: boolean
-}
-
 // These must be non-component functions because for some reason otherwise the drawer
 // doesn't register these items
 const renderDrawerItem = (name: string, label: string, hide = false, title?: string) => {
@@ -57,10 +49,6 @@ const renderDrawerItem = (name: string, label: string, hide = false, title?: str
   )
 }
 
-type HiddenRouteProps = {
-  name: string
-}
-
 // Same as with renderDrawerItem
 const renderHiddenRoute = (name: string) => {
   return (
@@ -76,68 +64,23 @@ const renderHiddenRoute = (name: string) => {
   )
 }
 
+const CustomDrawer = () => {
 
+  const auth = useAuth()
 
-export default function Layout() {
-
-  // Auth context
-  const [user, setUser] = useState<User | null>(null);
-
-  const auth = useAuth();
-  const pathname = usePathname();
-
-  const validateSession = async () => {
-    const _user = await auth.fetchUser();
-    if(!user && user_routes.includes(pathname.substring(1))) {
-      console.log('Your session has expired, please log in')
-      router.replace('/login')
-    } else if (user && guest_routes.includes(pathname.substring(1))) {
-      console.log('Already logged in, redirecting')
-      router.replace('/feed')
-    }
-    console.log('session valid')
-    console.log('logged in: ', user ? 'yes' : 'no')
-    console.log('pathname: ', pathname)
-  }
-
+  // Check if drawer item should be hidden depending on whether
+  // The user is logged in or not
   const shouldHideItem = (name: string) => {
     if(
       (user_routes.includes(name) && auth.user) ||
       (guest_routes.includes(name) && !auth.user)) {
-      console.log("shouldn't hide route " + name)
-      console.log('logged in ', auth.user ? 'yes' : 'no')
-      console.log(auth.user)
-      console.log('abc')
-      console.log(user)
       return false;
     }
     return true;
   }
 
-  useEffect(() => {
-    validateSession()
-
-    const timeout = setTimeout(async () => {
-      validateSession()
-    }, 10 * 1000)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [])
-
-  useEffect(() => {
-    validateSession()
-  }, [pathname])
-
   return (
-    <AuthContext.Provider 
-      value={{
-        user,
-        setUser
-      }}
-    >
-      <Drawer>
+    <Drawer>
 
         {/* Guest routes */}
 
@@ -162,6 +105,54 @@ export default function Layout() {
           return renderHiddenRoute(route_name)
         })}
       </Drawer>
+  )
+}
+
+export default function Layout() {
+
+  // Auth context
+  const [user, setUser] = useState<User | null>(null);
+
+  const auth = useAuth();
+  const pathname = usePathname();
+
+  const validateSession = async () => {
+    const user = await auth.fetchUser();
+    if(!user && user_routes.includes(pathname.substring(1))) {
+      console.log('Your session has expired, please log in')
+      router.replace('/login')
+    } else if (user && guest_routes.includes(pathname.substring(1))) {
+      console.log('Already logged in, redirecting')
+      router.replace('/feed')
+    }
+  }
+
+  
+
+  useEffect(() => {
+    validateSession()
+
+    const timeout = setTimeout(async () => {
+      validateSession()
+    }, 10 * 1000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [])
+
+  useEffect(() => {
+    validateSession()
+  }, [pathname])
+
+  return (
+    <AuthContext.Provider 
+      value={{
+        user,
+        setUser
+      }}
+    >
+      <CustomDrawer />
     </AuthContext.Provider>
   );
 }
