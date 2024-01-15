@@ -2,15 +2,43 @@ import supabase from '#misc/supabase'
 import { Listing, ListingNew, ListingUpdate } from '#types/Listing'
 
 type ListingFetchOptions = {
-    page: number,
-    per_page: number
+    filter?: Partial<Listing> | null,
+    page?: number,
+    per_page?: number
+}
+
+const fetch_listings_default_options: Required<ListingFetchOptions> = {
+    filter: null,
+    page: 0,
+    per_page: 16
 }
 
 export default function useListings() {
     const fetchListings = async (options?: ListingFetchOptions) => {
-        const { data, error } = await supabase
+
+        const _options = {
+            ...fetch_listings_default_options,
+            ...options
+        }
+
+        const range_from = _options.page * _options.per_page // Paginated results start index
+        const range_to = range_from + _options.per_page // Paginated results end index
+
+        let query = supabase
             .from('listings')
             .select()
+            .range(range_from, range_to)
+
+        const filter = _options.filter;
+
+        if(filter) {
+            if(filter.user_id) {
+                query = query.eq('user_id', filter.user_id)
+            }
+        }
+        
+
+        const { data, error } = await query
 
         if (error) {
             throw error;
@@ -37,15 +65,16 @@ export default function useListings() {
     }
 
     const createListing = async (listing: ListingNew) => {
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('listings')
             .insert(listing)
+            .select()
 
         if (error) {
             throw error
         }
 
-        return true;
+        return data[0].id; // Return the id of the newly created listing
     }
 
     const updateListing = async (listing: ListingUpdate) => {

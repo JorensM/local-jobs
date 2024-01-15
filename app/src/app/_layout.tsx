@@ -11,26 +11,62 @@ export const unstable_settings = {
   initialRouteName: 'login',
 };
 
+type Routes = {
+  [name: string]: {
+    label: string,
+    title?: string,
+    hide?: boolean
+  }
+}
 
 // Routes that should be available when user is not signed in
-const guest_routes: string[] = [
-  'login',
-  'register'
-]
+const guest_routes: Routes = {
+  'login': {
+    label: 'Login',
+  },
+  'register': {
+    label: 'Register'
+  }
+}
 
 // Routes that should be available when user is signed in
-const user_routes: string[] = [
-  'feed',
-  'new-listing'
-]
+const user_routes: Routes = {
+  'feed': {
+    label: 'Feed'
+  },
+  'new-listing': {
+    label: 'New Listing'
+  },
+  'listings/[listing_id]': {
+    label: '',
+    hide: true,
+  },
+  'edit-listing/[listing_id]': {
+    label: 'Edit Listing',
+    hide: true
+  },
+  'listings/my': {
+    label: 'My Listings'
+  }
+}
+//   [
+//   'feed',
+//   'new-listing'
+// ]
 
 // Routes that are hidden from navigation
-const hidden_routes: {
-  [name: string]: string // Key should be name of the route, and value should be title
-} = {
-  'index': 'Home',
-  'listings/[listing_id]': '',
-  'edit-listing/[listing_id]': 'Edit Listing'
+const hidden_routes: Routes = {
+  'index': {
+    label: 'Home'
+  }
+}
+
+const isUserRoute = (name: string) => {
+  return Object.keys(user_routes).includes(name)
+}
+
+const isGuestRoute = (name: string) => {
+  return Object.keys(guest_routes).includes(name)
 }
 
 // These must be non-component functions because for some reason otherwise the drawer
@@ -80,9 +116,14 @@ const CustomDrawer = () => {
   // The user is logged in or not
   const shouldHideItem = (name: string) => {
     // console.log(auth.user)
+
+    const is_user_route = Object.keys(user_routes).includes(name);
+    const is_guest_route = Object.keys(guest_routes).includes(name);
+
     if(
-      (user_routes.includes(name) && auth.user) ||
-      (guest_routes.includes(name) && !auth.user)) {
+      (is_user_route && auth.user) ||
+      (is_guest_route && !auth.user)
+    ) {
       return false;
     }
     return true;
@@ -94,24 +135,22 @@ const CustomDrawer = () => {
         {/* Guest routes */}
 
         {
-          [
-            renderDrawerItem('login', 'Login', shouldHideItem('login')),
-            renderDrawerItem('register', 'Register', shouldHideItem('register'))
-          ]
+          Object.entries(guest_routes).map(([route_name, route]) => {
+            return renderDrawerItem(route_name, route.label, route.hide || shouldHideItem(route_name))
+          })
         }
 
         {/* User routes */}
 
         {
-          [
-            renderDrawerItem('new-listing', 'New Listing', shouldHideItem('new-listing')),
-            renderDrawerItem('feed', 'Feed', shouldHideItem('new-listing')),
-          ]
+          Object.entries(user_routes).map(([route_name, route]) => {
+            return renderDrawerItem(route_name, route.label, route.hide || shouldHideItem(route_name))
+          })
         }
 
         {/* Hidden routes */}
-        {Object.entries(hidden_routes).map(([route_name, route_title]) => {
-          return renderHiddenRoute(route_name, route_title)
+        {Object.entries(hidden_routes).map(([route_name, route]) => {
+          return renderHiddenRoute(route_name, route.title || route.label)
         })}
       </Drawer>
   )
@@ -128,10 +167,10 @@ export default function Layout() {
   const validateSession = async () => {
     const user = await auth.fetchUser();
     // console.log(user)
-    if(!user && user_routes.includes(pathname.substring(1))) {
+    if(!user && isUserRoute(pathname.substring(1))) {
       console.log('Your session has expired, please log in')
       router.replace('/login')
-    } else if (user && guest_routes.includes(pathname.substring(1))) {
+    } else if (user && isGuestRoute(pathname.substring(1))) {
       console.log('Already logged in, redirecting')
       router.replace('/feed')
     }

@@ -48,14 +48,14 @@ export default function NewListingPage() {
         console.log(values)
         console.log(auth.user!.id)
 
-        const success = await listings.createListing({
+        const id = await listings.createListing({
             ...values,
             user_id: auth.user!.id,
             user_name: auth.user!.name
         })
 
-        if(success) {
-            router.replace('/feed') // Should redirect to newly created listing's page instead
+        if(id) {
+            router.replace('listings/' + id)
         } else {
             console.error('Could not create listing')
         }
