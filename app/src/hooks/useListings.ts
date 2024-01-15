@@ -1,5 +1,5 @@
 import supabase from '#misc/supabase'
-import { ListingNew } from '#types/Listing'
+import { Listing, ListingNew } from '#types/Listing'
 
 type ListingFetchOptions = {
     page: number,
@@ -19,6 +19,23 @@ export default function useListings() {
         return data;
     }
 
+    const fetchListing = async (id: number | string): Promise<Listing> => {
+
+        const _id = typeof id == 'string' ? parseInt(id) : id
+
+        const { data, error } = await supabase
+            .from('listings')
+            .select()
+            .limit(1)
+            .eq('id', _id)
+
+        if (error) {
+            throw error
+        }
+
+        return data[0] as Listing;
+    }
+
     const createListing = async(listing: ListingNew) => {
         const { error } = await supabase
             .from('listings')
@@ -33,6 +50,7 @@ export default function useListings() {
 
     return {
         fetchListings,
+        fetchListing,
         createListing
     }
 }

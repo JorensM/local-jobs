@@ -52,7 +52,7 @@ export default function FeedPage() {
         //     })
     }
 
-    const handleListingPress = (id: string) => {
+    const handleListingPress = (id: number) => {
 
         router.replace('/listings/' + id)
 
@@ -119,7 +119,7 @@ export default function FeedPage() {
                 style={styles.listings_list}
                 ItemSeparatorComponent={() => <View style={{height: 8}} />}
                 data={listingsData}
-                renderItem={({ item }: { item: Listing}) => (
+                renderItem={({ item }: { item: Listing} ) => (
                     <ListingSmall 
                         item={item}
                         onPress={() => handleListingPress(item.id)}

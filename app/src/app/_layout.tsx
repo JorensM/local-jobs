@@ -29,8 +29,8 @@ const hidden_routes: {
   [name: string]: string // Key should be name of the route, and value should be title
 } = {
   'index': 'Home',
-  'edit-listing': 'Edit Listing',
-  'listings/[listing_id]': ''
+  'listings/[listing_id]': '',
+  'edit-listing/[listing_id]': 'Edit Listing'
 }
 
 // These must be non-component functions because for some reason otherwise the drawer

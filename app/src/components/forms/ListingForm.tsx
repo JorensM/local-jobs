@@ -1,7 +1,7 @@
 // Core
 import { StyleSheet, View, Button } from 'react-native'
 import { Formik } from 'formik'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 // Components
 import TextInput from '#components/input/TextInput'
@@ -27,7 +27,7 @@ const default_values: ListingFormValues = {
 
 type ListingFormProps = {
     onSubmit?: (values: ListingFormValues) => void
-    listing?: Listing
+    listing?: Listing | null
 }
 
 export default function ListingForm( { onSubmit = () => {}, listing = undefined }: ListingFormProps) {
@@ -42,7 +42,8 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
         } else {
             return default_values
         }
-    }, [])
+    }, [listing])
+
     // const [ initialValues, setInitialValues ] = useState<ListingFormValues>(default_values)
 
     return (
