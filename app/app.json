@@ -2,7 +2,7 @@
   "expo": {
     "name": "app",
     "slug": "app",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./res/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./res/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jorensm.app",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./res/favicon.png",
@@ -32,6 +34,14 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e517c0ae-a3f2-469b-91e1-d264be03a5ba"
+      }
+    }
   }
 }

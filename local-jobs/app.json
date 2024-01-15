@@ -2,7 +2,7 @@
   "expo": {
     "name": "local-jobs",
     "slug": "local-jobs",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jorensm.localjobs"
+      "package": "com.jorensm.localjobs",
+      "versionCode": "0.1.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
