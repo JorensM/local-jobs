@@ -41,9 +41,6 @@ export default function LoginPage() {
             await auth.login(email, password);
             router.replace('/feed')
         } catch (error: any) {
-            console.log(error);
-            console.log(error.code)
-            console.log(error.message);
             if(error.message.toLowerCase().includes('email')) {
                 toastError('Could not log in', 'please confirm your email');
             } else {

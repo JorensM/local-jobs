@@ -38,7 +38,7 @@ export default function RegisterPage() {
           const success = await auth.register(email, password, name, role)
 
           if(success) {
-            toastSuccess('Your account has been created!', ' A confirmation email has been sent to ' + email);
+            toastSuccess('Your account has been created!', 'A confirmation email has been sent to ' + email);
             router.replace('/')
           }
         } catch (err: any) {
