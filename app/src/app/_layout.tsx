@@ -155,9 +155,9 @@ const CustomDrawer = () => {
         }
 
         {/* Hidden routes */}
-        {Object.entries(hidden_routes).map(([route_name, route]) => {
+        {/* {Object.entries(hidden_routes).map(([route_name, route]) => {
           return renderHiddenRoute(route_name, route.title || route.label)
-        })}
+        })} */}
       </Drawer>
   )
 }
