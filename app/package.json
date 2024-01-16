@@ -7,7 +7,7 @@
     "prod-preview": "expo start --no-dev --minify",
     "prod-preview-c": "expo start --no-dev --minify --clear",
     "build-preview": "eas build --platform android --profile preview",
-    "build-dev": "eas build --platform android --profile development",
+    "build-testing": "eas build --platform android --profile testing",
     "web": "expo start --web",
     "test": "jest"
   },
