@@ -55,6 +55,13 @@ const user_routes: Routes = {
   },
   'listings/my': {
     label: 'My Listings'
+  },
+  'contacts/[user_id]': {
+    label: 'View Contact',
+    hide: true
+  },
+  'contacts/my': {
+    label: 'My Contacts'
   }
 }
 //   [

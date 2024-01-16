@@ -11,6 +11,25 @@ export default function useContacts() {
             throw new Error('User not stored in state')
         }
 
+        {
+
+            const { data, error } = await supabase
+                .from('contacts')
+                .select()
+                .limit(1)
+                .eq('user_id', auth.user.id)
+                .eq('contact_id', contact_user_id)
+
+            if(error) {
+                throw error
+            }
+
+            if (data.length != 0) {
+                throw new Error('User already in your contacts')
+            }
+        }
+        
+
         const { error } = await supabase
             .from('contacts')
             .insert({
@@ -25,7 +44,26 @@ export default function useContacts() {
         return true;
     }
 
+    const fetchUsersContacts = async () => {
+
+        if(!auth.user) {
+            throw new Error('User state not set')
+        }
+
+        const { data, error } = await supabase
+            .from('contacts')
+            .select()
+            .eq('user_id', auth.user.id)
+
+        if(error) {
+            throw error;
+        }
+
+        return data;
+    }
+
     return {
-        purchaseContact
+        purchaseContact,
+        fetchUsersContacts
     }
 }

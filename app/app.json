@@ -56,6 +56,7 @@
       "eas": {
         "projectId": "e517c0ae-a3f2-469b-91e1-d264be03a5ba"
       }
-    }
+    },
+    "scheme": "local-jobs"
   }
 }

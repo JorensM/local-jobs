@@ -1,9 +1,9 @@
 import SessionPage from '#components/layout/SessionPage';
 
-export default function ContactPage() {
+export default function MyContactsPage() {
     return (
         <SessionPage>
-
+            
         </SessionPage>
     )
 }

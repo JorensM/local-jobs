@@ -28,6 +28,8 @@ import useListings from '#hooks/useListings'
 import useFocusEffect from '#hooks/useFocusEffect'
 import { usePathname } from 'expo-router'
 import useAuth from '#hooks/useAuth'
+import useContacts from '#hooks/useContacts'
+import { toastError, toastSuccess } from '#misc/toast'
 
 export default function ListingPage() {
 
@@ -36,6 +38,7 @@ export default function ListingPage() {
     const auth = useAuth();
     const pathname = usePathname();
     const navigation = useNavigation();
+    const contacts = useContacts();
     const { listing_id } = useLocalSearchParams();
 
     // State
@@ -62,8 +65,19 @@ export default function ListingPage() {
         setShowContactModal(true);
     }
 
-    const handlePayForContactPress = () => {
-
+    const handlePayForContactPress = async () => {
+        try {
+            if(!listing) {
+                throw new Error('Listing not found')
+            }
+            await contacts.purchaseContact(listing.user_id);
+            setShowContactModal(false);
+            router.replace('/feed') // This should redirect to the newly created contact
+            toastSuccess('Purchase successful', 'User has been added to your contacts')
+        } catch (err: any) {
+            setShowContactModal(false);
+            toastError('An error has occured', err.message)
+        }
     }
 
     const handleEditPressRef = useRef(handleEditPress)
@@ -214,11 +228,18 @@ export default function ListingPage() {
             >
                 { listing?.description || '' }
             </Text>
-            { !isOwnListing ? 
+            { !isOwnListing ?
+            <View
+                style={{
+                    marginTop: 'auto'
+                }}
+            >
                 <Button
                     onPress={handleContactPress}
                     title='Contact'
                 />
+            </View>
+                
             : null }
         </Page>
     )
