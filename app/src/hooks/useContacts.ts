@@ -1,4 +1,5 @@
 import supabase from '#misc/supabase'
+import { User } from '#types/User';
 import useAuth from './useAuth'
 
 export default function useContacts() {
@@ -59,7 +60,29 @@ export default function useContacts() {
             throw error;
         }
 
-        return data;
+        let users: User[] = [];
+        
+        if(data.length > 0) {
+
+            const contact_ids = data.map(entry => entry.contact_id);
+
+            const { data: _users, error } = await supabase
+                .from('users')
+                .select()
+                .in('id', contact_ids)
+
+            if(error) {
+                throw error
+            }
+
+            users = _users;
+        } else {
+            return []
+        }
+
+        
+
+        return users;
     }
 
     return {
