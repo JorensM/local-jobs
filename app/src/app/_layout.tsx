@@ -23,45 +23,52 @@ type Routes = {
   [name: string]: {
     label: string,
     title?: string,
+    backButton?: string,
     hide?: boolean
   }
 }
 
 // Routes that should be available when user is not signed in
 const guest_routes: Routes = {
-  'index': {
+  '/': {
     label: 'Loginnn',
   },
-  'register': {
+  '/register': {
     label: 'Register'
   }
 }
 
 // Routes that should be available when user is signed in
 const user_routes: Routes = {
-  'feed': {
+  '/feed': {
     label: 'Feed'
   },
-  'new-listing': {
-    label: 'New Listing'
+  '/new-listing': {
+    label: 'New Listing',
+    backButton: '/feed',
   },
-  'listings/[listing_id]': {
+  '/listings/[listing_id]': {
     label: '',
     hide: true,
+    backButton: '/feed',
   },
-  'edit-listing/[listing_id]': {
+  '/edit-listing/[listing_id]': {
     label: 'Edit Listing',
-    hide: true
+    hide: true,
+    backButton: '/feed'
   },
-  'listings/my': {
-    label: 'My Listings'
+  '/listings/my': {
+    label: 'My Listings',
+    backButton: '/feed'
   },
-  'contacts/[user_id]': {
+  '/contacts/[user_id]': {
     label: 'View Contact',
-    hide: true
+    hide: true,
+    backButton: '/contacts/my'
   },
-  'contacts/my': {
-    label: 'My Contacts'
+  '/contacts/my': {
+    label: 'My Contacts',
+    backButton: '/feed'
   }
 }
 //   [
@@ -179,11 +186,12 @@ export default function Layout() {
 
   const validateSession = async () => {
     const user = await auth.fetchUser();
-    // console.log(user)
-    if(!user && isUserRoute(pathname.substring(1))) {
+    console.log(user)
+    console.log(pathname)
+    if(!user && isUserRoute(pathname)) {
       console.log('Your session has expired, please log in')
       router.replace('/login')
-    } else if (user && isGuestRoute(pathname.substring(1))) {
+    } else if (user && isGuestRoute(pathname)) {
       console.log('Already logged in, redirecting')
       router.replace('/feed')
     }
