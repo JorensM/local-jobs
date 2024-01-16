@@ -140,9 +140,6 @@ const CustomDrawer = () => {
     const is_user_route = Object.keys(user_routes).includes(name);
     const is_guest_route = Object.keys(guest_routes).includes(name);
 
-    console.log(user_routes)
-    console.log(name)
-
     if(
       (is_user_route && auth.user) ||
       (is_guest_route && !auth.user)
