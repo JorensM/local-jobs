@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "version": "0.1.0",
+  "name": "local-jobs",
+  "version": "0.2.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",

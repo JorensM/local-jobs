@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "local-jobs",
-    "slug": "local-jobs",
+    "slug": "app",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

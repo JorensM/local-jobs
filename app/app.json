@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "app",
+    "name": "local-jobs",
     "slug": "app",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./res/icon.png",
     "userInterfaceStyle": "light",
@@ -25,8 +25,8 @@
         "foregroundImage": "./res/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jorensm.app",
-      "versionCode": 2,
+      "package": "com.jorensm.localjobs",
+      "versionCode": 4,
       "intentFilters": [
         {
           "action": "VIEW",
