@@ -10,7 +10,10 @@ type ContactSmallProps = {
 export default function ContactSmall({ item, onPress = () => {}}: ContactSmallProps) {
     return (
         <Pressable
-            style={list.item}
+            style={{
+                ...list.item,
+                padding: 16
+            }}
             onPress={onPress}
         >
             <Text>
