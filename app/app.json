@@ -27,18 +27,20 @@
       },
       "package": "com.jorensm.app",
       "versionCode": 2,
-      "intentFilters": {
-        "action": "VIEW",
-        "autoVerify": true,
-        "data": [
-          {
-            "scheme": "https",
-            "host": "*.localjobs.com",
-            "pathPrefix": "/records"
-          }
-        ],
-        "category": ["BROWSABLE", "DEFAULT"]
-      }
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.localjobs.com",
+              "pathPrefix": "/records"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./res/favicon.png",
