@@ -9,3 +9,5 @@ const list = StyleSheet.create({
         borderColor: 'gray'
     }
 })
+
+export default list;

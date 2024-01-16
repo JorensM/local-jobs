@@ -1,5 +1,6 @@
+import list from '#styles/list'
 import { User } from '#types/User'
-import { Pressable } from 'react-native/types'
+import { Pressable, Text } from 'react-native'
 
 type ContactSmallProps = {
     item: User,
@@ -8,8 +9,13 @@ type ContactSmallProps = {
 
 export default function ContactSmall({ item, onPress = () => {}}: ContactSmallProps) {
     return (
-        <Pressable>
-            
+        <Pressable
+            style={list.item}
+            onPress={onPress}
+        >
+            <Text>
+                { item.name }
+            </Text>
         </Pressable>
     )
 }
