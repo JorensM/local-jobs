@@ -26,10 +26,15 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.jorensm.localjobs",
-      "versionCode": "0.1.0"
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "df50c2cb-1206-4291-b483-b45b2b9abe08"
+      }
     }
   }
 }

@@ -5,7 +5,6 @@
   },
   "build": {
     "testing": {
-      "developmentClient": true,
       "distribution": "internal",
       "android": {
         "buildType": "app-bundle"

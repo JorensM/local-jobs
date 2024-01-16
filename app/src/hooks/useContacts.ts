@@ -51,7 +51,7 @@ export default function useContacts() {
             throw new Error('User state not set')
         }
 
-        const { data, error } = await supabase
+        const { data: contacts, error } = await supabase
             .from('contacts')
             .select()
             .eq('user_id', auth.user.id)
@@ -62,20 +62,37 @@ export default function useContacts() {
 
         let users: User[] = [];
         
-        if(data.length > 0) {
+        if(contacts.length > 0) {
 
-            const contact_ids = data.map(entry => entry.contact_id);
+            const contact_ids = contacts.map(entry => entry.contact_id);
 
-            const { data: _users, error } = await supabase
-                .from('users')
+            const { data: users, error } = await supabase
+                .from('user_data')
                 .select()
-                .in('id', contact_ids)
+                .in('user_id', contact_ids)
 
-            if(error) {
+            if(error){
                 throw error
             }
 
-            users = _users;
+            const users_parsed: User[] = users!.map(user => ({
+                id: user.user_id,
+                role: user.role,
+                name: user.name
+            }))
+
+            return users_parsed;
+
+            // const { data: _users, error } = await supabase
+            //     .from('users')
+            //     .select()
+            //     .in('id', contact_ids)
+
+            // if(error) {
+            //     throw error
+            // }
+
+            // users = _users;
         } else {
             return []
         }

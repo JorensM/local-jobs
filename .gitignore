@@ -38,3 +38,4 @@ const.ts
 private.ts
 
 app/android
+app/credentials.json

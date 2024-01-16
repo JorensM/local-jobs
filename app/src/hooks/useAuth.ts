@@ -9,6 +9,7 @@ import AuthContext from '#state/AuthContext';
 
 // Misc
 import supabase from '#misc/supabase'
+import { Form } from 'formik';
 
 export default function useAuth() {
 
@@ -42,19 +43,52 @@ export default function useAuth() {
     }
 
     const fetchUser = async () => {
-        const { data: { user }, error } = await supabase.auth.getUser();
+        const { data: { user: user }, error } = await supabase.auth.getUser();
 
         if(error?.status == 401) {
             return false
         } else if(error) {
             throw error
         }
+
+        if(!user) {
+            throw new Error('Could not find user')
+        }
         
-        const user_parsed = user ? {
+        
+        const { data: user_data, error: user_data_error } = await supabase
+            .from('user_data')
+            .select()
+            .eq('user_id', user!.id)
+            .limit(1);
+
+        if(user_data_error) {
+            throw user_data_error
+        }
+        
+        
+
+        const user_parsed = {
             id: user.id,
             role: user.user_metadata.role,
             name: user.user_metadata.name
-        } : null
+        }
+
+        if(user_data!.length == 0) {
+            const { error } = await supabase
+                .from('user_data')
+                .insert({
+                    ...user_parsed,
+                    id: undefined,
+                    user_id: user_parsed.id
+                })
+
+            if(error) {
+                throw error;
+            }
+        }
+
+        
 
         context.setUser(user_parsed)
 
