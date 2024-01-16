@@ -30,43 +30,43 @@ type Routes = {
 
 // Routes that should be available when user is not signed in
 const guest_routes: Routes = {
-  '/': {
+  'index': {
     label: 'Loginnn',
   },
-  '/register': {
+  'register': {
     label: 'Register'
   }
 }
 
 // Routes that should be available when user is signed in
 const user_routes: Routes = {
-  '/feed': {
+  'feed': {
     label: 'Feed'
   },
-  '/new-listing': {
+  'new-listing': {
     label: 'New Listing',
     backButton: '/feed',
   },
-  '/listings/[listing_id]': {
+  'listings/[listing_id]': {
     label: '',
     hide: true,
     backButton: '/feed',
   },
-  '/edit-listing/[listing_id]': {
+  'edit-listing/[listing_id]': {
     label: 'Edit Listing',
     hide: true,
     backButton: '/feed'
   },
-  '/listings/my': {
+  'listings/my': {
     label: 'My Listings',
     backButton: '/feed'
   },
-  '/contacts/[user_id]': {
+  'contacts/[user_id]': {
     label: 'View Contact',
     hide: true,
     backButton: '/contacts/my'
   },
-  '/contacts/my': {
+  'contacts/my': {
     label: 'My Contacts',
     backButton: '/feed'
   }
@@ -140,6 +140,9 @@ const CustomDrawer = () => {
     const is_user_route = Object.keys(user_routes).includes(name);
     const is_guest_route = Object.keys(guest_routes).includes(name);
 
+    console.log(user_routes)
+    console.log(name)
+
     if(
       (is_user_route && auth.user) ||
       (is_guest_route && !auth.user)
@@ -186,12 +189,12 @@ export default function Layout() {
 
   const validateSession = async () => {
     const user = await auth.fetchUser();
-    console.log(user)
-    console.log(pathname)
-    if(!user && isUserRoute(pathname)) {
+    let _pathname = pathname.substring(1);
+    _pathname = _pathname == '' ? 'index' : _pathname
+    if(!user && isUserRoute(_pathname)) {
       console.log('Your session has expired, please log in')
       router.replace('/login')
-    } else if (user && isGuestRoute(pathname)) {
+    } else if (user && isGuestRoute(_pathname)) {
       console.log('Already logged in, redirecting')
       router.replace('/feed')
     }
