@@ -102,8 +102,33 @@ export default function useContacts() {
         return users;
     }
 
+    const parseUserData = (user_data: any): User => {
+        return {
+            id: user_data.user_id,
+            name: user_data.name,
+            role: user_data.role
+        }
+    }
+
+    const fetchContact = async (contact_id: string) => {
+        const { data, error } = await supabase
+            .from('user_data')
+            .select()
+            .eq('user_id', contact_id)
+            .limit(1);
+
+        if(error) {
+            throw error
+        } else if (data.length == 0) {
+            throw new Error('Could not fetch contact')
+        }
+
+        return parseUserData(data[0]);
+    }
+
     return {
         purchaseContact,
-        fetchUsersContacts
+        fetchUsersContacts,
+        fetchContact
     }
 }
