@@ -2,7 +2,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { router, usePathname } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
+import { View, Text, Pressable } from 'react-native';
+import { DrawerToggleButton } from '@react-navigation/drawer';
+// import { Header } from 'react-navigation'
 import Toast, { SuccessToast, ToastConfig, ErrorToast } from 'react-native-toast-message';
+import { MaterialIcons } from '@expo/vector-icons';
 
 // Hooks
 import useAuth from '#hooks/useAuth';
@@ -12,7 +16,10 @@ import { User } from '#types/User';
 
 // State
 import AuthContext from '#state/AuthContext';
+
+// Constants
 import toast_config from '#constants/toast_config';
+
 
 export const unstable_settings = {
   // Ensure any route can link back to `/`
@@ -48,7 +55,7 @@ const user_routes: Routes = {
     backButton: '/feed',
   },
   'listings/[listing_id]': {
-    label: '',
+    label: 'View Listing',
     hide: true,
     backButton: '/feed',
   },
@@ -87,6 +94,10 @@ const isUserRoute = (name: string) => {
 
 const isGuestRoute = (name: string) => {
   return Object.keys(guest_routes).includes(name)
+}
+
+const getRouteBackRoute = (name: string) => {
+  return user_routes[name]?.backButton || null 
 }
 
 // These must be non-component functions because for some reason otherwise the drawer
@@ -150,7 +161,54 @@ const CustomDrawer = () => {
   }
 
   return (
-    <Drawer>
+    <Drawer
+      screenOptions={{
+        header: ({ route, options }) => {
+
+          const back_route = getRouteBackRoute(route.name)
+
+          return (
+            <View
+              style={{
+                flexDirection: 'row',
+                height: 56,
+                alignItems: 'center',
+                //padding: 8,
+                backgroundColor: 'white'
+              }}
+            >
+              { back_route ? 
+                <Pressable
+                  style={{
+                    padding: 14
+                  }}
+                  onPress={() => {
+                    router.replace(back_route)
+                  }}
+                >
+                  <MaterialIcons
+                    name='arrow-back'
+                    size={24}
+                  />
+                </Pressable>
+              :
+                <DrawerToggleButton />
+              }
+              
+              <Text
+                style={{
+                  fontWeight: 'normal',
+                  fontSize: 20,
+                  marginBottom: 2
+                }}
+              >
+                {options.title}
+              </Text>
+            </View>
+          )
+        }
+      }}
+    >
 
         {/* Guest routes */}
 
