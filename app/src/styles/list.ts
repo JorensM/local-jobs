@@ -7,6 +7,9 @@ const list = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4,
         borderColor: 'gray'
+    },
+    list: {
+        gap: 8
     }
 })
 
