@@ -2,17 +2,22 @@ import { PropsWithChildren } from 'react'
 import { View, StyleSheet, Text, ViewProps, StyleSheetProperties, ViewStyle, StyleProp } from 'react-native'
 
 export type PageProps = ViewProps & {
-    loading?: boolean | null,
-    error?: string | null,
+    pageState: {
+        error: string | null
+        loading: boolean
+    }
     style?: any
 }
 
 export default function Page( { 
     children,
-    loading = false,
-    error = null,
+    pageState,
     style = {},
 }: PropsWithChildren<PageProps> ) {
+
+    const loading = pageState.loading;
+    const error = pageState.error;
+
     return (
         <View
             style={{
