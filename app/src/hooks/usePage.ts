@@ -1,5 +1,6 @@
 // Core
-import { useMemo, useState } from 'react';
+import { usePathname } from 'expo-router/src/hooks';
+import { useEffect, useMemo, useState } from 'react';
 
 /**
  * Hook to handle page state.
@@ -12,9 +13,14 @@ import { useMemo, useState } from 'react';
  * * **pageState** - Pass this to the Page/SessionPage component's `pageState` prop so it can display the state
  */
 export default function usePage(initialLoading: boolean = false) {
+    const pathname = usePathname()
+
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(initialLoading);
 
+    useEffect(() => {
+        setLoading(initialLoading)
+    }, [pathname])
 
     const pageState = useMemo(() => ({
         error,
