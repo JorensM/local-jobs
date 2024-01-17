@@ -45,7 +45,6 @@ export default function CustomDrawer() {
                 header: ({ route, options }) => {
         
                     const back_route = getRouteBackRoute(route.name)
-        
                     return (
                         <View
                             style={{
@@ -84,6 +83,18 @@ export default function CustomDrawer() {
                             >
                                 {options.title}
                             </Text>
+                            {/* headerRight */}
+                            <View
+                                style={{
+                                    marginLeft: 'auto'
+                                }}
+                            >
+                                { options.headerRight ? options.headerRight({
+                                    tintColor: options.headerTintColor,
+                                    pressColor: options.headerPressColor,
+                                    pressOpacity: options.headerPressOpacity
+                                }) : null }
+                            </View>
                         </View>
                     )
                 }
