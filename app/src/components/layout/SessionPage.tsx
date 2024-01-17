@@ -1,35 +1,41 @@
 // Core
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useMemo } from 'react'
 
 // Components
 import Page, { PageProps } from '#/components/layout/Page'
 
+// Hooks
+import useAuth from '#hooks/useAuth'
 
-// //Components
-// import Page from '../layout copy/Page'
+// Types
+import { PageState } from '#types/PageState';
 
-// //Functions
-// import useCheckLogin from '../../functions/useCheckLogin'
-// import useAppwrite from '../../functions/useAppwrite'
-// import { useFocusEffect } from '@react-navigation/native'
 
 type Props = PageProps & {}
 
-export default function SessionPage({ children, ...props }: PropsWithChildren<Props>) {
+/**
+ * Page component used for pages that are only for users.
+ */
+export default function SessionPage({ children, pageState, ...props }: PropsWithChildren<Props>) {
 
-    // useCheckLogin('Login')
+    const auth = useAuth();
 
-    // const { fetchCurrentUser } = useAppwrite()
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         fetchCurrentUser()
-    //     }, [])
-    // )
+    // Intercept pageState and set it to loading if user is not logged in
+    const _pageState: PageState = useMemo(() => {
+        if (auth.user) {
+            return pageState
+        } else {
+            return {
+                error: pageState.error,
+                loading: true
+            }
+        }
+    }, [auth.user, pageState])
 
     return (
         <Page
             { ...props }
+            pageState={_pageState}
         >
             { children }
         </Page>
