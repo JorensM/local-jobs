@@ -1,8 +1,9 @@
 // Core
-import { useEffect, useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { router, usePathname } from 'expo-router';
 import Toast from 'react-native-toast-message';
-import { StripeProvider } from 'stripe/stripe-react-native';
+import { StripeProvider } from '#misc/stripe';
+// import { StripeProvider } from '@stripe/stripe-react-native'
 
 // Components
 import CustomDrawer from '#components/layout/CustomDrawer';
@@ -31,8 +32,11 @@ export const unstable_settings = {
 
 export default function Layout() {
 
+  // rconsole.log(StripeProvider)
+
   // Auth context
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const auth = useAuth();
   const pathname = usePathname();
@@ -49,7 +53,6 @@ export default function Layout() {
       router.replace('/feed')
     }
   }
-
   
 
   useEffect(() => {
@@ -75,7 +78,9 @@ export default function Layout() {
         setUser
       }}
     >
-      <StripeProvider>
+      <StripeProvider
+        publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+      >
         <CustomDrawer />
         <Toast config={toast_config}/>
       </StripeProvider>
