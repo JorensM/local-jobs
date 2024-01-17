@@ -37,7 +37,7 @@ export default function LoginPage() {
 
     // Hooks
     const auth = useAuth();
-    const { pageState } = usePage(false);
+    const { pageState } = usePage();
 
     const handleSubmit = async ({ email, password }: FormValues) => {
 

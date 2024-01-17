@@ -28,7 +28,7 @@ export default function FeedPage() {
     // Hooks
     const listings = useListings();
     const auth = useAuth();
-    const { pageState, setLoading } = usePage();
+    const { pageState, setLoading } = usePage(true);
 
     // State
     const [listingsData, setListingsData] = useState<Listing[]>([]);

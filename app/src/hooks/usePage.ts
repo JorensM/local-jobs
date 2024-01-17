@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react';
  * * **setLoading** - Use this to set the loading state of the page as a boolean
  * * **pageState** - Pass this to the Page/SessionPage component's `pageState` prop so it can display the state
  */
-export default function usePage(initialLoading: boolean = true) {
+export default function usePage(initialLoading: boolean = false) {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(initialLoading);
 

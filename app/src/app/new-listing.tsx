@@ -41,8 +41,6 @@ export default function NewListingPage() {
             toastError('Error', error.message)
         }
         
-
-        
     }
 
     return (

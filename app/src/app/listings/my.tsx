@@ -24,7 +24,7 @@ export default function MyListingsPage() {
     // Hooks
     const listings = useListings();
     const auth = useAuth();
-    const { setLoading, pageState } = usePage();
+    const { setLoading, pageState } = usePage(true);
 
     // State
     const [ listingsData, setListingsData ] = useState<Listing[]>([])

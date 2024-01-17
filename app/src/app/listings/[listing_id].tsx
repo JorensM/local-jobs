@@ -52,7 +52,7 @@ export default function ListingPage() {
     const navigation = useNavigation();
     const contacts = useContacts();
     const { listing_id } = useLocalSearchParams();
-    const { setLoading, setError, pageState } = usePage();
+    const { setLoading, setError, pageState } = usePage(true);
 
     // State
     const [listing, setListing] = useState<Listing | null>(null)

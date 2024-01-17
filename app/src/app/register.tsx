@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
     // Hooks
     const auth = useAuth();
-    const { pageState } = usePage(false)
+    const { pageState } = usePage()
 
     const handleSubmit = async ({ email, password, name, role} : FormValues) => {
       try {
