@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 const button = StyleSheet.create({
     secondary: {
-        borderColor: 'green',
+        borderColor: 'gray',
         borderWidth: 1,
         width: '100%',
         padding: 8,
