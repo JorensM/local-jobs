@@ -50,5 +50,9 @@ export const user_routes: Routes = {
     'contacts/my': {
         label: 'My Contacts',
         backButton: '/feed'
+    },
+    'profile': {
+        label: 'My Profile',
+        backButton: '/feed'
     }
 }
