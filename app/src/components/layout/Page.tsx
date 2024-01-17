@@ -9,6 +9,17 @@ export type PageProps = ViewProps & {
     style?: any
 }
 
+/**
+ * Page component that should be used on each individual page. 
+ * Should be passed a `pageState` prop acquired via the [usePage](../../hooks/usePage.ts) hook
+ * 
+ * ## Props
+ * Any props that a `View` components accepts, and additionally:
+ * 
+ * * **pageState** - prop used to render the page in according to the page state, i.e errors, loading state etc.
+ * this prop can be acquired by using the [usePage](../../hooks/usePage.ts) hook
+ * 
+ */
 export default function Page( { 
     children,
     pageState,
@@ -58,7 +69,8 @@ const styles = StyleSheet.create({
     container: {
       padding: 8,
       width: '100%',
-      height: '100%'
+      height: '100%',
+      gap: 8
     },
     message_container: {
         height: '100%',
