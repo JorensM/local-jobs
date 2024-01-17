@@ -25,18 +25,24 @@ export default function NewListingPage() {
     
     const handleSubmit = async (values: ListingFormValues) => {
 
-        const id = await listings.createListing({
-            ...values,
-            user_id: auth.user!.id,
-            user_name: auth.user!.name
-        })
-
-        if(id) {
-            router.replace('listings/' + id)
-            toastSuccess('Success', 'Listing has been created')
-        } else {
-            toastError('Error', 'Could not create listing')
+        try {
+            const id = await listings.createListing({
+                ...values,
+                user_id: auth.user!.id,
+                user_name: auth.user!.name
+            })
+            if(id) {
+                router.replace('listings/' + id)
+                toastSuccess('Success', 'Listing has been created')
+            } else {
+                throw new Error('Could not create listing')
+            }
+        } catch(error: any) {
+            toastError('Error', error.message)
         }
+        
+
+        
     }
 
     return (
