@@ -1,6 +1,6 @@
 // Core
 import  { useState } from 'react'
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, Button } from 'react-native'
 import { router } from 'expo-router'
 
 // Components
@@ -14,22 +14,32 @@ import { Listing } from '#types/Listing'
 import useFocusEffect from '#hooks/useFocusEffect'
 import useListings from '#hooks/useListings'
 import useAuth from '#hooks/useAuth'
+import usePage from '#hooks/usePage'
 
-
+/**
+ * Page showing user's posted listings
+ */
 export default function MyListingsPage() {
 
     // Hooks
     const listings = useListings();
     const auth = useAuth();
+    const { setLoading, pageState } = usePage();
 
     // State
     const [ listingsData, setListingsData ] = useState<Listing[]>([])
-    const [ error, setError ] = useState<null | string>(null)
-    const [ loading, setLoading ] = useState<boolean>(false)
     
+    // Handlers
     const handleListingPress = (id: number) => {
         router.replace('/listings/' + id)
     }
+
+    const handleAddListingPress = () => {
+        router.replace('/new-listing')
+    }
+
+
+    // Functions
 
     const fetchListings = async () => {
 
@@ -46,14 +56,17 @@ export default function MyListingsPage() {
 
     }
 
+    // Effects
+
     useFocusEffect(() => {
-        fetchListings()
-    })
+        if (auth.user) {
+            fetchListings()
+        }
+    }, [auth.user])
 
     return (
         <SessionPage
-            error={error}
-            loading={loading}
+            pageState={pageState}
         >
             <FlatList
                 style={styles.listings_list}
@@ -66,10 +79,10 @@ export default function MyListingsPage() {
                     /> 
                 )}
             />
-            {/* <Button
+            <Button
                 onPress={() => handleAddListingPress()}
                 title='Add Listing'
-            /> */}
+            />
             {/* <Link
                 to={{
                     screen: 'ListingEdit'
