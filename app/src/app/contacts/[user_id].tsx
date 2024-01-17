@@ -12,6 +12,7 @@ import { User } from '#types/User';
 // Hooks
 import useFocusEffect from '#hooks/useFocusEffect';
 import useContacts from '#hooks/useContacts';
+import usePage from '#hooks/usePage';
 
 // Components
 import H1 from '#components/typography/H1';
@@ -21,19 +22,18 @@ import Caption from '#components/typography/Caption';
 import { toastError } from '#misc/toast';
 
 
-
-
-
+/**
+ * Page showing a specific contact
+ */
 export default function ContactPage() {
 
     // Hooks
     const { user_id } = useLocalSearchParams();
     const contacts = useContacts();
+    const { setError, setLoading, pageState } = usePage(true);
 
     // State
     const [contact, setContact] = useState<User | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
 
     // Functions
     const fetchContact = async () => {
@@ -57,8 +57,7 @@ export default function ContactPage() {
 
     return (
         <SessionPage
-            loading={loading}
-            error={error}
+            pageState={pageState}
         >
             {contact ? 
                 <>
