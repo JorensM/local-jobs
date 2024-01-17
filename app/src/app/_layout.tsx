@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { router, usePathname } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { StripeProvider } from 'stripe/stripe-react-native';
 
 // Components
 import CustomDrawer from '#components/layout/CustomDrawer';
@@ -74,8 +75,10 @@ export default function Layout() {
         setUser
       }}
     >
-      <CustomDrawer />
-      <Toast config={toast_config}/>
+      <StripeProvider>
+        <CustomDrawer />
+        <Toast config={toast_config}/>
+      </StripeProvider>
     </AuthContext.Provider>
   );
 }
