@@ -1,17 +1,24 @@
 import 'expo-router/entry'
 
-//Core
+// Core
 import { Button, View, StyleSheet, Text } from 'react-native'
 import { Formik } from 'formik'
 import { Link, router } from 'expo-router'
 
-//Components
+// Components
 import TextInput from '#components/input/TextInput'
 import Page from '#components/layout/Page'
+
+// Hooks
 import useAuth from '#hooks/useAuth'
-import { useState } from 'react'
-import { AuthError } from '@supabase/supabase-js'
-import { toastError, toastSuccess } from '#misc/toast'
+import usePage from '#hooks/usePage'
+
+// Misc
+import { toastError } from '#misc/toast'
+
+// Styles
+import button from '#styles/button'
+import form from '#styles/form'
 
 type FormValues = {
     email: string,
@@ -23,19 +30,16 @@ const initial_values: FormValues = {
     password: ''
 }
 
+/**
+ * User login page
+ */
 export default function LoginPage() {
 
-    // useCheckLogin(undefined, 'Feed')
-
-    // const { account } = useAppwrite()
-
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+    // Hooks
     const auth = useAuth();
+    const { pageState } = usePage(false);
 
     const handleSubmit = async ({ email, password }: FormValues) => {
-
-        setErrorMessage(null)
 
         try {
             await auth.login(email, password);
@@ -51,9 +55,7 @@ export default function LoginPage() {
 
     return (
         <Page
-            style={{
-                gap: 8
-            }}
+            pageState={pageState}
         >
             <Formik
                 initialValues={initial_values}
@@ -61,7 +63,7 @@ export default function LoginPage() {
             >
                 {(formik) => (
                     <View
-                        style={styles.form}
+                        style={form.container}
                     >
                         <TextInput
                             name='email'
@@ -72,36 +74,16 @@ export default function LoginPage() {
                             label='Password'
                             secureTextEntry={true}
                         />
-                        {errorMessage ? 
-                            <Text
-                                style={{
-                                    color: 'red'
-                                }}
-                            >
-                                {errorMessage}
-                            </Text>
-                        : null}
-                        
                         <Button
                             onPress={() => formik.handleSubmit()}
                             title='Login'
                         />
-                        {/* <Button onPress={handleSubmit} title="Submit" /> */}
                     </View>
                 )}
             </Formik>
             <Text>Not a member?</Text>
             <Link 
-                style={{
-                    borderColor: 'green',
-                    borderWidth: 1,
-                    width: '100%',
-                    padding: 8,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    textAlignVertical: 'center'
-                }}
+                style={button.secondary}
                 href="/register"
             >
                 Register
@@ -109,9 +91,3 @@ export default function LoginPage() {
         </Page>
     )
 }
-
-const styles = StyleSheet.create({
-    form: {
-      gap: 16
-    }
-});
