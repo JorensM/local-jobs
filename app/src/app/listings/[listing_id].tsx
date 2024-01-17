@@ -1,6 +1,6 @@
-//Core
+// Core
 import { 
-    useCallback, 
+    useCallback,
     useEffect, 
     useRef, 
     useState 
@@ -9,28 +9,40 @@ import {
     Text,
     View,
     Button,
-    Pressable,
-    Modal,
-    StyleSheet
+    StyleSheet,
+    Pressable
 } from 'react-native'
+import { 
+    router, 
+    useLocalSearchParams, 
+    useNavigation,
+    usePathname
+} from 'expo-router'
 
-//Types
+// Types
 import { Listing } from '#types/Listing'
 
-//Components
-import Page from '#components/layout/Page'
+// Components
+import SessionPage from '#components/layout/SessionPage'
 import H1 from '#components/typography/H1'
 import Caption from '#components/typography/Caption'
 import Info from '#components/typography/Info'
 import IconButton from '#components/input/IconButton'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import Modal from '#components/layout/Modal'
+
+// Hooks
 import useListings from '#hooks/useListings'
 import useFocusEffect from '#hooks/useFocusEffect'
-import { usePathname } from 'expo-router'
 import useAuth from '#hooks/useAuth'
 import useContacts from '#hooks/useContacts'
+import usePage from '#hooks/usePage'
+
+// Misc
 import { toastError, toastSuccess } from '#misc/toast'
 
+/**
+ * Page for single listing
+ */
 export default function ListingPage() {
 
     // Hooks
@@ -40,21 +52,19 @@ export default function ListingPage() {
     const navigation = useNavigation();
     const contacts = useContacts();
     const { listing_id } = useLocalSearchParams();
+    const { setLoading, setError, pageState } = usePage();
 
     // State
     const [listing, setListing] = useState<Listing | null>(null)
-    const [loading, setLoading] = useState<boolean>(true)
-    const [isOwnListing, setIsOwnListing] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null);
     const [showContactModal, setShowContactModal] = useState<boolean>(false);
 
-    // const isFocused = useIsFocused()
+    // Refs
+    const isOwnListingRef = useRef<boolean>(false);
 
-    
+    // Handlers
 
     const handleEditPress = () => {
-        console.log(isOwnListing)
-        if (isOwnListing) {
+        if (isOwnListingRef.current) {
             router.replace('edit-listing/' + listing_id)
         } else {
             console.warn(`Can't edit listing that isn't your own!`)
@@ -80,19 +90,20 @@ export default function ListingPage() {
         }
     }
 
-    const handleEditPressRef = useRef(handleEditPress)
-    handleEditPressRef.current = handleEditPress
+    // Functions
 
     const fetchListing = async () => {
-        setIsOwnListing(false)
+        isOwnListingRef.current = false;
+        // setIsOwnListing(false)
         setLoading(true)
         if( listing_id ) {
             const _listing: Listing = await listings.fetchListing(parseInt(listing_id as string));
 
-            const is_own = _listing.user_id == auth.user!.id
-            setIsOwnListing(is_own)
+            const is_own = _listing.user_id == auth.user!.id;
+            isOwnListingRef.current = is_own;
 
             if(is_own) {
+                console.log('setting option')
                 navigation.setOptions({
                     headerRight: () => (
                         <View
@@ -103,7 +114,7 @@ export default function ListingPage() {
                             <IconButton
                                 name='edit'
                                 size={ 24 }
-                                onPress={ handleEditPressRef.current }
+                                onPress={ handleEditPress }
                             />
                         </View>
                     )
@@ -111,98 +122,48 @@ export default function ListingPage() {
             }
             setListing(_listing)
             setLoading(false)
-        //     db.getDocument<ListingModel>(
-        //         constant.db.id,
-        //         constant.db.listings_id,
-        //         route.params.id
-        //     )
-        //     .then( async res => {
-        //         const current_user = await account.get()
-        //         const is_own = res.by_user == current_user.$id
-        //         console.log('setting isownlisting to ' + is_own)
-        //         setIsOwnListing(is_own)
-
-        //         if (is_own) {
-        //             navigation.setOptions({
-        //                 headerRight: () => (
-        //                     <View
-        //                         style={{
-        //                             paddingRight: 16
-        //                         }}
-        //                     >
-        //                         <IconButton
-        //                             name='edit'
-        //                             size={ 24 }
-        //                             onPress={ handleEditPressRef.current }
-        //                         />
-        //                     </View>
-        //                 )
-        //             })
-        //         }
-                
-        //         setListing(res)
-        //         setLoading(false)
-        //     })
-        //     .catch( err => {
-        //         console.error('Could not retrieve listing with id ' 
-        //             + route.params?.id, err)
-        //     })
         } else {
-            console.error('Id not specified for listing')
             setError('Id not specified for listing')
         }
     }
 
+    // Effects
+
     useFocusEffect(() => {
-        fetchListing()
-    }, [listing_id])
+        if(auth.user) {
+            fetchListing()
+        }
+    }, [listing_id, auth.user])
 
     useEffect(() => {
         setLoading(true)
         setListing(null)
-        console.log('unsetting listing')
     }, [pathname])
 
     return (
-        <Page
-            loading={loading}
-            error={error}
+        <SessionPage
+            pageState={pageState}
         >
             <Modal
-                transparent={true}
                 visible={showContactModal}
             >
-                <View
-                    style={styles.modal_background}
-                >
-                    <View
-                        style={styles.modal_box}
+                <Modal.Header>
+                    <Pressable
+                        onPress={() => setShowContactModal(false)}
                     >
-                        <View
-                            style={styles.modal_header}
+                        <Text
+                            style={styles.warn}
                         >
-                            <Pressable
-                                onPress={() => setShowContactModal(false)}
-                            >
-                                <Text
-                                    style={styles.warn}
-                                >
-                                    Close
-                                </Text>
-                            </Pressable>
-                        </View>
-                        <View
-                            style={styles.modal_content}
-                        >
-                            <Button
-                                onPress={handlePayForContactPress}
-                                title="Pay for contact"
-                            />
-                        </View>
-
-                    </View>
-                </View>
-                
+                            Close
+                        </Text>
+                    </Pressable>
+                </Modal.Header>
+                <Modal.Content>
+                    <Button
+                        onPress={handlePayForContactPress}
+                        title="Pay for contact"
+                    />
+                </Modal.Content>
             </Modal>
             <H1>
                 { listing?.title || '' }
@@ -215,7 +176,7 @@ export default function ListingPage() {
                     { listing.location_name }
                 </Caption>
             : null } */}
-            { isOwnListing ? 
+            { isOwnListingRef.current ? 
                 <Info>
                     This is your listing
                 </Info>
@@ -228,7 +189,7 @@ export default function ListingPage() {
             >
                 { listing?.description || '' }
             </Text>
-            { !isOwnListing ?
+            { !isOwnListingRef.current ?
             <View
                 style={{
                     marginTop: 'auto'
@@ -241,33 +202,11 @@ export default function ListingPage() {
             </View>
                 
             : null }
-        </Page>
+        </SessionPage>
     )
 }
 
 const styles = StyleSheet.create({
-    modal_background: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#00000080',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    modal_box: {
-        width: '80%',
-        height: 'auto',
-        padding: 16,
-        backgroundColor: 'white',
-        borderRadius: 8,
-        gap: 16
-    },
-    modal_header: {
-        width: '100%',
-    },
-    modal_content: {
-        flexGrow: 1,
-        width: '100%'
-    },
     warn: {
         color: 'red'
     }
