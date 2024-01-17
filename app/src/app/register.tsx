@@ -1,15 +1,27 @@
+// Core
 import { Text, View, StyleSheet, Button } from 'react-native'
 import { Formik } from 'formik'
+import { Link, router } from 'expo-router'
+import * as Yup from 'yup'
+
+// Components
 import TextInput from '#components/input/TextInput'
 import Dropdown from '#components/input/Dropdown'
-import { Link, router } from 'expo-router'
+import Page from '#components/layout/Page'
+
+// Styles
 import button from '#styles/button'
-import * as Yup from 'yup'
+
+// Hooks
+import useAuth from '#hooks/useAuth'
 
 // Types
 import { UserRole } from '#types/User'
-import useAuth from '#hooks/useAuth'
+
+// Misc
 import { toastError, toastSuccess } from '#misc/toast'
+import usePage from '#hooks/usePage'
+import form from '#styles/form'
 
 type FormValues = {
     email: string,
@@ -25,57 +37,34 @@ const validationSchema = Yup.object().shape({
     role: Yup.string().required('Required')
 })
 
+/**
+ * New user registration page
+ */
 export default function RegisterPage() {
 
-    //const { account } = useAppwrite()
-
+    // Hooks
     const auth = useAuth();
+    const { pageState } = usePage(false)
 
     const handleSubmit = async ({ email, password, name, role} : FormValues) => {
+      try {
+        const success = await auth.register(email, password, name, role)
 
-
-        try {
-          const success = await auth.register(email, password, name, role)
-
-          if(success) {
-            toastSuccess('Your account has been created!', 'A confirmation email has been sent to ' + email);
-            router.replace('/')
-          }
-        } catch (err: any) {
-          toastError('Could not register')
+        if(success) {
+          toastSuccess('Your account has been created!', 'A confirmation email has been sent to ' + email);
+          router.replace('/')
         }
-      
-
-        
-        // account.create(
-        //   ID.unique(),
-        //   values.email,
-        //   values.password,
-        //   values.name
-        // ).then(res => {
-        //   account.createEmailSession(
-        //     values.email,
-        //     values.password
-        //   ).then(res => {
-        //     account.updatePrefs({
-        //       role: values.role
-        //     })
-        //   })
-        //   console.log('Created account')
-        //   //console.log(res)
-        //   navigation.navigate('Login')
-        // }).catch(err => {
-        //   console.error('Could not create account')
-        //   console.error(err)
-        // })
-        // console.log('submitted')
-        // console.log(values)
+      } catch (err: any) {
+        toastError('Could not register')
       }
+    }
 
     return (
-        <View style={styles.container}>
+        <Page
+          pageState={pageState}
+          // style={styles.container}
+        >
             <Formik<FormValues>
-                
                 initialValues={{
                   email: '',
                   password: '',
@@ -89,7 +78,7 @@ export default function RegisterPage() {
             >
                 {(formik) => (
                     <View
-                        style={styles.form}
+                        style={form.container}
                     >
                         <TextInput
                             name='email'
@@ -130,11 +119,11 @@ export default function RegisterPage() {
             <Text>Already a member?</Text>
             <Link
                 style={button.secondary}
-                href="/login"
+                href="/"
             >
                 Login
             </Link>
-        </View>
+        </Page>
     )
 }
 
@@ -144,8 +133,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     gap: 8
-  },
-  form: {
-    gap: 16
   }
 });
