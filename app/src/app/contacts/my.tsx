@@ -1,6 +1,7 @@
 // Core
 import { useState } from 'react';
 import { FlatList } from 'react-native';
+import { router } from 'expo-router';
 
 // Components
 import ListSeparator from '#components/layout/ListSeparator';
@@ -10,23 +11,28 @@ import ContactSmall from '#components/ContactSmall';
 // Styles
 import list from '#styles/list';
 
-// Types
-import { User } from '#types/User';
-import { router } from 'expo-router';
+// Hooks
 import useFocusEffect from '#hooks/useFocusEffect';
 import useContacts from '#hooks/useContacts';
+import usePage from '#hooks/usePage';
+
+// Types
+import { User } from '#types/User';
+
+// Misc
 import { toastError } from '#misc/toast';
 
-
+/**
+ * Page showing all of users contacts
+ */
 export default function MyContactsPage() {
 
     // Hooks
     const contacts = useContacts();
+    const { setError, setLoading, pageState } = usePage(true);
 
     // State
     const [contactsData, setContactsData] = useState<User[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
 
     const handleContactPress = (contact_id: string) => {
         router.replace('/contacts/' + contact_id);
@@ -53,8 +59,7 @@ export default function MyContactsPage() {
     
     return (
         <SessionPage
-            loading={loading}
-            error={error}
+            pageState={pageState}
         >
             <FlatList
                 style={list.list}
