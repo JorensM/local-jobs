@@ -1,6 +1,7 @@
 // Core
-import  { useCallback, useState } from 'react'
-import { Button, View, FlatList, StyleSheet } from 'react-native'
+import  { useState } from 'react'
+import { View, FlatList, StyleSheet } from 'react-native'
+import { router } from 'expo-router'
 
 // Components
 import ListingSmall from '#components/ListingSmall'
@@ -13,7 +14,7 @@ import { Listing } from '#types/Listing'
 import useFocusEffect from '#hooks/useFocusEffect'
 import useListings from '#hooks/useListings'
 import useAuth from '#hooks/useAuth'
-import { router } from 'expo-router'
+
 
 export default function MyListingsPage() {
 
