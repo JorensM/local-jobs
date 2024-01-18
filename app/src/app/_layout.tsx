@@ -22,6 +22,7 @@ import toast_config from '#constants/toast_config';
 
 // Misc
 import { isGuestRoute, isUserRoute } from '#misc/route_utils';
+import { API_URL } from '#constants/env';
 
 
 
@@ -60,7 +61,14 @@ export default function Layout() {
 
     const timeout = setTimeout(async () => {
       validateSession()
-    }, 10 * 1000)
+    }, 10 * 1000);
+
+    (async () => {
+      const res = await fetch(API_URL + 'session')
+      const data = await res.json();
+      console.log('session: ')
+      console.log(data)
+    })()
 
     return () => {
       clearTimeout(timeout)

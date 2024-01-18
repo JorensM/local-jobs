@@ -1,7 +1,7 @@
 import 'react-native-url-polyfill/auto'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createBrowserClient } from '@supabase/ssr';
+import { createBrowserClient } from '@supabase/ssr/dist/index'; //Need to explicitly import the file because metro bundler doens't support implicit .mjs imports
 
 const supabase = createBrowserClient(
     'https://yoiekjsjcdmjddgdurnj.supabase.co', 
