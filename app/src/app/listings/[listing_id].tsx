@@ -1,6 +1,5 @@
 // Core
 import { 
-    useCallback,
     useEffect, 
     useRef, 
     useState 
@@ -9,9 +8,7 @@ import {
     Text,
     View,
     Button,
-    StyleSheet,
     Pressable,
-    Platform
 } from 'react-native'
 import { 
     router, 
@@ -37,12 +34,14 @@ import useFocusEffect from '#hooks/useFocusEffect'
 import useAuth from '#hooks/useAuth'
 import useContacts from '#hooks/useContacts'
 import usePage from '#hooks/usePage'
+import useAPI from '#hooks/useAPI'
 
 // Misc
 import { toastError } from '#misc/toast'
 import { useStripe } from '#misc/stripe'
-import { API_URL } from '#constants/env'
-import useAPI from '#hooks/useAPI'
+
+// Styles
+import text from '#styles/text'
 
 /**
  * Page for single listing
