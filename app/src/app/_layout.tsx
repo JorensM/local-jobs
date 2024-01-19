@@ -22,6 +22,7 @@ import toast_config from '#constants/toast_config';
 // Misc
 import { isGuestRoute, isUserRoute } from '#misc/route_utils';
 import { StripeProvider } from '#misc/stripe';
+import { toastInfo } from '#misc/toast';
 
 
 
@@ -48,6 +49,7 @@ export default function Layout() {
     if(!user && isUserRoute(_pathname)) {
       console.log('Your session has expired, please log in')
       router.replace('/')
+      toastInfo('Your session has expired', 'Please log in')
     } else if (user && isGuestRoute(_pathname)) {
       console.log('Already logged in, redirecting')
       router.replace('/feed')
