@@ -47,7 +47,7 @@ export default function Layout() {
     _pathname = _pathname == '' ? 'index' : _pathname
     if(!user && isUserRoute(_pathname)) {
       console.log('Your session has expired, please log in')
-      router.replace('/login')
+      router.replace('/')
     } else if (user && isGuestRoute(_pathname)) {
       console.log('Already logged in, redirecting')
       router.replace('/feed')
