@@ -2,8 +2,13 @@ import { useField, useFormikContext } from 'formik'
 import { useState } from 'react'
 import { Dropdown as NativeDropdown } from 'react-native-element-dropdown'
 
+type DropdownValue = {
+    label: string,
+    value: string
+}
+
 type Props = {
-    data: any[],
+    data: DropdownValue[],
     name: string,
     formik: any,
     placeholder?: string
