@@ -1,6 +1,11 @@
-import { Text, StyleSheet } from 'react-native'
+// Core
 import { PropsWithChildren } from 'react';
+import { Text, StyleSheet } from 'react-native'
 
+
+/**
+ * Description component, used for long description-type texts
+ */
 export default function Description({ children }: PropsWithChildren<{}>) {
     return (
         <Text
@@ -14,7 +19,5 @@ export default function Description({ children }: PropsWithChildren<{}>) {
 const styles = StyleSheet.create({
     description: {
         marginVertical: 8,
-        // fontSize: 14,
-        // color: 'black'
     }
 })

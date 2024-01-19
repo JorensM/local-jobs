@@ -1,6 +1,11 @@
-import { Text, StyleSheet } from 'react-native'
+// Core
 import { PropsWithChildren } from 'react';
+import { Text, StyleSheet } from 'react-native'
 
+
+/**
+ * H1 component
+ */
 export default function H1( { children }: PropsWithChildren<{}> ) {
     return (
         <Text

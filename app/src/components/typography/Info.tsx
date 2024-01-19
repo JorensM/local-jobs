@@ -1,6 +1,10 @@
-import { Text, StyleSheet } from 'react-native'
+// Core
 import { PropsWithChildren } from 'react';
+import { Text, StyleSheet } from 'react-native'
 
+/**
+ * Info text, used for general short informative text.
+ */
 export default function Info({ children }: PropsWithChildren<{}>) {
     return (
         <Text
