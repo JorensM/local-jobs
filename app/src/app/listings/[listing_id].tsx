@@ -54,7 +54,6 @@ export default function ListingPage() {
     const auth = useAuth();
     const pathname = usePathname();
     const navigation = useNavigation();
-    const contacts = useContacts();
     const { listing_id } = useLocalSearchParams();
     const { setLoading, setError, pageState } = usePage(true);
     const api = useAPI();
