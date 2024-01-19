@@ -19,6 +19,7 @@ import { Listing } from '#types/Listing';
 
 // Styles
 import list from '#styles/list';
+import ListSeparator from '#components/layout/ListSeparator';
 
 /**
  * Feed page where listings are displayed
@@ -62,7 +63,7 @@ export default function FeedPage() {
         >
             <FlatList
                 style={list.list}
-                ItemSeparatorComponent={() => <View style={{height: 8}} />}
+                ItemSeparatorComponent={() => <ListSeparator />}
                 data={listingsData}
                 renderItem={({ item }: { item: Listing} ) => (
                     <ListingSmall 

@@ -63,7 +63,7 @@ export default function MyContactsPage() {
         >
             <FlatList
                 style={list.list}
-                ItemSeparatorComponent={() => <ListSeparator/>}
+                ItemSeparatorComponent={() => <ListSeparator />}
                 data={contactsData}
                 renderItem={({ item }) => (
                     <ContactSmall 

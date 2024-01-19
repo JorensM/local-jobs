@@ -15,6 +15,7 @@ import useFocusEffect from '#hooks/useFocusEffect'
 import useListings from '#hooks/useListings'
 import useAuth from '#hooks/useAuth'
 import usePage from '#hooks/usePage'
+import ListSeparator from '#components/layout/ListSeparator'
 
 /**
  * Page showing user's posted listings
@@ -70,7 +71,7 @@ export default function MyListingsPage() {
         >
             <FlatList
                 style={styles.listings_list}
-                ItemSeparatorComponent={() => <View style={{height: 8}} />}
+                ItemSeparatorComponent={() => <ListSeparator />}
                 data={listingsData}
                 renderItem={({ item }) => (
                     <ListingSmall 
