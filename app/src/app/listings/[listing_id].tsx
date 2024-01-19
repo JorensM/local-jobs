@@ -113,32 +113,37 @@ export default function ListingPage() {
         // setIsOwnListing(false)
         setLoading(true)
         if( listing_id ) {
-            const _listing: Listing = await listings.fetchListing(parseInt(listing_id as string));
+            try {
+                const _listing: Listing = await listings.fetchListing(parseInt(listing_id as string));
 
-            // Check if this is user's own listing
-            const is_own = _listing.user_id == auth.user!.id;
-            isOwnListingRef.current = is_own;
+                // Check if this is user's own listing
+                const is_own = _listing.user_id == auth.user!.id;
+                isOwnListingRef.current = is_own;
 
-            if(is_own) {
-                // If this is user's own listing, add an 'edit' button to the header
-                navigation.setOptions({
-                    headerRight: () => (
-                        <View
-                            style={{
-                                paddingRight: 16
-                            }}
-                        >
-                            <IconButton
-                                name='edit'
-                                size={ 24 }
-                                onPress={ handleEditPress }
-                            />
-                        </View>
-                    )
-                })
+                if(is_own) {
+                    // If this is user's own listing, add an 'edit' button to the header
+                    navigation.setOptions({
+                        headerRight: () => (
+                            <View
+                                style={{
+                                    paddingRight: 16
+                                }}
+                            >
+                                <IconButton
+                                    name='edit'
+                                    size={ 24 }
+                                    onPress={ handleEditPress }
+                                />
+                            </View>
+                        )
+                    })
+                }
+                setListing(_listing)
+                setLoading(false)
+                console.log('fetched listing')
+            } catch (error: any) {
+                toastError('Error', error.message)
             }
-            setListing(_listing)
-            setLoading(false)
         } else {
             setError('Id not specified for listing')
         }
@@ -187,11 +192,14 @@ export default function ListingPage() {
 
     useFocusEffect(() => {
         fetchListing()
-    }, [], true)
+    }, [listing_id], true)
 
     useEffect(() => {
         setLoading(true)
         setListing(null)
+        navigation.setOptions({
+            headerRight: () => null
+        })
     }, [pathname])
 
     return (
