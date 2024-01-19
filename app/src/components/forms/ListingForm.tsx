@@ -39,7 +39,6 @@ type ListingFormProps = {
  */
 export default function ListingForm( { onSubmit = () => {}, listing = undefined }: ListingFormProps) {
 
-
     const initialValues = useMemo<ListingFormValues>(() => {
         if(listing) {
             return {
