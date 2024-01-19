@@ -1,15 +1,13 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 // Types
 import { UserRole } from '#types/User';
-import { User } from '#/types/User'
 
 // State
 import AuthContext from '#state/AuthContext';
 
 // Misc
 import supabase from '#misc/supabase'
-import { Form } from 'formik';
 
 export default function useAuth() {
 
