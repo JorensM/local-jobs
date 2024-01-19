@@ -1,5 +1,6 @@
-import 'react-native-url-polyfill/auto'
+import 'react-native-url-polyfill/auto' // Need this otherwise Supabase doesn't work
 
+// Core
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBrowserClient } from '@supabase/ssr/dist/index'; //Need to explicitly import the file because metro bundler doens't support implicit .mjs imports
 
@@ -16,7 +17,7 @@ const supabase = createBrowserClient(
             persistSession: true,
             detectSessionInUrl: false
         },
-        cookies: {
+        cookies: { // This is not being used anywhere but is required by TS for some reason
             get: async (key: string) => {
                 console.log('getting cookie')
                 return null;
