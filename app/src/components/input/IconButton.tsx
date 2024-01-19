@@ -8,6 +8,15 @@ type Props = {
     onPress?: () => void
 }
 
+/**
+ * An icon button
+ * 
+ * ## Props
+ * 
+ * * `size` - size of the icon in pixels
+ * * `name` - name of the icon from Expo's MaterialIcons package
+ * * `onPress` - called when button is pressed
+ */
 export default function IconButton( { size, name, onPress }: Props) {
     return (
         <Pressable
