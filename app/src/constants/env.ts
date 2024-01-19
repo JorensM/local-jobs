@@ -1,4 +1,5 @@
-export const API_URL = process.env.EXPO_PUBLIC_API_URL
+// Constants from environment variables
+
 const ENV_VARIABLE_NAMES = [
     'API_URL',
     'STRIPE_PUBLISHABLE_KEY',
@@ -22,3 +23,7 @@ const validateEnvVariables = () => {
 
 validateEnvVariables();
 
+export const API_URL = process.env.EXPO_PUBLIC_API_URL;
+export const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
+export const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_KEY;
+export const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY;
