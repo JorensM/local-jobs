@@ -39,7 +39,7 @@ import useContacts from '#hooks/useContacts'
 import usePage from '#hooks/usePage'
 
 // Misc
-import { toastError, toastSuccess } from '#misc/toast'
+import { toastError } from '#misc/toast'
 import { useStripe } from '#misc/stripe'
 import { API_URL } from '#constants/env'
 import useAPI from '#hooks/useAPI'
@@ -88,15 +88,14 @@ export default function ListingPage() {
             } else if (!stripe) {
                 throw new Error('Stripe not supported on web')
             }
-            await initializePaymentSheet();
+            await initializePaymentSheet()
             const { error } = await stripe.presentPaymentSheet();
             if(error) {
+                console.log(error)
                 throw error
             }
-            //await contacts.purchaseContact(listing.user_id);
-            //setShowContactModal(false);
-            //router.replace('/feed') // This should redirect to the newly created contact
-            toastSuccess('Purchase successful', 'User has been added to your contacts')
+                //toastSuccess('Purchase successful', 'User has been added to your contacts')
+            
         } catch (err: any) {
             setShowContactModal(false);
             toastError('An error has occured', err.message)
@@ -144,15 +143,9 @@ export default function ListingPage() {
         if(!stripe) {
             throw new Error('Stripe not supported on web')
         }
-        // const {
-        //   paymentIntent,
-        //   ephemeralKey,
-        //   customer,
-        //   publishableKey,
-        // } = await api.getContactPaymentSheet();
     
-        const payment_sheet = await api.getContactPaymentSheet();
-
+        const payment_sheet = await api.getContactPaymentSheet(listing!.user_id);
+        console.log('bbb')
         if(!payment_sheet) {
             throw new Error('Could not retrieve payment sheet')
         }
@@ -176,8 +169,8 @@ export default function ListingPage() {
             name: 'Jane Doe',
           }
         });
-        if (!error) {
-          setLoading(true);
+        if(error) {
+            throw error
         }
     };
 
@@ -193,6 +186,13 @@ export default function ListingPage() {
         setLoading(true)
         setListing(null)
     }, [pathname])
+
+    useEffect(() => {
+        if(showContactModal) {
+            console.log('abc')
+            
+        }
+    }, [showContactModal])
 
     return (
         <SessionPage

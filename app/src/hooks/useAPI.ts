@@ -8,7 +8,7 @@ import useAuth from './useAuth';
 import { API_URL } from '#constants/env';
 
 type APIHookReturnValue = {
-    getContactPaymentSheet: () => Promise<{
+    getContactPaymentSheet: (contact_id: string) => Promise<{
         paymentIntent: any,
         ephemeralKey: string,
         customer: string,
@@ -32,23 +32,40 @@ export default function useAPI(): APIHookReturnValue {
             throw new Error('Session not found')
         }
 
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'access-token': session.access_token,
-                'refresh-token': session.refresh_token
+        try {
+            const url = new URL(`${API_URL}${endpoint}`);
+
+            if(typeof params == 'object') {
+                for(const param_key in params) {
+                    url.searchParams.set(param_key, params[param_key])
+                }
             }
-        })
+            
+            const response = await fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'access-token': session.access_token,
+                    'refresh-token': session.refresh_token
+                }
+            })
+    
+            const data = await response.json()
 
-        const data = await response.json()
-
-        return data;
+            //console.log(data);
+    
+            return data;
+        } catch (error: any) {
+            throw new Error(error)
+        }
+        
     }, [auth.user])
 
 
-    const getContactPaymentSheet = async () => {
-        const payment_sheet = await authGET('contact-payment-sheet');
+    const getContactPaymentSheet = async (contact_id: string) => {
+        const payment_sheet = await authGET('contact-payment-sheet', {contact_id});
     
+        // console.log(JSON.stringify(payment_sheet, null, 2))
+
         return payment_sheet;
     }
 
