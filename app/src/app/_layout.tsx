@@ -1,9 +1,8 @@
 // Core
-import { ReactElement, ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { router, usePathname } from 'expo-router';
 import Toast from 'react-native-toast-message';
-import { StripeProvider } from '#misc/stripe';
-// import { StripeProvider } from '@stripe/stripe-react-native'
+
 
 // Components
 import CustomDrawer from '#components/layout/CustomDrawer';
@@ -22,7 +21,7 @@ import toast_config from '#constants/toast_config';
 
 // Misc
 import { isGuestRoute, isUserRoute } from '#misc/route_utils';
-import { API_URL } from '#constants/env';
+import { StripeProvider } from '#misc/stripe';
 
 
 
