@@ -1,18 +1,13 @@
+// Core
 import { 
     Text, 
     View, 
     StyleSheet,
     TextInput as NativeTextInput, 
-    StyleSheetProperties,
-    StyleProp,
-    ViewStyle,
-    TextStyle,
     TextInputProps,
-    NativeSyntheticEvent,
-    TextInputChangeEventData,
 } from 'react-native'
-import { Field, useField } from 'formik';
-import React, { ChangeEvent, ComponentProps, useMemo, useState } from 'react';
+import { useField } from 'formik';
+import React, { useState } from 'react';
 
 
 type Props = TextInputProps & {
