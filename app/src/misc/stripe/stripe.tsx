@@ -13,3 +13,10 @@ export const StripeProvider = ({ publishableKey, children }: PropsWithChildren<S
         </>
     )
 }
+
+type StripeHook = (() => null) |
+(() => {
+    initPaymentSheet: (context: any) => { error: any }
+})
+
+export const useStripe: StripeHook = () => null;

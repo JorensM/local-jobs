@@ -1,3 +1,3 @@
-import { StripeProvider } from './stripe';
+import { StripeProvider, useStripe } from './stripe';
 
-export { StripeProvider }
+export { StripeProvider, useStripe }
