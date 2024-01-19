@@ -1,11 +1,13 @@
 //Core
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
 import { Pressable, Text, StyleSheet } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 //Components
 import Caption from './typography/Caption'
 import Description from './typography/Description'
+
+// Types
 import { Listing } from '#types/Listing'
 
 //Functions
@@ -17,6 +19,14 @@ type Props = {
     onPress: () => void
 }
 
+/**
+ * Listing card, used to display basic info about a listing.
+ * 
+ * ## Props
+ * 
+ * * `item` - Listing object
+ * * `onPress` - called when card is pressed
+ */
 export default function ListingSmall( { item, onPress }: Props ) {
 
     //const { getPlaceByID } = usePlacesAPI()
