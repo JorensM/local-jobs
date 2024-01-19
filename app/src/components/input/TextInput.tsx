@@ -15,6 +15,17 @@ type Props = TextInputProps & {
     label: string
 }
 
+/**
+ * Text input component
+ * 
+ * # Props
+ * 
+ * * `label` - label of the field
+ * * `name` - unique name to identify field in formik
+ * 
+ * And any native TextInput props
+ * @returns 
+ */
 export default function TextInput( { 
     label, 
     name,
