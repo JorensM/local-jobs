@@ -12,6 +12,14 @@ type ContactSmallProps = {
     onPress?: () => void
 }
 
+/**
+ * Contact card, displays basic information about a contact
+ * 
+ * # Props
+ * 
+ * * `item` - User object of the contact
+ * * `onPress` - called when card is pressed
+ */
 export default function ContactSmall({ item, onPress = () => {}}: ContactSmallProps) {
     return (
         <Pressable
