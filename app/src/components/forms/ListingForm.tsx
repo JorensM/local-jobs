@@ -18,6 +18,11 @@ export type ListingFormValues = {
     // location_name?: string
 }
 
+const validationSchema = Yup.object().shape({
+    title: Yup.string().required().min(8),
+    description: Yup.string().required().min(20)
+})
+
 const default_values: ListingFormValues = {
     title: '',
     description: '',
@@ -55,8 +60,11 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
     return (
         <Formik<ListingFormValues>
             initialValues={initialValues}
+            validationSchema={validationSchema}
             enableReinitialize={true}
             onSubmit={onSubmit}
+            validateOnChange={false}
+            validateOnBlur={false}
         >
             {(formik) => (
                 <View
