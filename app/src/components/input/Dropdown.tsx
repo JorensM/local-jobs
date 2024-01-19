@@ -13,6 +13,16 @@ type Props = {
     placeholder?: string
 }
 
+/**
+ * Dropdown element
+ * 
+ * ## Props
+ * 
+ * * `data` - Dropdown values.
+ * * `name` - The input name attribute
+ * * `placeholder` - Placeholder text when no value is selected
+ * @returns 
+ */
 export default function Dropdown( { data, name, ...props }: Props ) {
 
     const [ field ] = useField(name);
