@@ -105,7 +105,6 @@ export default function RegisterPage() {
                             }
                           ]}
                           placeholder='I am a...'
-                          formik={formik} // Should remove this and use useField instead
                           name='role'
                         />
                         <Button

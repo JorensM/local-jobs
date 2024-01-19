@@ -10,24 +10,15 @@ type DropdownValue = {
 type Props = {
     data: DropdownValue[],
     name: string,
-    formik: any,
     placeholder?: string
 }
 
-export default function Dropdown( { data, formik, name, ...props }: Props ) {
+export default function Dropdown( { data, name, ...props }: Props ) {
 
-    const [value, setValue] = useState<any>(null)
+    const [ field ] = useField(name);
 
-    const [field] = useField(name)
-
-    const { setFieldValue } = useFormikContext()
-
-    const handleChange = (item: any) => {
-        //const event: any = {}
-        //event.target.name = name
-        //event.target.value = item.value
-        //setValue(item.value)
-        setFieldValue(name, item.value)
+    const handleChange = (item: DropdownValue) => {
+        field.onChange(name)(item.value)
     }
 
     return (
