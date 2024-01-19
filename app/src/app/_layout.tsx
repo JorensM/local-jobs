@@ -62,13 +62,6 @@ export default function Layout() {
       validateSession()
     }, 10 * 1000);
 
-    (async () => {
-      const res = await fetch(API_URL + 'session')
-      const data = await res.json();
-      console.log('session: ')
-      console.log(data)
-    })()
-
     return () => {
       clearTimeout(timeout)
     }
