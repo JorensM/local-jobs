@@ -10,7 +10,8 @@ import {
     View,
     Button,
     StyleSheet,
-    Pressable
+    Pressable,
+    Platform
 } from 'react-native'
 import { 
     router, 
@@ -39,6 +40,9 @@ import usePage from '#hooks/usePage'
 
 // Misc
 import { toastError, toastSuccess } from '#misc/toast'
+import { useStripe } from '#misc/stripe'
+import { API_URL } from '#constants/env'
+import useAPI from '#hooks/useAPI'
 
 /**
  * Page for single listing
@@ -53,6 +57,8 @@ export default function ListingPage() {
     const contacts = useContacts();
     const { listing_id } = useLocalSearchParams();
     const { setLoading, setError, pageState } = usePage(true);
+    const api = useAPI();
+    const stripe = useStripe();
 
     // State
     const [listing, setListing] = useState<Listing | null>(null)
@@ -77,12 +83,19 @@ export default function ListingPage() {
 
     const handlePayForContactPress = async () => {
         try {
-            if(!listing) {
+            if (!listing) {
                 throw new Error('Listing not found')
+            } else if (!stripe) {
+                throw new Error('Stripe not supported on web')
             }
-            await contacts.purchaseContact(listing.user_id);
-            setShowContactModal(false);
-            router.replace('/feed') // This should redirect to the newly created contact
+            await initializePaymentSheet();
+            const { error } = await stripe.presentPaymentSheet();
+            if(error) {
+                throw error
+            }
+            //await contacts.purchaseContact(listing.user_id);
+            //setShowContactModal(false);
+            //router.replace('/feed') // This should redirect to the newly created contact
             toastSuccess('Purchase successful', 'User has been added to your contacts')
         } catch (err: any) {
             setShowContactModal(false);
@@ -126,6 +139,47 @@ export default function ListingPage() {
             setError('Id not specified for listing')
         }
     }
+
+    const initializePaymentSheet = async () => {
+        if(!stripe) {
+            throw new Error('Stripe not supported on web')
+        }
+        // const {
+        //   paymentIntent,
+        //   ephemeralKey,
+        //   customer,
+        //   publishableKey,
+        // } = await api.getContactPaymentSheet();
+    
+        const payment_sheet = await api.getContactPaymentSheet();
+
+        if(!payment_sheet) {
+            throw new Error('Could not retrieve payment sheet')
+        }
+
+        const {
+            paymentIntent,
+            ephemeralKey,
+            customer,
+            publishableKey
+        } = payment_sheet
+
+        const { error } = await stripe.initPaymentSheet({
+          merchantDisplayName: "Local Jobs",
+          customerId: customer,
+          customerEphemeralKeySecret: ephemeralKey,
+          paymentIntentClientSecret: paymentIntent,
+          // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+          //methods that complete payment after a delay, like SEPA Debit and Sofort.
+          allowsDelayedPaymentMethods: false,
+          defaultBillingDetails: {
+            name: 'Jane Doe',
+          }
+        });
+        if (!error) {
+          setLoading(true);
+        }
+    };
 
     // Effects
 
