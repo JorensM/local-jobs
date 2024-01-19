@@ -121,7 +121,6 @@ export default function ListingPage() {
             isOwnListingRef.current = is_own;
 
             if(is_own) {
-                console.log('setting option')
                 // If this is user's own listing, add an 'edit' button to the header
                 navigation.setOptions({
                     headerRight: () => (
@@ -155,7 +154,7 @@ export default function ListingPage() {
     
         // Make request to API to generate a payment sheet for purchasing a contact
         const payment_sheet = await api.getContactPaymentSheet(listing!.user_id);
-        console.log('bbb')
+
         if(!payment_sheet) {
             throw new Error('Could not retrieve payment sheet')
         }
