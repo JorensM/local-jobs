@@ -15,11 +15,14 @@ const supabase = createBrowserClient(
         },
         cookies: {
             get: async (key: string) => {
-                const item = await AsyncStorage.getItem('cookies:' + key)
-                return item;
+                console.log('getting cookie')
+                return null;
             },
             set: async(key: string, value: string) => {
-                await AsyncStorage.setItem('cookies:' + key, value)
+                console.log('setting cookie')
+            },
+            remove: async (key: string, value: string) => {
+                console.log('removing cookie')
             }
         }
     }
