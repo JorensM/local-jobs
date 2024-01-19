@@ -30,6 +30,13 @@ type ListingFormProps = {
     listing?: Listing | null
 }
 
+/**
+ * Listing edit/create form
+ * 
+ * ## Props
+ * 
+ * * `onSubmit` - called when the form is submitted. Validation i 
+ */
 export default function ListingForm( { onSubmit = () => {}, listing = undefined }: ListingFormProps) {
 
 
