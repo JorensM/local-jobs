@@ -1,7 +1,9 @@
+// Core
 import { useContext } from 'react';
+import { AuthSession } from '@supabase/supabase-js';
 
 // Types
-import { UserRole } from '#types/User';
+import { User, UserRole } from '#types/User';
 
 // State
 import AuthContext from '#state/AuthContext';
@@ -9,11 +11,26 @@ import AuthContext from '#state/AuthContext';
 // Misc
 import supabase from '#misc/supabase'
 
-export default function useAuth() {
+
+type AuthHook = {
+    user: User | null
+    fetchUser: () => Promise<User|null>
+    getSession: () => Promise<AuthSession|null>,
+    login: (email: string, password: string) => Promise<true>
+    logout: () => Promise<true>
+    register: (email: string, password: string, name: string, role: UserRole) => Promise<true>
+}
+
+/**
+ * Hook for managing user/session related stuff
+ * 
+ * ## Returned functions
+ */
+export default function useAuth(): AuthHook {
 
     const context = useContext(AuthContext)
 
-    const login = async (email: string, password: string) => {
+    const login = async (email: string, password: string): Promise<true> => {
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -28,7 +45,7 @@ export default function useAuth() {
         return true;
     }
 
-    const logout = async () => {
+    const logout = async (): Promise<true> => {
         const { error } = await supabase.auth.signOut();
 
         if (error) {
@@ -42,7 +59,7 @@ export default function useAuth() {
         const { data: { user: user }, error } = await supabase.auth.getUser();
 
         if(error?.status == 401) {
-            return false
+            return null
         } else if(error) {
             throw error
         }
@@ -101,7 +118,7 @@ export default function useAuth() {
         return session;
     }
 
-    const register = async (email: string, password: string, name: string, role: UserRole) => {
+    const register = async (email: string, password: string, name: string, role: UserRole): Promise<true> => {
         const { error } = await supabase.auth.signUp({
             email,
             password,
@@ -114,7 +131,7 @@ export default function useAuth() {
         })
 
         if (error) {
-            return false
+            throw error;
         }
         return true;
     }
