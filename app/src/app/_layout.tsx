@@ -37,7 +37,6 @@ export default function Layout() {
 
   // Auth context
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
 
   const auth = useAuth();
   const pathname = usePathname();
