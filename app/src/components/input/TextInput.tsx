@@ -12,7 +12,6 @@ import React, { useState } from 'react';
 
 type Props = TextInputProps & {
     name: string,
-    // style?: StyleProp<TextStyle>,
     label: string
 }
 
@@ -25,7 +24,7 @@ export default function TextInput( {
 
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
 
-    const [field, meta, helpers] = useField<any>(name);
+    const [field, meta ] = useField<any>(name);
 
     return (
         <View>
