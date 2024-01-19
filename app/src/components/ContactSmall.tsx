@@ -1,6 +1,11 @@
-import list from '#styles/list'
-import { User } from '#types/User'
+// Core
 import { Pressable, Text } from 'react-native'
+
+// Types
+import { User } from '#types/User'
+
+// Styles
+import list from '#styles/list'
 
 type ContactSmallProps = {
     item: User,
