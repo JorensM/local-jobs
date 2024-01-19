@@ -207,7 +207,7 @@ export default function ListingPage() {
                         onPress={() => setShowContactModal(false)}
                     >
                         <Text
-                            style={styles.warn}
+                            style={text.warn}
                         >
                             Close
                         </Text>
@@ -260,9 +260,3 @@ export default function ListingPage() {
         </SessionPage>
     )
 }
-
-const styles = StyleSheet.create({
-    warn: {
-        color: 'red'
-    }
-})
