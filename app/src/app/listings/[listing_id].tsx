@@ -195,13 +195,6 @@ export default function ListingPage() {
         setListing(null)
     }, [pathname])
 
-    useEffect(() => {
-        if(showContactModal) {
-            console.log('abc')
-            
-        }
-    }, [showContactModal])
-
     return (
         <SessionPage
             pageState={pageState}
