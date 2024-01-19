@@ -140,7 +140,6 @@ export default function ListingPage() {
                 }
                 setListing(_listing)
                 setLoading(false)
-                console.log('fetched listing')
             } catch (error: any) {
                 toastError('Error', error.message)
             }
