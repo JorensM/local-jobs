@@ -95,6 +95,16 @@ export default function useAuth() {
         return user_parsed;
     }
 
+    const getSession = async () => {
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if(error) {
+            throw error
+        }
+
+        return session;
+    }
+
     const register = async (email: string, password: string, name: string, role: UserRole) => {
         const { error } = await supabase.auth.signUp({
             email,
@@ -116,6 +126,7 @@ export default function useAuth() {
     return {
         user: context.user,
         fetchUser,
+        getSession,
         login,
         logout,
         register,
