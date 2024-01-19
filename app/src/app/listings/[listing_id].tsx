@@ -187,10 +187,8 @@ export default function ListingPage() {
     // Effects
 
     useFocusEffect(() => {
-        if(auth.user) {
-            fetchListing()
-        }
-    }, [listing_id, auth.user])
+        fetchListing()
+    }, [], true)
 
     useEffect(() => {
         setLoading(true)
