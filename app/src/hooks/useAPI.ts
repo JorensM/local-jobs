@@ -20,7 +20,7 @@ type APIHookReturnValue = {
 /**
  * Hook for API calls. Returns an object with several functions
  * 
- * ## Returned functions
+ * ## Returns
  * 
  * `getContactPaymentSheet()` - creates and returns a payment sheet for 
  * purchasing a contact for the current user. Must be passed a single `contact_id` arg.
@@ -78,7 +78,7 @@ export default function useAPI(): APIHookReturnValue {
         const payment_sheet = await authGET('contact-payment-sheet', {contact_id});
 
         return payment_sheet;
-        
+
     }
 
     return {
