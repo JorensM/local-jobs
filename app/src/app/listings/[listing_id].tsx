@@ -45,6 +45,8 @@ import text from '#styles/text'
 
 /**
  * Page for single listing
+ * Page for single listing. On this page customer can make payment to get access
+ * to contact.
  */
 export default function ListingPage() {
 
@@ -68,7 +70,9 @@ export default function ListingPage() {
 
     // Handlers
 
+    // On listing edit press
     const handleEditPress = () => {
+        // Only redirect to edit page if the listing is user's own listing
         if (isOwnListingRef.current) {
             router.replace('edit-listing/' + listing_id)
         } else {
@@ -76,23 +80,27 @@ export default function ListingPage() {
         }
     }
 
+    // On contact button press
     const handleContactPress = () => {
         setShowContactModal(true);
     }
 
+    // On contact payment button press
     const handlePayForContactPress = async () => {
         try {
             if (!listing) {
                 throw new Error('Listing not found')
-            } else if (!stripe) {
+            } else if (!stripe) { // Stripe doesn't work on web so check for that
                 throw new Error('Stripe not supported on web')
             }
             await initializePaymentSheet()
+            // Present the payment sheet
             const { error } = await stripe.presentPaymentSheet();
             if(error) {
                 console.log(error)
                 throw error
             }
+                // #TODO implement after-payment-success flow
                 //toastSuccess('Purchase successful', 'User has been added to your contacts')
             
         } catch (err: any) {
@@ -110,11 +118,13 @@ export default function ListingPage() {
         if( listing_id ) {
             const _listing: Listing = await listings.fetchListing(parseInt(listing_id as string));
 
+            // Check if this is user's own listing
             const is_own = _listing.user_id == auth.user!.id;
             isOwnListingRef.current = is_own;
 
             if(is_own) {
                 console.log('setting option')
+                // If this is user's own listing, add an 'edit' button to the header
                 navigation.setOptions({
                     headerRight: () => (
                         <View
@@ -138,11 +148,14 @@ export default function ListingPage() {
         }
     }
 
+    // Initialize payment sheet. Must be called before presenting the payment sheet
     const initializePaymentSheet = async () => {
+        // Stripe is not supported on web so check for that
         if(!stripe) {
             throw new Error('Stripe not supported on web')
         }
     
+        // Make request to API to generate a payment sheet for purchasing a contact
         const payment_sheet = await api.getContactPaymentSheet(listing!.user_id);
         console.log('bbb')
         if(!payment_sheet) {
@@ -156,6 +169,7 @@ export default function ListingPage() {
             publishableKey
         } = payment_sheet
 
+        // Initialize payment sheet by passing data received from API
         const { error } = await stripe.initPaymentSheet({
           merchantDisplayName: "Local Jobs",
           customerId: customer,
