@@ -11,8 +11,6 @@ import supabase from '#misc/supabase'
 
 export default function useAuth() {
 
-    //const [user, setUser] = useState<User | null>(null)
-
     const context = useContext(AuthContext)
 
     const login = async (email: string, password: string) => {
