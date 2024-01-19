@@ -1,5 +1,6 @@
-import MaterialIcon from '@expo/vector-icons/MaterialIcons'
+// Core
 import { Pressable } from 'react-native'
+import MaterialIcon from '@expo/vector-icons/MaterialIcons'
 
 type Props = {
     name: keyof typeof MaterialIcon.glyphMap,
