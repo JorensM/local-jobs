@@ -32,7 +32,6 @@ import Modal from '#components/layout/Modal'
 import useListings from '#hooks/useListings'
 import useFocusEffect from '#hooks/useFocusEffect'
 import useAuth from '#hooks/useAuth'
-import useContacts from '#hooks/useContacts'
 import usePage from '#hooks/usePage'
 import useAPI from '#hooks/useAPI'
 
