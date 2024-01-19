@@ -21,8 +21,8 @@ const toast_config: ToastConfig = {
         {...props}
         style={styles.base}
         contentContainerStyle={styles.container}
-        text1NumberOfLines={0}
-        text2NumberOfLines={0}
+        text1NumberOfLines={0} 
+        text2NumberOfLines={0} // Need this because otherwise the text will end abruptly and show 3 dots
       />
     ),
     error: (props) => (
