@@ -24,7 +24,14 @@ type AuthHook = {
 /**
  * Hook for managing user/session related stuff
  * 
- * ## Returned functions
+ * ## Returns
+ * 
+ * `user` - User object of the currently logged in user or null if not logged in (as state)
+ * `fetchUser()` - fetches currently logged in User object, returns it and assigns the `user` state to the retrieved value.
+ * `getSession()` - fetches and returns the current session
+ * `login()` - logs in user with email and password
+ * `logout()` - logs out current user
+ * `register()` - registers new user
  */
 export default function useAuth(): AuthHook {
 
