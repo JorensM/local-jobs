@@ -55,8 +55,6 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
         }
     }, [listing])
 
-    // const [ initialValues, setInitialValues ] = useState<ListingFormValues>(default_values)
-
     return (
         <Formik<ListingFormValues>
             initialValues={initialValues}
