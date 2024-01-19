@@ -3,9 +3,12 @@ import 'react-native-url-polyfill/auto'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBrowserClient } from '@supabase/ssr/dist/index'; //Need to explicitly import the file because metro bundler doens't support implicit .mjs imports
 
+// Constants
+import { SUPABASE_KEY, SUPABASE_URL } from '#constants/env';
+
 const supabase = createBrowserClient(
-    'https://yoiekjsjcdmjddgdurnj.supabase.co', 
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvaWVranNqY2RtamRkZ2R1cm5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDUwNTAzMTYsImV4cCI6MjAyMDYyNjMxNn0.i08XsWmZkIeU2nvTXriR7iI1UYuyuReVPmYXelS6Dxw',
+    SUPABASE_URL, 
+    SUPABASE_KEY,
     {
         auth: {
             storage: AsyncStorage,

@@ -23,6 +23,7 @@ import toast_config from '#constants/toast_config';
 import { isGuestRoute, isUserRoute } from '#misc/route_utils';
 import { StripeProvider } from '#misc/stripe';
 import { toastInfo } from '#misc/toast';
+import { STRIPE_PUBLISHABLE_KEY } from '#constants/env';
 
 
 
@@ -80,7 +81,7 @@ export default function Layout() {
       }}
     >
       <StripeProvider
-        publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+        publishableKey={STRIPE_PUBLISHABLE_KEY}
       >
         <CustomDrawer />
         <Toast config={toast_config}/>
