@@ -44,7 +44,6 @@ import { useStripe } from '#misc/stripe'
 import text from '#styles/text'
 
 /**
- * Page for single listing
  * Page for single listing. On this page customer can make payment to get access
  * to contact.
  */
