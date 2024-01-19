@@ -33,8 +33,6 @@ export default function ListingSmall( { item, onPress }: Props ) {
 
     const [ locationStr, setLocationStr ] = useState<string>('')
 
-    const navigation = useNavigation<any>()
-
     const handleListingPress = useCallback(() => {
         // console.log('listing button press: ' + item.$id)
         // navigation.navigate('Listing', {
