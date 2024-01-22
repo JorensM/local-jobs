@@ -13,6 +13,44 @@ const fetch_listings_default_options: Required<ListingFetchOptions> = {
     per_page: 16
 }
 
+type ListingsHook = {
+    /**
+     * Fetch and return listings according to options
+     * 
+     * @param options See ListingFetchOptions type for list 
+     * of options
+     * 
+     * @returns Promise that resolves to an array of Listing objects
+     */
+    fetchListings: (options: ListingFetchOptions) => Promise<Listing[]>
+    /**
+     * Fetch and return a single listing by ID
+     * 
+     * @param id an ID as either string or number, number is preferred because string
+     * will be converted to number
+     * 
+     * @returns Promise that resolves to a Listing object or null if listing not found
+     */
+    fetchListing: (id: number | string) => Promise<Listing | null>
+    /**
+     * Create a new listing
+     * 
+     * @param listing The listing object to create, see ListingNew type for the format
+     * 
+     * @returns {number} ID of newly created listing
+     */
+    createListing: (listing: ListingNew) => Promise<number>
+    /**
+     * Update an existing listing
+     * 
+     * @param listing Listing object to update. See ListingUpdate type for the format
+     */
+    updateListing: (listing: ListingUpdate) => Promise<true>
+}
+
+/**
+ * Hook for managing listings
+ */
 export default function useListings() {
     const fetchListings = async (options?: ListingFetchOptions) => {
 
