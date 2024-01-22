@@ -32,7 +32,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-.env
 const.ts
 private.ts
 
