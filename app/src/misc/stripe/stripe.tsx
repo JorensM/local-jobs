@@ -1,5 +1,8 @@
 // DO NOT IMPORT THIS FILE, import the index.ts instead
 
+// Since stripe-react-native is not available on web, this just has non-functioning
+// placeholders
+
 import { PropsWithChildren } from 'react'
 
 type StripeProviderProps = {

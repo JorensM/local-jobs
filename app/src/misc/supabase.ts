@@ -7,12 +7,15 @@ import { createBrowserClient } from '@supabase/ssr/dist/index'; //Need to explic
 // Constants
 import { SUPABASE_KEY, SUPABASE_URL } from '#constants/env';
 
+/**
+ * Supabase client
+ */
 const supabase = createBrowserClient(
     SUPABASE_URL, 
     SUPABASE_KEY,
     {
         auth: {
-            storage: AsyncStorage,
+            storage: AsyncStorage, // Use AsyncStorage
             autoRefreshToken: true,
             persistSession: true,
             detectSessionInUrl: false
