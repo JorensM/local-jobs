@@ -15,7 +15,7 @@ export default function useFocusEffect(callback: () => void, deps?: any[], use_a
     // Hooks
     const auth = useAuth();
 
-    const auth_dep = auth ? [auth.user] : [] // If use_auth is true, add auth.user to dependencies
+    const auth_dep = use_auth ? [auth.user] : [] // If use_auth is true, add auth.user to dependencies
     const _deps = deps ? [...deps, ...auth_dep] : auth_dep
     
     return ExpoUseFocusEffect(
