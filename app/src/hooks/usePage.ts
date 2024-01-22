@@ -30,8 +30,11 @@ type PageHook = {
  * Hook to handle page state.
  */
 export default function usePage(initialLoading: boolean = false): PageHook {
+
+    // Hooks
     const pathname = usePathname()
 
+    // State
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(initialLoading);
 
