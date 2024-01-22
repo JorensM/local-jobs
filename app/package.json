@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --go",
     "prod-preview": "expo start --no-dev --minify",
     "prod-preview-c": "expo start --no-dev --minify --clear",
     "build-preview": "eas build --platform android --profile preview",
