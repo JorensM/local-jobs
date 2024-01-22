@@ -16,8 +16,8 @@ const validateEnvVariables = () => {
         }
     }
 
-    if (missing_vars) {
-        throw new Error('Missing the following environment variables: ' + missing_vars)
+    if (missing_vars.length > 0) {
+        throw new Error('Missing the following environment variables: ' + missing_vars.join(', '))
     }
 }
 
