@@ -12,7 +12,7 @@ type Routes = {
 // Routes that should be available when user is not signed in
 export const guest_routes: Routes = {
     'index': {
-      label: 'Loginnn',
+      label: 'Login',
     },
     'register': {
       label: 'Register'
