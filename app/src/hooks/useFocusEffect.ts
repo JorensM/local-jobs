@@ -24,6 +24,6 @@ export default function useFocusEffect(callback: () => void, deps?: any[], use_a
             } else if (!use_auth) {
                 callback()
             }
-        }, deps || []) 
+        }, _deps || []) 
     )
 }
