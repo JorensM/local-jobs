@@ -38,9 +38,10 @@ const validateEnvVariables = () => {
     }
 }
 
-validateEnvVariables();
+//validateEnvVariables(); Disable this for now because the app isn't detecting
+//env variables in EAS Build.
 
-export const API_URL = process.env.EXPO_PUBLIC_API_URL!;
-export const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-export const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_KEY!;
-export const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
+export const API_URL = "https://local-jobs.deno.dev/";//process.env.EXPO_PUBLIC_API_URL!;
+export const SUPABASE_URL = "https://yoiekjsjcdmjddgdurnj.supabase.co";//process.env.EXPO_PUBLIC_SUPABASE_URL!;
+export const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvaWVranNqY2RtamRkZ2R1cm5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDUwNTAzMTYsImV4cCI6MjAyMDYyNjMxNn0.i08XsWmZkIeU2nvTXriR7iI1UYuyuReVPmYXelS6Dxw";//process.env.EXPO_PUBLIC_SUPABASE_KEY!;
+export const STRIPE_PUBLISHABLE_KEY = "pk_test_51IsVKBGzVxrDUiCoswQCpPVrP81REBPngmYwbhWVyx89fBFDupveqPXGLWQiyZZbzqeBXphcps4VhPzwxCBk5mtc00zJo3d9kh";//process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
