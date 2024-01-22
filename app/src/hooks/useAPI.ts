@@ -8,6 +8,12 @@ import useAuth from './useAuth';
 import { API_URL } from '#constants/env';
 
 type APIHookReturnValue = {
+    /**
+     * creates and returns a payment sheet for 
+     * purchasing a contact for the current user.
+     * 
+     * @param contact_id user id of the contact to be added to user's contacts upon payment
+     */
     getContactPaymentSheet: (contact_id: string) => Promise<{
         paymentIntent: any,
         ephemeralKey: string,
@@ -18,12 +24,7 @@ type APIHookReturnValue = {
 }
 
 /**
- * Hook for API calls. Returns an object with several functions
- * 
- * ## Returns
- * 
- * `getContactPaymentSheet()` - creates and returns a payment sheet for 
- * purchasing a contact for the current user. Must be passed a single `contact_id` arg.
+ * Hook for API calls.
  */
 export default function useAPI(): APIHookReturnValue {
 

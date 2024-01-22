@@ -13,27 +13,40 @@ import supabase from '#misc/supabase'
 
 
 type AuthHook = {
+    /**
+     * User object of the currently logged in user or null if not 
+     * logged in (as state). This state is stored in context and is synced throughout
+     * each use of the hook.
+     */
     user: User | null
+    /**
+     * fetches currently logged in User object, returns it and assigns the `user` 
+     * state to the retrieved value.
+     * 
+     * @returns Promise that resolves to a User object or null if not logged in
+     */
     fetchUser: () => Promise<User|null>
+    /**
+     * fetches and returns the current session.
+     * 
+     * @returns Promise that resolves to an AuthSession or null if not logged in
+     */
     getSession: () => Promise<AuthSession|null>,
-    login: (email: string, password: string) => Promise<true>
-    logout: () => Promise<true>
+    /** 
+     * logs in user with email and password. 
+     * 
+     * @param email - email
+     * @param password - password
+     * */
+    login: (email: string, password: string) => Promise<true> 
+    /** logs out current user. */
+    logout: () => Promise<true>/* AAA */
+    /** registers new user. */
     register: (email: string, password: string, name: string, role: UserRole) => Promise<true>
 }
 
 /**
  * Hook for managing user/session related stuff
- * 
- * ## Returns
- * 
- * `user` - User object of the currently logged in user or null if not 
- * logged in (as state). This state is stored in context and is synced throughout
- * each use of the hook.
- * `fetchUser()` - fetches currently logged in User object, returns it and assigns the `user` state to the retrieved value.
- * `getSession()` - fetches and returns the current session.
- * `login()` - logs in user with email and password.
- * `logout()` - logs out current user.
- * `register()` - registers new user.
  */
 export default function useAuth(): AuthHook {
 
@@ -55,6 +68,10 @@ export default function useAuth(): AuthHook {
         return true;
     }
 
+    /**
+     * Test
+     * @returns 
+     */
     const logout = async (): Promise<true> => {
         const { error } = await supabase.auth.signOut();
 
@@ -90,13 +107,14 @@ export default function useAuth(): AuthHook {
         }
         
         
-
+        // Convert DB schema to User type
         const user_parsed = {
             id: user.id,
             role: user.user_metadata.role,
             name: user.user_metadata.name
         }
 
+        // If user data has not been created in user_data table, create it
         if(user_data!.length == 0) {
             const { error } = await supabase
                 .from('user_data')
@@ -110,10 +128,6 @@ export default function useAuth(): AuthHook {
                 throw error;
             }
         }
-
-        
-
-        context.setUser(user_parsed)
 
         return user_parsed;
     }
@@ -151,6 +165,9 @@ export default function useAuth(): AuthHook {
         fetchUser,
         getSession,
         login,
+        /**
+         * AAA
+         */
         logout,
         register,
     }
