@@ -36,11 +36,12 @@ import usePage from '#hooks/usePage'
 import useAPI from '#hooks/useAPI'
 
 // Misc
-import { toastError } from '#misc/toast'
+import { toastError, toastSuccess } from '#misc/toast'
 import { useStripe } from '#misc/stripe'
 
 // Styles
 import text from '#styles/text'
+import useContacts from '#hooks/useContacts'
 
 /**
  * Page for single listing. On this page customer can make payment to get access
@@ -57,6 +58,7 @@ export default function ListingPage() {
     const { setLoading, setError, pageState } = usePage(true);
     const api = useAPI();
     const stripe = useStripe();
+    const contacts = useContacts();
 
     // State
     const [listing, setListing] = useState<Listing | null>(null)
@@ -97,6 +99,22 @@ export default function ListingPage() {
                 console.log(error)
                 throw error
             }
+            setLoading(true);
+            setShowContactModal(false);
+            let interval_tries = 0;
+            const MAX_INTERVAL_TRIES =  5;
+            const interval = setTimeout(async () => {
+                if(interval_tries > MAX_INTERVAL_TRIES) {
+                    clearTimeout(interval);
+                    return;
+                }
+                const contact = await contacts.fetchContact(listing.user_id);
+                if(contact) {
+                    setLoading(false);
+                    toastSuccess('Payment successful', 'Contact has been added to your contacts list')
+                }
+                interval_tries++;
+            }, 2000)
                 // #TODO implement after-payment-success flow
                 //toastSuccess('Purchase successful', 'User has been added to your contacts')
             
