@@ -26,15 +26,18 @@ type AuthHook = {
  * 
  * ## Returns
  * 
- * `user` - User object of the currently logged in user or null if not logged in (as state)
+ * `user` - User object of the currently logged in user or null if not 
+ * logged in (as state). This state is stored in context and is synced throughout
+ * each use of the hook.
  * `fetchUser()` - fetches currently logged in User object, returns it and assigns the `user` state to the retrieved value.
- * `getSession()` - fetches and returns the current session
- * `login()` - logs in user with email and password
- * `logout()` - logs out current user
- * `register()` - registers new user
+ * `getSession()` - fetches and returns the current session.
+ * `login()` - logs in user with email and password.
+ * `logout()` - logs out current user.
+ * `register()` - registers new user.
  */
 export default function useAuth(): AuthHook {
 
+    // State
     const context = useContext(AuthContext)
 
     const login = async (email: string, password: string): Promise<true> => {
