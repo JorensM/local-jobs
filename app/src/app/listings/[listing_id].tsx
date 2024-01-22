@@ -1,6 +1,7 @@
 // Core
 import { 
     useEffect, 
+    useMemo, 
     useRef, 
     useState 
 } from 'react'
@@ -63,6 +64,7 @@ export default function ListingPage() {
     // State
     const [listing, setListing] = useState<Listing | null>(null)
     const [showContactModal, setShowContactModal] = useState<boolean>(false);
+    const [isContact, setIsContact] = useState<boolean>(false);
 
     // Refs
     const isOwnListingRef = useRef<boolean>(false);
@@ -111,12 +113,11 @@ export default function ListingPage() {
                 const contact = await contacts.fetchContact(listing.user_id);
                 if(contact) {
                     setLoading(false);
-                    toastSuccess('Payment successful', 'Contact has been added to your contacts list')
+                    setIsContact(true);
+                    toastSuccess('Payment successful', 'User has been added to your contacts list')
                 }
                 interval_tries++;
             }, 2000)
-                // #TODO implement after-payment-success flow
-                //toastSuccess('Purchase successful', 'User has been added to your contacts')
             
         } catch (err: any) {
             setShowContactModal(false);
@@ -157,6 +158,9 @@ export default function ListingPage() {
                             </View>
                         )
                     })
+                } else {
+                    const contact = await contacts.fetchContact(_listing.user_id);
+                    setIsContact(contact ? true : false)
                 }
                 setListing(_listing)
                 setLoading(false)
@@ -276,10 +280,16 @@ export default function ListingPage() {
                     marginTop: 'auto'
                 }}
             >
-                <Button
-                    onPress={handleContactPress}
-                    title='Contact'
-                />
+                {isContact ? 
+                    <Text>
+                        This user is in your contacts
+                    </Text>
+                :
+                    <Button
+                        onPress={handleContactPress}
+                        title='Contact'
+                    />
+                }
             </View>
                 
             : null }
