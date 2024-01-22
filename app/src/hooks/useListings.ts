@@ -47,7 +47,7 @@ export default function useListings() {
         return data;
     }
 
-    const fetchListing = async (id: number | string): Promise<Listing> => {
+    const fetchListing = async (id: number | string): Promise<Listing | null> => {
 
         const _id = typeof id == 'string' ? parseInt(id) : id
 
@@ -61,7 +61,15 @@ export default function useListings() {
             throw error
         }
 
-        return data[0] as Listing;
+        // Check if a row was returned from Supabase, in which case return the row
+        if(data.length > 0) {
+            return data[0] as Listing;
+        }
+
+        // Otherwise return null
+        return null;
+
+        
     }
 
     const createListing = async (listing: ListingNew) => {
