@@ -8,16 +8,21 @@ import useFocusEffect from '#hooks/useFocusEffect';
 import useAuth from '#hooks/useAuth';
 import usePage from '#hooks/usePage';
 
+/**
+ * Profile page that displays the information about the current user
+ */
 export default function ProfilePage() {
 
     // Hooks
     const auth = useAuth();
 
     // State
-    const { setError, setLoading, pageState } = usePage()
+    const { pageState } = usePage();
+
+    // Effects
 
     useFocusEffect(() => {
-        auth.fetchUser()
+        auth.fetchUser();
     })
 
     return (

@@ -9,6 +9,8 @@ const ENV_VARIABLE_NAMES = [
 
 const validateEnvVariables = () => {
     const missing_vars = []
+    // Turns out you can only us dot notation to access ENV variables so the 
+    // Commented code below won't work. Have to check each var manually instead.
     // for(const var_name of ENV_VARIABLE_NAMES) {
     //     const full_var_name = 'EXPO_PUBLIC_' + var_name
     //     if(!process.env[full_var_name]) {

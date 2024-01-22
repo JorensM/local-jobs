@@ -43,11 +43,10 @@ export default function MyContactsPage() {
         setError(null);
         try {
             const _contacts = await contacts.fetchUsersContacts();
-            // console.log(_contacts);
-            setContactsData(_contacts)
+            setContactsData(_contacts);
             setLoading(false);
         } catch (err: any) {
-            setError(err.message)
+            setError(err.message);
             toastError('An error has occured', err.message);
         }
         

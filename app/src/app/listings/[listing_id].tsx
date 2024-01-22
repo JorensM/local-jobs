@@ -62,9 +62,9 @@ export default function ListingPage() {
     const contacts = useContacts();
 
     // State
-    const [listing, setListing] = useState<Listing | null>(null)
-    const [showContactModal, setShowContactModal] = useState<boolean>(false);
-    const [isContact, setIsContact] = useState<boolean>(false);
+    const [ listing, setListing ] = useState<Listing | null>(null);
+    const [ showContactModal, setShowContactModal ] = useState<boolean>(false);
+    const [ isContact, setIsContact ] = useState<boolean>(false);
 
     // Refs
     const isOwnListingRef = useRef<boolean>(false);
@@ -75,9 +75,9 @@ export default function ListingPage() {
     const handleEditPress = () => {
         // Only redirect to edit page if the listing is user's own listing
         if (isOwnListingRef.current) {
-            router.replace('edit-listing/' + listing_id)
+            router.replace('edit-listing/' + listing_id);
         } else {
-            console.warn(`Can't edit listing that isn't your own!`)
+            console.warn(`Can't edit listing that isn't your own!`);
         }
     }
 
@@ -90,15 +90,14 @@ export default function ListingPage() {
     const handlePayForContactPress = async () => {
         try {
             if (!listing) {
-                throw new Error('Listing not found')
+                throw new Error('Listing not found');
             } else if (!stripe) { // Stripe doesn't work on web so check for that
-                throw new Error('Stripe not supported on web')
+                throw new Error('Stripe not supported on web');
             }
-            await initializePaymentSheet()
+            await initializePaymentSheet();
             // Present the payment sheet
             const { error } = await stripe.presentPaymentSheet();
             if(error) {
-                console.log(error)
                 throw error
             }
             setLoading(true);
@@ -121,7 +120,7 @@ export default function ListingPage() {
             
         } catch (err: any) {
             setShowContactModal(false);
-            toastError('An error has occured', err.message)
+            toastError('An error has occured', err.message);
         }
     }
 
@@ -130,7 +129,7 @@ export default function ListingPage() {
     const fetchListing = async () => {
         isOwnListingRef.current = false;
         // setIsOwnListing(false)
-        setLoading(true)
+        setLoading(true);
         if( listing_id ) {
             try {
                 const _listing: Listing | null = await listings.fetchListing(parseInt(listing_id as string));
@@ -160,15 +159,15 @@ export default function ListingPage() {
                     })
                 } else {
                     const contact = await contacts.fetchContact(_listing.user_id);
-                    setIsContact(contact ? true : false)
+                    setIsContact(contact ? true : false);
                 }
-                setListing(_listing)
-                setLoading(false)
+                setListing(_listing);
+                setLoading(false);
             } catch (error: any) {
-                toastError('Error', error.message)
+                toastError('Error', error.message);
             }
         } else {
-            setError('Id not specified for listing')
+            setError('Id not specified for listing');
         }
     }
 
@@ -176,14 +175,14 @@ export default function ListingPage() {
     const initializePaymentSheet = async () => {
         // Stripe is not supported on web so check for that
         if(!stripe) {
-            throw new Error('Stripe not supported on web')
+            throw new Error('Stripe not supported on web');
         }
     
         // Make request to API to generate a payment sheet for purchasing a contact
         const payment_sheet = await api.getContactPaymentSheet(listing!.user_id);
 
         if(!payment_sheet) {
-            throw new Error('Could not retrieve payment sheet')
+            throw new Error('Could not retrieve payment sheet');
         }
 
         const {
@@ -191,7 +190,7 @@ export default function ListingPage() {
             ephemeralKey,
             customer,
             publishableKey
-        } = payment_sheet
+        } = payment_sheet;
 
         // Initialize payment sheet by passing data received from API
         const { error } = await stripe.initPaymentSheet({
@@ -207,22 +206,22 @@ export default function ListingPage() {
           }
         });
         if(error) {
-            throw error
+            throw error;
         }
     };
 
     // Effects
 
     useFocusEffect(() => {
-        fetchListing()
+        fetchListing();
     }, [listing_id], true)
 
     useEffect(() => {
-        setLoading(true)
-        setListing(null)
+        setLoading(true);
+        setListing(null);
         navigation.setOptions({
             headerRight: () => null
-        })
+        });
     }, [pathname])
 
     return (

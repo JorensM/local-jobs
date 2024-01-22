@@ -23,7 +23,7 @@ export default function ListingEditPage() {
     const { listing_id } = useLocalSearchParams();
     const pathname = usePathname()
     const listings = useListings();
-    const { setLoading, setError, pageState } = usePage();
+    const { setLoading, pageState } = usePage();
 
     // State
     const [ listing, setListing ] = useState<Listing | null>(null);
@@ -38,10 +38,10 @@ export default function ListingEditPage() {
         const success = await listings.updateListing({
             ...values,
             id: parseInt(listing_id as string)
-        })
+        });
 
         if(success) {
-            router.replace('listings/' + listing_id)
+            router.replace('listings/' + listing_id);
         }
     }
 

@@ -44,26 +44,28 @@ export default function RegisterPage() {
 
     // Hooks
     const auth = useAuth();
-    const { pageState } = usePage()
+    const { pageState } = usePage();
+
+    // Handlers
 
     const handleSubmit = async ({ email, password, name, role} : FormValues) => {
       try {
-        const success = await auth.register(email, password, name, role)
+        const success = await auth.register(email, password, name, role);
 
-        if(success) {
+        if (success) {
           toastSuccess('Your account has been created!', 'A confirmation email has been sent to ' + email);
-          router.replace('/')
+          router.replace('/');
         }
       } catch (err: any) {
-        toastError('Could not register')
+        toastError('Could not register');
       }
     }
 
     return (
         <Page
           pageState={pageState}
-          // style={styles.container}
         >
+            {/* Registration form */}
             <Formik<FormValues>
                 initialValues={{
                   email: '',

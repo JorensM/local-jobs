@@ -23,6 +23,7 @@ export default function NewListingPage() {
     const listings = useListings();
     const { pageState } = usePage();
     
+    // Handlers
     const handleSubmit = async (values: ListingFormValues) => {
 
         try {
@@ -32,13 +33,13 @@ export default function NewListingPage() {
                 user_name: auth.user!.name
             })
             if(id) {
-                router.replace('listings/' + id)
-                toastSuccess('Success', 'Listing has been created')
+                router.replace('listings/' + id);
+                toastSuccess('Success', 'Listing has been created');
             } else {
-                throw new Error('Could not create listing')
+                throw new Error('Could not create listing');
             }
         } catch(error: any) {
-            toastError('Error', error.message)
+            toastError('Error', error.message);
         }
         
     }

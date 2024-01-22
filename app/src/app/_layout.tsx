@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { router, usePathname } from 'expo-router';
 import Toast from 'react-native-toast-message';
 
-
 // Components
 import CustomDrawer from '#components/layout/CustomDrawer';
 
@@ -25,54 +24,56 @@ import { StripeProvider } from '#misc/stripe';
 import { toastInfo } from '#misc/toast';
 import { STRIPE_PUBLISHABLE_KEY } from '#constants/env';
 
-
-
 export const unstable_settings = {
   // Ensure any route can link back to `/`
   initialRouteName: '/login',
 };
 
+/**
+ * Layout component that will be shown on each route
+ */
 export default function Layout() {
 
-  // rconsole.log(StripeProvider)
-
   // Auth context
-  const [user, setUser] = useState<User | null>(null);
+  const [ user, setUser ] = useState<User | null>(null);
 
+  // hooks
   const auth = useAuth();
   const pathname = usePathname();
 
+  /**
+   * Validates whether user/guest is allowed to be on a given route, and redirects
+   * if not.
+   */
   const validateSession = async () => {
-    // console.log('validating');
     const user = await auth.fetchUser();
     let _pathname = pathname.substring(1);
-    _pathname = _pathname == '' ? 'index' : _pathname
-    // console.log(user)
-    if(!user && isUserRoute(_pathname)) {
-      console.log('Your session has expired, please log in')
-      router.replace('/')
-      toastInfo('Your session has expired', 'Please log in')
+    _pathname = _pathname == '' ? 'index' : _pathname;
+    if (!user && isUserRoute(_pathname)) {
+      console.log('Your session has expired, please log in');
+      router.replace('/');
+      toastInfo('Your session has expired', 'Please log in');
     } else if (user && isGuestRoute(_pathname)) {
-      console.log('Already logged in, redirecting')
-      router.replace('/feed')
+      console.log('Already logged in, redirecting');
+      router.replace('/feed');
     }
   }
   
 
   useEffect(() => {
-    validateSession()
+    validateSession();
 
     const timeout = setTimeout(async () => {
-      validateSession()
+      validateSession();
     }, 10 * 1000);
 
     return () => {
-      clearTimeout(timeout)
+      clearTimeout(timeout);
     }
   }, [])
 
   useEffect(() => {
-    validateSession()
+    validateSession();
   }, [pathname])
 
   return (

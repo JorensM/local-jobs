@@ -28,15 +28,16 @@ export default function MyListingsPage() {
     const { setLoading, pageState } = usePage(true);
 
     // State
-    const [ listingsData, setListingsData ] = useState<Listing[]>([])
+    const [ listingsData, setListingsData ] = useState<Listing[]>([]);
     
     // Handlers
+
     const handleListingPress = (id: number) => {
-        router.replace('/listings/' + id)
+        router.replace('/listings/' + id);
     }
 
     const handleAddListingPress = () => {
-        router.replace('/new-listing')
+        router.replace('/new-listing');
     }
 
 
@@ -44,16 +45,16 @@ export default function MyListingsPage() {
 
     const fetchListings = async () => {
 
-        setLoading(true)
+        setLoading(true);
 
         const _listings = await listings.fetchListings({
             filter: {
                 user_id: auth.user!.id
             }
-        })
+        });
 
         setListingsData(_listings);
-        setLoading(false)
+        setLoading(false);
 
     }
 
@@ -61,7 +62,7 @@ export default function MyListingsPage() {
 
     useFocusEffect(() => {
         if (auth.user) {
-            fetchListings()
+            fetchListings();
         }
     }, [auth.user])
 

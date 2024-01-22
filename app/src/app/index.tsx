@@ -39,11 +39,13 @@ export default function LoginPage() {
     const auth = useAuth();
     const { pageState } = usePage();
 
+    // Handlers
+
     const handleSubmit = async ({ email, password }: FormValues) => {
 
         try {
             await auth.login(email, password);
-            router.replace('/feed')
+            router.replace('/feed');
         } catch (error: any) {
             if(error.message.toLowerCase().includes('email')) {
                 toastError('Could not log in', 'please confirm your email');
@@ -57,6 +59,7 @@ export default function LoginPage() {
         <Page
             pageState={pageState}
         >
+            {/* Login form */}
             <Formik
                 initialValues={initial_values}
                 onSubmit={handleSubmit}
@@ -81,6 +84,7 @@ export default function LoginPage() {
                     </View>
                 )}
             </Formik>
+            {/* Register button */}
             <Text>Not a member?</Text>
             <Link 
                 style={button.secondary}

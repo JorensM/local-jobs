@@ -1,8 +1,7 @@
 // Core
 import { useState } from 'react';
-import { Button, FlatList, View, StyleSheet } from 'react-native'
+import { Button, FlatList, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-
 
 // Components
 import Page from '#components/layout/Page';
@@ -34,33 +33,35 @@ export default function FeedPage() {
     // State
     const [listingsData, setListingsData] = useState<Listing[]>([]);
 
+    // Handlers
+
     const handleLogoutPress = async () => {
         auth.logout();
-        router.replace('/')
+        router.replace('/');
     }
 
     const handleListingPress = (id: number) => {
-        router.replace('/listings/' + id)
+        router.replace('/listings/' + id);
     }
 
+    // Functions
     const fetchListings = async () => {
         setLoading(true);
         const listings_data = await listings.fetchListings();
-        // console.log(listings_data)
         setListingsData(listings_data);
         setLoading(false);
     }
 
+    // Effects
     useFocusEffect(() => {
-        fetchListings()
+        fetchListings();
     })
-
-    
 
     return (
         <Page
             pageState={pageState}
         >
+            {/* Listings list */}
             <FlatList
                 style={list.list}
                 ItemSeparatorComponent={() => <ListSeparator />}
@@ -72,6 +73,7 @@ export default function FeedPage() {
                     />
                 )}
             />
+            {/* Logout button */}
             <Button
                 onPress={handleLogoutPress}
                 title='Logout'
