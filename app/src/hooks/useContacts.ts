@@ -6,17 +6,23 @@ import useAuth from './useAuth'
 import { User } from '#types/User';
 
 type ContactsHook = {
+    /**
+     * Fetches all of users contacts and returns an array of User objects of those contacts.
+     * 
+     * @returns Promise that resolves to an array of User objects of the contacts
+     */
     fetchUsersContacts: () => Promise<User[]>
+    /**
+     * Fetches single contact by id and returns User object of that contact
+     * 
+     * @returns User object of requested contact or null if user not found or not
+     * in current user's contacts
+     */
     fetchContact: (contact_id: string) => Promise<User | null>
 }
 
 /**
  * Hook used for managing contacts
- * 
- * ## Returns
- * 
- * `fetchUserContacts()` - fetches all of users contacts and returns an array of User objects of those contacts.
- * `fetchContact()` - fetches single contact by id and returns User object of that contact
  */
 export default function useContacts(): ContactsHook {
 
