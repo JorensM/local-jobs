@@ -86,6 +86,7 @@ export default function useAuth(): AuthHook {
         const { data: { user: user }, error } = await supabase.auth.getUser();
 
         if(error?.status == 401) {
+            context.setUser(null);
             return null
         } else if(error) {
             throw error
@@ -128,6 +129,8 @@ export default function useAuth(): AuthHook {
                 throw error;
             }
         }
+
+        context.setUser(user_parsed);
 
         return user_parsed;
     }
