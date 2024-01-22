@@ -43,9 +43,11 @@ export default function Layout() {
   const pathname = usePathname();
 
   const validateSession = async () => {
+    // console.log('validating');
     const user = await auth.fetchUser();
     let _pathname = pathname.substring(1);
     _pathname = _pathname == '' ? 'index' : _pathname
+    // console.log(user)
     if(!user && isUserRoute(_pathname)) {
       console.log('Your session has expired, please log in')
       router.replace('/')

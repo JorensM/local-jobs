@@ -43,7 +43,7 @@ export default function MyContactsPage() {
         setError(null);
         try {
             const _contacts = await contacts.fetchUsersContacts();
-            console.log(_contacts);
+            // console.log(_contacts);
             setContactsData(_contacts)
             setLoading(false);
         } catch (err: any) {

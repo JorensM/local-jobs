@@ -50,7 +50,7 @@ export default function TextInput( {
                     ...(typeof style == 'object' ? style : {})
                 }}
                 onChangeText={(value: string) => {
-                    console.log('changing')
+                    // console.log('changing')
                     field.onChange(name)(value)/*e.nativeEvent.text)*/;
                 }/*formik.handleChange(name)*/}
                 onBlur={(e) => { 

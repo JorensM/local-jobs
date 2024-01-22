@@ -46,7 +46,7 @@ export default function FeedPage() {
     const fetchListings = async () => {
         setLoading(true);
         const listings_data = await listings.fetchListings();
-        console.log(listings_data)
+        // console.log(listings_data)
         setListingsData(listings_data);
         setLoading(false);
     }
