@@ -9,11 +9,26 @@ const ENV_VARIABLE_NAMES = [
 
 const validateEnvVariables = () => {
     const missing_vars = []
-    for(const var_name of ENV_VARIABLE_NAMES) {
-        const full_var_name = 'EXPO_PUBLIC_' + var_name
-        if(!process.env[full_var_name]) {
-            missing_vars.push(full_var_name)
-        }
+    // for(const var_name of ENV_VARIABLE_NAMES) {
+    //     const full_var_name = 'EXPO_PUBLIC_' + var_name
+    //     if(!process.env[full_var_name]) {
+    //         missing_vars.push(full_var_name)
+    //     }
+    // }
+
+    const fullVarName = (name: string) => 'EXPO_PUBLIC' + name
+
+    if(!process.env.API_URL) {
+        missing_vars.push(fullVarName('API_URL'))
+    }
+    if(!process.env.STRIPE_PUBLISHABLE_KEYL) {
+        missing_vars.push(fullVarName('STRIPE_PUBLISHABLE_KEY'))
+    }
+    if(!process.env.SUPABASE_URL) {
+        missing_vars.push(fullVarName('SUPABASE_URL'))
+    }
+    if(!process.env.SUPABASE_KEY) {
+        missing_vars.push(fullVarName('SUPABASE_KEY'))
     }
 
     if (missing_vars.length > 0) {
