@@ -60,6 +60,7 @@ export default function FeedPage() {
     return (
         <Page
             pageState={pageState}
+            testID='FeedPage'
         >
             {/* Listings list */}
             <FlatList
@@ -77,6 +78,7 @@ export default function FeedPage() {
             <Button
                 onPress={handleLogoutPress}
                 title='Logout'
+                testID='button-login'
             />
         </Page>
     )

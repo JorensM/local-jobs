@@ -1,7 +1,8 @@
 // Core
-import { useEffect, useState } from 'react';
+import { useEffect, useState, } from 'react';
 import { router, usePathname } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { View } from 'react-native';
 
 // Components
 import CustomDrawer from '#components/layout/CustomDrawer';
@@ -77,18 +78,23 @@ export default function Layout() {
   }, [pathname])
 
   return (
-    <AuthContext.Provider 
-      value={{
-        user,
-        setUser
-      }}
+    <View
+      testID='Layout'
     >
-      <StripeProvider
-        publishableKey={STRIPE_PUBLISHABLE_KEY}
+      <AuthContext.Provider 
+        value={{
+          user,
+          setUser
+        }}
+        
       >
-        <CustomDrawer />
-        <Toast config={toast_config}/>
-      </StripeProvider>
-    </AuthContext.Provider>
+        <StripeProvider
+          publishableKey={STRIPE_PUBLISHABLE_KEY}
+        >
+          <CustomDrawer />
+          <Toast config={toast_config}/>
+        </StripeProvider>
+      </AuthContext.Provider>
+    </View>
   );
 }

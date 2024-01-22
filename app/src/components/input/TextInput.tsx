@@ -59,6 +59,7 @@ export default function TextInput( {
                 }}
                 onFocus={() => setIsFocused(true)}
                 value={field.value}
+                testID={'input-' + name}
                 {...props}
             />
             {meta.error ? 
