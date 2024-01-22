@@ -114,8 +114,10 @@ export default function ListingPage() {
         setLoading(true)
         if( listing_id ) {
             try {
-                const _listing: Listing = await listings.fetchListing(parseInt(listing_id as string));
-
+                const _listing: Listing | null = await listings.fetchListing(parseInt(listing_id as string));
+                if(!_listing) {
+                    throw new Error("Listing not found");
+                }
                 // Check if this is user's own listing
                 const is_own = _listing.user_id == auth.user!.id;
                 isOwnListingRef.current = is_own;
