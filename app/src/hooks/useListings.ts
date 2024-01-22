@@ -2,8 +2,17 @@ import supabase from '#misc/supabase'
 import { Listing, ListingNew, ListingUpdate } from '#types/Listing'
 
 type ListingFetchOptions = {
+    /**
+     * Filter by listing properties that are available in Listing object
+     */
     filter?: Partial<Listing> | null,
+    /**
+     * Which page to fetch
+     */
     page?: number,
+    /**
+     * How many items per page to fetch
+     */
     per_page?: number
 }
 
