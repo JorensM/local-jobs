@@ -8,13 +8,14 @@ import useAuth from './useAuth';
  * @param callback Callback to call on focus
  * @param deps Dependencies
  * @param use_auth Whether to call this effect only after user has been fetched. If true, also adds auth.user to deps 
- * @returns 
+ * @returns modified useFocusEffect
  */
 export default function useFocusEffect(callback: () => void, deps?: any[], use_auth: boolean = false) {
 
+    // Hooks
     const auth = useAuth();
 
-    const auth_dep = auth ? [auth.user] : []
+    const auth_dep = auth ? [auth.user] : [] // If use_auth is true, add auth.user to dependencies
     const _deps = deps ? [...deps, ...auth_dep] : auth_dep
     
     return ExpoUseFocusEffect(
