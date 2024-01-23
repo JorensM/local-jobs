@@ -1,5 +1,5 @@
 // Core
-import { useEffect, useState, } from 'react';
+import { useEffect, useState } from 'react';
 import { router, usePathname } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import { View } from 'react-native';
@@ -25,10 +25,12 @@ import { StripeProvider } from '#misc/stripe';
 import { toastInfo } from '#misc/toast';
 import { STRIPE_PUBLISHABLE_KEY } from '#constants/env';
 
-export const unstable_settings = {
-  // Ensure any route can link back to `/`
-  initialRouteName: '/login',
-};
+// import Layout from '#components/layout/Layout';
+
+// export const unstable_settings = {
+//   // Ensure any route can link back to `/`
+//   initialRouteName: '/login',
+// };
 
 /**
  * Layout component that will be shown on each route
@@ -78,23 +80,18 @@ export default function Layout() {
   }, [pathname])
 
   return (
-    <View
-      testID='Layout'
-    >
-      <AuthContext.Provider 
+    <AuthContext.Provider 
         value={{
-          user,
-          setUser
+            user,
+            setUser
         }}
-        
-      >
+    >
         <StripeProvider
-          publishableKey={STRIPE_PUBLISHABLE_KEY}
+            publishableKey={STRIPE_PUBLISHABLE_KEY}
         >
-          <CustomDrawer />
-          <Toast config={toast_config}/>
+            <CustomDrawer />
+            <Toast config={toast_config}/>
         </StripeProvider>
-      </AuthContext.Provider>
-    </View>
+    </AuthContext.Provider>
   );
 }

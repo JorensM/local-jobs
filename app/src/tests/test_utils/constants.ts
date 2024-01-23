@@ -1,0 +1,3 @@
+const USE_LISTINGS_COUNT = 5;
+
+export { USE_LISTINGS_COUNT }

@@ -41,6 +41,7 @@ export default function CustomDrawer() {
   
     return (
         <Drawer
+            useLegacyImplementation={process.env.NODE_ENV == 'test' ? false : true}
             screenOptions={{
                 header: ({ route, options }) => {
         

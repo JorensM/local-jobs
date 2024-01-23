@@ -89,7 +89,8 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
                     /> */}
                     <Button
                         onPress={() => formik.handleSubmit()}
-                        title='Save'
+                        title={listing ? 'Save' : 'Create'}
+                        accessibilityLabel={listing ? 'Save listing' : 'Create listing'}
                     />
                     {/* <Button onPress={handleSubmit} title="Submit" /> */}
                 </View>
