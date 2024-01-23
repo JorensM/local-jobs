@@ -8,7 +8,7 @@ import { act, fireEvent, renderRouter, screen, waitFor } from 'expo-router/testi
 import LoginPage from '#app';
 import FeedPage from '#app/feed';
 
-describe.skip('Login page', () => {
+describe('Login page', () => {
 
     it('Should redirect to feed page when successfully logged in', async () => {
         renderRouter({

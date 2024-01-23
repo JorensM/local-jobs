@@ -11,7 +11,7 @@ import FeedPage from '#app/feed';
 import { USE_LISTINGS_COUNT } from '#tests/test_utils/constants';
 import { createTestListing } from '#tests/test_utils/createTestListing';
 
-describe.skip('Feed page', () => {
+describe('Feed page', () => {
 
     it('Should display listings and their data', async () => {
         renderRouter({
