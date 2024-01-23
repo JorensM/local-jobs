@@ -31,7 +31,7 @@ type ListingsHook = {
      * 
      * @returns Promise that resolves to an array of Listing objects
      */
-    fetchListings: (options: ListingFetchOptions) => Promise<Listing[]>
+    fetchListings: (options?: ListingFetchOptions) => Promise<Listing[]>
     /**
      * Fetch and return a single listing by ID
      * 
@@ -60,7 +60,7 @@ type ListingsHook = {
 /**
  * Hook for managing listings
  */
-export default function useListings() {
+export default function useListings(): ListingsHook {
     const fetchListings = async (options?: ListingFetchOptions) => {
 
         const _options = {
@@ -132,7 +132,7 @@ export default function useListings() {
         return data[0].id; // Return the id of the newly created listing
     }
 
-    const updateListing = async (listing: ListingUpdate) => {
+    const updateListing = async (listing: ListingUpdate): Promise<true> => {
         const { error } = await supabase
             .from('listings')
             .update(listing)
