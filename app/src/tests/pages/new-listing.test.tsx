@@ -25,6 +25,8 @@ console.log(Layout);
 
 const AUTHOR_NAME = 'Custom author name';
 
+it.skip('placeholder', () => {})
+
 // jest.mock('#hooks/useAuth', () => {
 //     return {
 //         __esModule: true,
