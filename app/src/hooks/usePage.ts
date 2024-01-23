@@ -1,5 +1,5 @@
 // Core
-import { usePathname } from 'expo-router/src/hooks';
+import { usePathname } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
 // Types
