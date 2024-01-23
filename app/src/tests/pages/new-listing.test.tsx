@@ -1,31 +1,21 @@
 // Mocks
 import '#tests/mocks/hooks/useListings';
+import '#tests/mocks/hooks/useAuth';
 import '#tests/mocks/stripe';
 
 // Core
-import { fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
+import { act, fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { screen as nativeScreen } from '@testing-library/react-native'
-import { useState } from 'react';
 
 // Util
-import { setListingID } from '#tests/mocks/hook_utils';
+import { getListings, setListingID, setUser } from '#tests/mocks/hook_utils';
 
 // Pages
 import FeedPage from '#app/feed';
 import NewListingPage from '#app/new-listing';
 import ListingPage from '#app/listings/[listing_id]';
-import Layout from '#app/_layout';
-
-import AuthContext from '#state/AuthContext';
-import { User } from '#types/User';
-import CustomDrawer from '#components/layout/CustomDrawer';
-
-console.log('layout: ')
-console.log(Layout);
 
 const AUTHOR_NAME = 'Custom author name';
-
-it.skip('placeholder', () => {})
 
 // jest.mock('#hooks/useAuth', () => {
 //     return {
@@ -41,62 +31,63 @@ it.skip('placeholder', () => {})
 //     }
 // })
 
-// describe('New Listing page', () => {
+describe('New Listing page', () => {
 
-//     // console.log('layout: ')
-//     // console.log(Layout());
+    setUser({
+        id: "123",
+        name: AUTHOR_NAME,
+        role: 'recruiter'
+    })
 
-//     const TestLayout = () => {
+    
 
-//         const [user, setUser] = useState<User | null>(null);
+    
+    it('Should create new listing upon form submission and redirect to listing page', async () => {
+        renderRouter({
+            'new-listing': NewListingPage,
+            'listings/[id]': ListingPage,
+            'feed': FeedPage,
+        }, {
+            initialUrl: '/new-listing'
+        });
 
-//         return (
-//             <AuthContext.Provider value={{user, setUser}}>
-//                 <CustomDrawer />
-//             </AuthContext.Provider>
-//         )
-//     }
+        const title_comp = await waitFor(() => screen.getByTestId('input-title'));
+        const description_comp = await waitFor(() => screen.getByTestId('input-description'));
+        const save_button = await waitFor(() => screen.getByLabelText('Create listing'));
 
-//     it('aaa', () => {
-//         expect(true).toBeTruthy();
-//     })
 
-//     renderRouter({
-//         'new-listing': NewListingPage,
-//         'listings/[id]': ListingPage,
-//         'feed': FeedPage,
-//         '_layout': TestLayout
-//     }, {
-//         initialUrl: '/'
-//     });
-//     it('Should create new listing upon form submission and redirect to listing page', async () => {
-
-//         console.log('screen:')
-//         screen.debug()
-//         const title_comp = screen.getByTestId('input-title');
-//         const description_comp = screen.getByTestId('input-description');
-//         const save_button = screen.getByLabelText('Create listing')
-
-//         // console.log(nativeScreen);
-
-//         const TITLE = 'My new Listing';
-//         const DESCRIPTION = 'Description of my new listing. aaaaaa'
+        const TITLE = 'My new Listing';
+        const DESCRIPTION = 'Description of my new listing. aaaaaa'
         
-//         const LISTING_ID = 25;
-//         setListingID(LISTING_ID);
+        const LISTING_ID = 25;
+        setListingID(LISTING_ID);
 
-//         fireEvent.changeText(title_comp, TITLE)
-//         fireEvent.changeText(description_comp, DESCRIPTION);
-//         fireEvent.press(save_button);
+        fireEvent.changeText(title_comp, TITLE)
+        fireEvent.changeText(description_comp, DESCRIPTION);
+        fireEvent.press(save_button);
 
-//         await waitFor(() => expect(screen).toHavePathname('/listing/' + LISTING_ID));
+        await waitFor(() => expect(screen).toHavePathname('/listings/' + LISTING_ID), {timeout: 10 * 1000, interval: 1000});
 
-//         const title_comp_2 = screen.findByText(TITLE);
-//         const description_comp_2 = screen.findByText(DESCRIPTION);
-//         const author_comp = screen.findByText('By ' + AUTHOR_NAME);
+        await waitFor(() => {
+            const index = getListings().findIndex(listing => (
+                listing.id == LISTING_ID &&
+                listing.title == TITLE &&
+                listing.description == DESCRIPTION &&
+                listing.user_name == AUTHOR_NAME
+            ))
 
-//         expect(title_comp_2).toBeDefined();
-//         expect(description_comp_2).toBeDefined();
-//         expect(author_comp).toBeDefined()
-//     })
-// })
+            expect(index).not.toEqual(-1);
+        })
+
+        // For now the below code doesn't work because screen becomes undefined on route change.
+        // GH issue: https://github.com/expo/expo/issues/26623
+
+        // const title_comp_2 = await waitFor(() => screen.getByText(TITLE));
+        // const description_comp_2 = await waitFor(() => screen.getByText(DESCRIPTION));
+        // const author_comp = await waitFor(() => screen.getByText('By ' + AUTHOR_NAME));
+
+        // expect(title_comp_2).toBeDefined();
+        // expect(description_comp_2).toBeDefined();
+        // expect(author_comp).toBeDefined()
+    })
+})
