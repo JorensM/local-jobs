@@ -3,6 +3,8 @@ import mockAuthContext from '#state/AuthContext';
 
 // Types
 import { User } from '#types/User';
+// import { getUser, setUser } from '../hook_utils';
+
 
 
 jest.mock('#hooks/useAuth', () => {
@@ -11,7 +13,9 @@ jest.mock('#hooks/useAuth', () => {
     // const AuthContext = jest.requireActual('#state/AuthContext');
 
     // const { user, setUser } = mockUseContext(mockAuthContext);
-    let current_user: User | null = null;
+    
+    const { getUser, setUser } = jest.requireActual('../hook_utils');
+
 
     return {
         __esModule: true,
@@ -22,14 +26,14 @@ jest.mock('#hooks/useAuth', () => {
                 //     name: email,
                 //     role: 'performer'
                 // })
-                current_user = {
+                setUser({
                     id: email,
                     name: email,
                     role: 'performer'
-                }
+                })
                 return true;
             },
-            user: current_user
+            user: getUser()
         })
     }
 })
