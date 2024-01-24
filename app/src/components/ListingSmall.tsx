@@ -81,7 +81,7 @@ export default function ListingSmall( { item, onPress }: Props ) {
             : null } */}
             
             <Caption>
-                { getAge(item.$createdAt, true) } ago
+                { getAge(item.created_at, true) } ago
             </Caption>
             <Description>
                 { item.description.slice(0, 100) }...
