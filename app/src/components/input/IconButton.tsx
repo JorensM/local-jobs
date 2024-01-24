@@ -17,7 +17,7 @@ type Props = {
  * * `name` - name of the icon from Expo's MaterialIcons package
  * * `onPress` - called when button is pressed
  */
-export default function IconButton( { size, name, onPress }: Props) {
+export default function IconButton( { size = 24, name, onPress }: Props) {
     return (
         <Pressable
             onPress={onPress}
