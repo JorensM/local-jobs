@@ -12,15 +12,14 @@ import { USE_LISTINGS_COUNT } from '#tests/test_utils/constants';
 import { createTestListing } from '#tests/test_utils/createTestListing';
 
 describe('Feed page', () => {
-
     it('Should display listings and their data', async () => {
         renderRouter({
-            // index: LoginPage,
             feed: FeedPage
         }, {
             initialUrl: '/feed'
         })
 
+        // Check if the default listings created in the useListings mock are displayed
         for(let i = 0; i < USE_LISTINGS_COUNT; i++) {
             const listing_data = createTestListing(i);
             const title = await waitFor(() => screen.getByText(listing_data.title));

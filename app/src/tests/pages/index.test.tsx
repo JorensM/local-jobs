@@ -28,7 +28,7 @@ describe('Login page', () => {
             fireEvent.press(login_button);
         }) 
         
-
+        // Check if user has been redirected to /feed after successful login
         await waitFor(() => expect(screen).toHavePathname('/feed'), {
             timeout: 25 * 1000,
             interval: 1000

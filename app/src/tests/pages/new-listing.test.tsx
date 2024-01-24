@@ -4,8 +4,7 @@ import '#tests/mocks/hooks/useAuth';
 import '#tests/mocks/stripe';
 
 // Core
-import { act, fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
-import { screen as nativeScreen } from '@testing-library/react-native'
+import { fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 
 // Util
 import { getListings, setListingID, setUser } from '#tests/mocks/hook_utils';
@@ -17,20 +16,6 @@ import ListingPage from '#app/listings/[listing_id]';
 
 const AUTHOR_NAME = 'Custom author name';
 
-// jest.mock('#hooks/useAuth', () => {
-//     return {
-//         __esModule: true,
-//         default: () => ({
-//             user: {
-//                 id: 20,
-//                 name: AUTHOR_NAME,
-//                 role: 'performer'
-//             },
-//             fetchUser: async () => true
-//         })
-//     }
-// })
-
 describe('New Listing page', () => {
 
     setUser({
@@ -38,9 +23,6 @@ describe('New Listing page', () => {
         name: AUTHOR_NAME,
         role: 'recruiter'
     })
-
-    
-
     
     it('Should create new listing upon form submission and redirect to listing page', async () => {
         renderRouter({
@@ -68,6 +50,7 @@ describe('New Listing page', () => {
 
         await waitFor(() => expect(screen).toHavePathname('/listings/' + LISTING_ID), {timeout: 10 * 1000, interval: 1000});
 
+        // Expect for the listing to be added to the mock listings array
         await waitFor(() => {
             const index = getListings().findIndex(listing => (
                 listing.id == LISTING_ID &&
@@ -75,7 +58,7 @@ describe('New Listing page', () => {
                 listing.description == DESCRIPTION &&
                 listing.user_name == AUTHOR_NAME
             ))
-
+            
             expect(index).not.toEqual(-1);
         })
 
