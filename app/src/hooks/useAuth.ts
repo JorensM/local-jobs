@@ -3,13 +3,16 @@ import { useContext } from 'react';
 import { AuthSession } from '@supabase/supabase-js';
 
 // Types
-import { User, UserRole } from '#types/User';
+import { User, UserRole, UserUpdate } from '#types/User';
 
 // State
 import AuthContext from '#state/AuthContext';
 
 // Misc
 import supabase from '#misc/supabase'
+
+// Schema
+import { userSchemaPartial } from '#schema/userSchema';
 
 
 type AuthHook = {
@@ -19,6 +22,13 @@ type AuthHook = {
      * each use of the hook.
      */
     user: User | null
+    /**
+     * Update user according to the passed User object. User must be signed in for
+     * this to work
+     * 
+     * @param user partial User object
+     */
+    updateUser: (user: UserUpdate) => Promise<void>
     /**
      * fetches currently logged in User object, returns it and assigns the `user` 
      * state to the retrieved value.
@@ -52,6 +62,11 @@ export default function useAuth(): AuthHook {
 
     // State
     const context = useContext(AuthContext)
+
+    const updateUser = async (user: UserUpdate) => {
+        const valid = userSchemaPartial.validate(user);
+        console.log(valid)
+    }
 
     const login = async (email: string, password: string): Promise<true> => {
         const { error } = await supabase.auth.signInWithPassword({
@@ -110,7 +125,9 @@ export default function useAuth(): AuthHook {
         const user_parsed = {
             id: user.id,
             role: user.user_metadata.role,
-            name: user.user_metadata.name
+            name: user.user_metadata.name,
+            phone_number: user.user_metadata.phone_number,
+            phone_country_code: user.user_metadata.phone_country_code
         }
 
         // If user data has not been created in user_data table, create it
@@ -120,7 +137,7 @@ export default function useAuth(): AuthHook {
                 .insert({
                     ...user_parsed,
                     id: undefined,
-                    user_id: user_parsed.id
+                    user_id: user_parsed.id,
                 })
 
             if(error) {
@@ -163,12 +180,10 @@ export default function useAuth(): AuthHook {
 
     return {
         user: context.user,
+        updateUser,
         fetchUser,
         getSession,
         login,
-        /**
-         * AAA
-         */
         logout,
         register,
     }

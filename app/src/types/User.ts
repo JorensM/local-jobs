@@ -16,6 +16,13 @@ type User = {
      * Role of user
      */
     role: UserRole
+    /**
+     * Contact information
+     */
+    phone_number: string
+    phone_country_code: string
 }
+
+export type UserUpdate = Omit<Partial<User>, 'id'>
 
 export { User, UserRole }

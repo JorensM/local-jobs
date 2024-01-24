@@ -9,6 +9,12 @@ import {
 import { useField } from 'formik';
 import React, { useState } from 'react';
 
+// Components
+import InputBase from './InputBase';
+
+// Styles
+import form from '#styles/form'
+
 
 type Props = TextInputProps & {
     name: string,
@@ -38,16 +44,18 @@ export default function TextInput( {
     const [field, meta ] = useField<any>(name);
 
     return (
-        <View>
-            <Text
-                style={styles.label}
-            >
-                { label }
-            </Text>
+        <InputBase
+            label={label}
+            error={meta.error}
+        >
             <NativeTextInput
                 style={{
-                    ...styles.input,
-                    ...(typeof style == 'object' ? style : {})
+                    ...form.input,
+                    ...(typeof style == 'object' ? style : {}),
+                    ...(props.multiline ? {
+                        paddingTop: 8,
+                        paddingBottom: 8
+                    } : {})
                 }}
                 onChangeText={(value: string) => {
                     // console.log('changing')
@@ -62,29 +70,6 @@ export default function TextInput( {
                 testID={'input-' + name}
                 {...props}
             />
-            {meta.error ? 
-                <Text
-                    style={{
-                        color: 'red'
-                    }}
-                >
-                    {meta.error}
-                </Text>
-            : null}
-            
-        </View>
-        
+        </InputBase>
     )
 }
-
-const styles = StyleSheet.create({
-    label: {
-        fontSize: 14,
-        color: 'gray'
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: 'lightgray',
-        height: 32
-    }
-})

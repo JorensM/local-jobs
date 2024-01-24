@@ -35,6 +35,8 @@ import useFocusEffect from '#hooks/useFocusEffect'
 import useAuth from '#hooks/useAuth'
 import usePage from '#hooks/usePage'
 import useAPI from '#hooks/useAPI'
+import useContacts from '#hooks/useContacts'
+import useHeader from '#hooks/useHeader'
 
 // Misc
 import { toastError, toastSuccess } from '#misc/toast'
@@ -42,7 +44,7 @@ import { useStripe } from '#misc/stripe'
 
 // Styles
 import text from '#styles/text'
-import useContacts from '#hooks/useContacts'
+
 
 /**
  * Page for single listing. On this page customer can make payment to get access
@@ -54,7 +56,8 @@ export default function ListingPage() {
     const listings = useListings();
     const auth = useAuth();
     const pathname = usePathname();
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
+    const { setHeaderRight } = useHeader();
     const { listing_id } = useLocalSearchParams();
     const { setLoading, setError, pageState } = usePage(true);
     const api = useAPI();
@@ -142,21 +145,19 @@ export default function ListingPage() {
 
                 if(is_own) {
                     // If this is user's own listing, add an 'edit' button to the header
-                    navigation.setOptions({
-                        headerRight: () => (
-                            <View
-                                style={{
-                                    paddingRight: 16
-                                }}
-                            >
-                                <IconButton
-                                    name='edit'
-                                    size={ 24 }
-                                    onPress={ handleEditPress }
-                                />
-                            </View>
-                        )
-                    })
+                    setHeaderRight(
+                        // <View
+                        //     style={{
+                        //         paddingRight: 16
+                        //     }}
+                        // >
+                            <IconButton
+                                name='edit'
+                                size={ 24 }
+                                onPress={ handleEditPress }
+                            />
+                        // </View>
+                    )
                 } else {
                     const contact = await contacts.fetchContact(_listing.user_id);
                     setIsContact(contact ? true : false);
@@ -219,9 +220,7 @@ export default function ListingPage() {
     useEffect(() => {
         setLoading(true);
         setListing(null);
-        navigation.setOptions({
-            headerRight: () => null
-        });
+        setHeaderRight(null);
     }, [pathname])
 
     return (

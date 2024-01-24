@@ -9,6 +9,7 @@ import Description from './typography/Description'
 
 // Types
 import { Listing } from '#types/Listing'
+import getAge from '#misc/getAge'
 
 //Functions
 //import getAge from '#functions/getAge'
@@ -80,7 +81,7 @@ export default function ListingSmall( { item, onPress }: Props ) {
             : null } */}
             
             <Caption>
-                {/* { getAge(item.$createdAt, true) } ago */}
+                { getAge(item.created_at, true) } ago
             </Caption>
             <Description>
                 { item.description.slice(0, 100) }...

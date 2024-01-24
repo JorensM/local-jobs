@@ -90,7 +90,6 @@ export default function useListings(): ListingsHook {
         if (error) {
             throw error;
         }
-
         return data;
     }
 
