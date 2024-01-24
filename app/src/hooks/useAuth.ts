@@ -76,23 +76,23 @@ export default function useAuth(): AuthHook {
         if (error) {
             throw error
         }
+        console.log('logged out')
+        fetchUser()
 
         return true;
     }
 
     const fetchUser = async () => {
-        const { data: { user: user }, error } = await supabase.auth.getUser();
+        const { data: { session }, error } = await supabase.auth.getSession()
 
-        if(error?.status == 401) {
+        if(!session) {
             context.setUser(null);
             return null
         } else if(error) {
             throw error
         }
 
-        if(!user) {
-            throw new Error('Could not find user')
-        }
+        const user = session.user;
         
         
         const { data: user_data, error: user_data_error } = await supabase

@@ -1,11 +1,12 @@
 import useAuth from '#hooks/useAuth'
-import { AuthError, SignInWithPasswordCredentials } from '@supabase/supabase-js';
+import { AuthError, SignInWithPasswordCredentials, SupabaseClient } from '@supabase/supabase-js';
 import { act, renderHook } from '@testing-library/react-native'
 import supabase from '#misc/supabase';
 import { 
     createSupabaseSession as mockCreateSupabaseSession, 
     createSupabaseUser as mockCreateSupabaseUser 
 } from '#tests/test_utils/createUser';
+import * as hookUtils from '#tests/mocks/hook_utils'
 import { getUser as mockGetUser, setUser as mockSetUser } from '#tests/mocks/hook_utils';
 import { createContext, useState } from 'react';
 import AuthContext from '#state/AuthContext';
@@ -14,7 +15,8 @@ import { User } from '#types/User';
 //const { getUser: _getUser, setUser: _setUser } = jest.requireActual('#tests/mocks/hook_utils');
 //const { createSupabaseUser } = jest.requireActual('#tests/test_utils/createUser');
 
-const TEST_EMAIL = 'test@gmail.com';
+const TEST_EMAIL = 'ntz.arts@gmail.com';
+const TEST_NAME = 'test_user';
 const TEST_PASSWORD = 'password';
 
 // jest.mock('#misc/supabase', () => {
@@ -71,34 +73,11 @@ const TEST_PASSWORD = 'password';
     
 // })
 
-const signInSpy = jest.spyOn(supabase.auth, 'signInWithPassword').mockImplementation(
-    async (credentials: any) => {
-        if(credentials.email == TEST_EMAIL && credentials.password == TEST_PASSWORD) {
-            const user = mockCreateSupabaseUser(credentials.email);
-            const session = mockCreateSupabaseSession(user);
-            mockSetUser({
-                id: user.id,
-                name: user.user_metadata.name,
-                role: 'performer'
-            })
-            return {
-                data: {
-                    user,
-                    session
-                },
-                error: null
-            };
-        } else {
-            return {
-                data: {
-                    user: null,
-                    session: null
-                },
-                error: new AuthError('Incorrect email/password', 400)
-            }
-        }
-    }
-)
+const signInSpy = jest.spyOn(supabase.auth, 'signInWithPassword');
+
+const logoutSpy = jest.spyOn(supabase.auth, 'signOut');
+
+
 
 describe('useAuth()', () => {
 
@@ -108,12 +87,13 @@ describe('useAuth()', () => {
             const [user, setUser] = useState<User | null>(null);
 
             return (
-                <AuthContext.Provider value={{user, setUser}}>
+                <AuthContext.Provider value={{user: mockGetUser(), setUser: mockSetUser}}>
                     {children}
                 </AuthContext.Provider>
             )
         }
     });
+
 
     describe('login()', () => {
         
@@ -136,7 +116,46 @@ describe('useAuth()', () => {
             expect(result.current.login('incorrect_email', 'incorrect_password'))
                 .rejects
                 .toThrow()
-                
+
+        })
+    })
+
+    describe('logout', () => {
+        result.current.logout()
+        it('Should call supabase.auth.logout', () => {
+            expect(logoutSpy).toHaveBeenCalled()
+        })
+    })
+
+    describe('fetchUser', () => {
+
+        it('Should return fetched user', async () => {
+            await result.current.login(TEST_EMAIL, TEST_PASSWORD);
+            const user = await result.current.fetchUser();
+            expect(user).not.toBeNull()
+            expect(user!.name).toEqual(TEST_NAME)
+        })
+
+    })
+
+    describe('getSession', () => {
+        
+        it('Should return session object if user is logged in', async () => {
+            await result.current.login(TEST_EMAIL, TEST_PASSWORD);
+
+            const session = await result.current.getSession();
+
+            expect(session).not.toBeNull();
+            expect(session!.access_token).toBeDefined();
+            expect(session!.refresh_token).toBeDefined();
+
+        })
+        it('Should return null if user is not logged in', async () => {
+            await result.current.logout();
+
+            const session = await result.current.getSession();
+
+            expect(session).toBeNull()
         })
     })
 })
