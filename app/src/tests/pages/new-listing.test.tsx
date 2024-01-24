@@ -7,7 +7,7 @@ import '#tests/mocks/stripe';
 import { fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 
 // Util
-import { getListings, setListingID, setUser } from '#tests/mocks/hook_utils';
+import { getListings, setListingID, setUser } from '#tests/mocks/state';
 
 // Pages
 import FeedPage from '#app/feed';

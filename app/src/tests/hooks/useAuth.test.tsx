@@ -6,8 +6,8 @@ import {
     createSupabaseSession as mockCreateSupabaseSession, 
     createSupabaseUser as mockCreateSupabaseUser 
 } from '#tests/test_utils/createUser';
-import * as hookUtils from '#tests/mocks/hook_utils'
-import { getUser as mockGetUser, setUser as mockSetUser } from '#tests/mocks/hook_utils';
+import * as hookUtils from '#tests/mocks/state'
+import { getUser as mockGetUser, setUser as mockSetUser } from '#tests/mocks/state';
 import { createContext, useState } from 'react';
 import AuthContext from '#state/AuthContext';
 import { User } from '#types/User';
