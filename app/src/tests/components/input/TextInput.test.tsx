@@ -19,10 +19,11 @@ describe('TextInput', () => {
         [INPUT_NAME]: Yup.string().required('This field is required').min(5)
     })
 
-    let native_input_comp: any = null;// = screen.getByTestId('input-' + INPUT_NAME);
+    let native_input_comp: any = null;
 
     beforeEach(() => {
         render(
+            // Wrap component in a Formik form because it relies on Formik context
             <Formik
                 initialValues={{
                     INPUT_NAME: 'initial value'
