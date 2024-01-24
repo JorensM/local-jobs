@@ -8,7 +8,7 @@
     "prod-preview-c": "expo start --no-dev --minify --clear",
     "build-preview": "eas build --platform android --profile preview",
     "build": "eas build --platform android",
-    "web": "npx expo start --web",
+    "web": "npx expo start --web --go",
     "test": "jest"
   },
   "dependencies": {
