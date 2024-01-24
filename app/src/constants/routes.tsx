@@ -57,6 +57,7 @@ export const user_routes: Routes = {
     },
     'profile-edit': {
         label: "Edit Profile",
+        hide: true,
         backButton: '/profile'
     }
 }
