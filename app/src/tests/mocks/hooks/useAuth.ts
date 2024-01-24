@@ -14,7 +14,7 @@ jest.mock('#hooks/useAuth', () => {
 
     // const { user, setUser } = mockUseContext(mockAuthContext);
     
-    const { getUser, setUser } = jest.requireActual('../hook_utils');
+    const { getUser, setUser, getSession: _getSession } = jest.requireActual('../hook_utils');
 
 
     return {
@@ -32,6 +32,9 @@ jest.mock('#hooks/useAuth', () => {
                     role: 'performer'
                 })
                 return true;
+            },
+            getSession: async () => {
+                return _getSession()
             },
             user: getUser()
         })
