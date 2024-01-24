@@ -19,6 +19,7 @@ export type Listing = {
      * Description of the listing
      */
     description: string,
+    $createdAt: string,
     // location_id?: string,
     // location_name?: string
 }
