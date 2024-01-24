@@ -1,8 +1,12 @@
 import { usePathname } from 'expo-router';
 import { useEffect } from 'react';
 
-export default function useUnfocusEffect(callback: () => void) {
+export default function useUnfocusEffect(callback: () => void, route_name: string) {
     const pathname = usePathname();
 
-    return useEffect(callback, [pathname])
+    return useEffect(() => {
+        if(pathname !== route_name) {
+            callback();
+        }
+    }, [pathname])
 }
