@@ -6,7 +6,7 @@ const form = StyleSheet.create({
         gap: 4
     },
     input: {
-        padding: 4,
+        padding: 8,
         borderWidth: 1,
         borderColor: 'lightgray',
         height: 32
