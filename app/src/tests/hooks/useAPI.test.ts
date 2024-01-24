@@ -11,7 +11,7 @@ import { API_URL } from '#constants/env';
 import useAPI from '#hooks/useAPI';
 
 // Test utils
-import { setSession } from '#tests/mocks/hook_utils';
+import { setSession } from '#tests/mocks/state';
 
 describe('useAPI()', () => {
     describe('getContactPaymentSheet', () => {
@@ -46,6 +46,7 @@ describe('useAPI()', () => {
 
             const payment_sheet = await result.current.getContactPaymentSheet(CONTACT_ID);
 
+            // Check if function returned the fetch response
             expect(payment_sheet).toMatchObject({
                 correct_response: true
             })
@@ -54,6 +55,7 @@ describe('useAPI()', () => {
 
             url.searchParams.set('contact_id', CONTACT_ID)
 
+            // Check if fetch function was called with correct params
             expect(fetchSpy).toHaveBeenCalledWith(url, {
                 headers: {
                     'Content-Type': 'application/json',
