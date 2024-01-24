@@ -54,19 +54,15 @@ export default function useAuth(): AuthHook {
     const context = useContext(AuthContext)
 
     const login = async (email: string, password: string): Promise<true> => {
-        console.log('logging in aaaa')
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password
         })
-        console.log('2')
         if (error){
             throw error
         }
-        console.log('3')
         fetchUser();
-
-        console.log('4')
+        
         return true;
     }
 
