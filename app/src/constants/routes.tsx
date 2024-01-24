@@ -54,5 +54,9 @@ export const user_routes: Routes = {
     'profile': {
         label: 'My Profile',
         backButton: '/feed'
+    },
+    'profile-edit': {
+        label: "Edit Profile",
+        backButton: '/profile'
     }
 }
