@@ -6,6 +6,7 @@ import { router } from 'expo-router'
 // Components
 import ListingSmall from '#components/ListingSmall'
 import SessionPage from '#components/layout/SessionPage'
+import ListSeparator from '#components/layout/ListSeparator'
 
 // Types
 import { Listing } from '#types/Listing'
@@ -15,7 +16,6 @@ import useFocusEffect from '#hooks/useFocusEffect'
 import useListings from '#hooks/useListings'
 import useAuth from '#hooks/useAuth'
 import usePage from '#hooks/usePage'
-import ListSeparator from '#components/layout/ListSeparator'
 
 // Styles
 import list from '#styles/list'
