@@ -8,17 +8,18 @@ import { User } from '#types/User'
 import list from '#styles/list'
 
 type ContactSmallProps = {
+    /**
+     * User object of the contact
+     */
     item: User,
+    /**
+     * called when card is pressed
+     */
     onPress?: () => void
 }
 
 /**
  * Contact card, displays basic information about a contact
- * 
- * # Props
- * 
- * * `item` - User object of the contact
- * * `onPress` - called when card is pressed
  */
 export default function ContactSmall({ item, onPress = () => {}}: ContactSmallProps) {
     return (
@@ -29,6 +30,7 @@ export default function ContactSmall({ item, onPress = () => {}}: ContactSmallPr
             }}
             onPress={onPress}
         >
+            {/* Contact name */}
             <Text>
                 { item.name }
             </Text>
