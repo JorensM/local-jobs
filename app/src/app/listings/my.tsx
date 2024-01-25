@@ -17,6 +17,9 @@ import useAuth from '#hooks/useAuth'
 import usePage from '#hooks/usePage'
 import ListSeparator from '#components/layout/ListSeparator'
 
+// Styles
+import list from '#styles/list'
+
 /**
  * Page showing user's posted listings
  */
@@ -83,13 +86,6 @@ export default function MyListingsPage() {
                 onPress={() => handleAddListingPress()}
                 title='Add Listing'
             />
-            {/* <Link
-                to={{
-                    screen: 'ListingEdit'
-                }}
-            >
-                Add Listing
-            </Link> */}
         </SessionPage>
     )
 }
@@ -99,4 +95,4 @@ const styles = StyleSheet.create({
     listings_list: {
         gap: 8
     }
-})
+})}
