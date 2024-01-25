@@ -2,6 +2,10 @@ import { PropsWithChildren } from 'react'
 import { View, StyleSheet, Text, ViewProps, StyleSheetProperties, ViewStyle, StyleProp } from 'react-native'
 
 export type PageProps = ViewProps & {
+    /**
+     * prop used to render the page in according to the page state, i.e errors, loading state etc.
+     * this prop can be acquired by using the [usePage](../../hooks/usePage.ts) hook
+     */
     pageState: {
         error: string | null
         loading: boolean
@@ -13,12 +17,6 @@ export type PageProps = ViewProps & {
  * Page component that should be used on each individual page. 
  * Should be passed a `pageState` prop acquired via the [usePage](../../hooks/usePage.ts) hook
  * 
- * ## Props
- * Any props that a `View` components accepts, and additionally:
- * 
- * * **pageState** - prop used to render the page in according to the page state, i.e errors, loading state etc.
- * this prop can be acquired by using the [usePage](../../hooks/usePage.ts) hook
- * 
  */
 export default function Page( { 
     children,
@@ -26,6 +24,7 @@ export default function Page( {
     style = {},
 }: PropsWithChildren<PageProps> ) {
 
+    // Page state
     const loading = pageState.loading;
     const error = pageState.error;
 
@@ -37,6 +36,8 @@ export default function Page( {
             }}
         >
             {
+                // If loading, display 'Loading' message, if error, display the
+                // error message. Otherwise show page contents
                 loading || error ? 
                 (
                     <View style={styles.message_container}>

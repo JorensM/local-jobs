@@ -18,9 +18,14 @@ type Props = PageProps & {}
  */
 export default function SessionPage({ children, pageState, ...props }: PropsWithChildren<Props>) {
 
+    // Hooks
     const auth = useAuth();
 
-    // Intercept pageState and set it to loading if user is not logged in
+    // Memo
+
+    /**
+     * Intercepted pageState that has loading set to true if user is not logged in
+     */
     const _pageState: PageState = useMemo(() => {
         if (auth.user) {
             return pageState

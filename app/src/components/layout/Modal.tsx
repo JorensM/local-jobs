@@ -4,15 +4,14 @@ import { PropsWithChildren } from 'react'
 import { Modal as NativeModal, View } from 'react-native'
 
 type ModalProps = {
+    /**
+     * Whether the modal should be shown
+     */
     visible: boolean
 }
 
 /**
  * Custom modal component to simplify some recurring stuff from the native `Modal`
- * 
- * ## Props
- * 
- * * `visible` - Whether the modal should be shown
  * 
  * ## Subcomponents
  * * `Modal.Header` - Header of the modal. If used, should be first component in the modal
@@ -38,6 +37,9 @@ function Modal( { visible, children }: PropsWithChildren<ModalProps>) {
     )
 }
 
+/**
+ * Header of the modal
+ */
 Modal.Header = ( { children }: PropsWithChildren) => {
     return (
         <View
@@ -48,6 +50,9 @@ Modal.Header = ( { children }: PropsWithChildren) => {
     )
 }
 
+/**
+ * Content of the modal
+ */
 Modal.Content = ( { children }: PropsWithChildren) => {
     return (
         <View
