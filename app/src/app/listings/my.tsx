@@ -31,21 +31,36 @@ export default function MyListingsPage() {
     const { setLoading, pageState } = usePage(true);
 
     // State
+    /**
+     * Listings to display
+     */
     const [ listingsData, setListingsData ] = useState<Listing[]>([]);
     
     // Handlers
 
+    /**
+     * On listing card press. Redirects to that listing's page
+     * @param id ID of the listing
+     */
     const handleListingPress = (id: number) => {
+        // Redirect to appropriate listing's page
         router.replace('/listings/' + id);
     }
 
+    /**
+     * On 'add listing' button press. Redirects to new-listing page
+     */
     const handleAddListingPress = () => {
+        // Redirect to new-listing page
         router.replace('/new-listing');
     }
 
 
     // Functions
 
+    /**
+     * Fetches all user's own listings
+     */
     const fetchListings = async () => {
 
         setLoading(true);
@@ -71,6 +86,7 @@ export default function MyListingsPage() {
         <SessionPage
             pageState={pageState}
         >
+            {/* Listings list */}
             <FlatList
                 style={styles.listings_list}
                 ItemSeparatorComponent={() => <ListSeparator />}
@@ -82,6 +98,7 @@ export default function MyListingsPage() {
                     /> 
                 )}
             />
+            {/* 'Add listing' button */}
             <Button
                 onPress={() => handleAddListingPress()}
                 title='Add Listing'
