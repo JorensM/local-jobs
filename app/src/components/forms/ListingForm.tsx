@@ -66,27 +66,40 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
         >
             {(formik) => (
                 <View
-                    style={styles.form}
+                    style={{
+                        ...form.container,
+                        height: '100%'
+                    }}
                 >
-                    <TextInput
-                        name='title'
-                        label='Listing Title'
-                    />
-                    <TextInput
-                        name='description'
-                        label='Description'
+                    <View
                         style={{
-                            height: 128
+                            flexGrow: 1
                         }}
-                        multiline
-                    />
-                    {/* <LocationInput
-                        id_name='location_id'
-                        name_name='location_name'
-                        formik={formik}
-                        // onChange={setLocationDetails}
-                        // value={locationValue}
-                    /> */}
+                    >
+                        {/* Title */}
+                        <TextInput
+                            name='title'
+                            label='Listing Title'
+                        />
+                        {/* Description */}
+                        <TextInput
+                            name='description'
+                            label='Description'
+                            style={{
+                                height: 128
+                            }}
+                            multiline
+                        />
+                        {/* <LocationInput
+                            id_name='location_id'
+                            name_name='location_name'
+                            formik={formik}
+                            // onChange={setLocationDetails}
+                            // value={locationValue}
+                        /> */}
+                    </View>
+                    
+                    {/* Submit button */}
                     <Button
                         onPress={() => formik.handleSubmit()}
                         title={listing ? 'Save' : 'Create'}
