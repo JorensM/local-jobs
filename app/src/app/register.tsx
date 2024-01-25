@@ -49,10 +49,21 @@ export default function RegisterPage() {
 
     // Handlers
 
+    /**
+     * On register button press. Registers user, displays a success toast
+     * and redirects to login page
+     * @param values form values
+     * @param values.email email
+     * @param values.password password
+     * @param values.name display name
+     * @param values.role role. Either 'performer' or 'recruiter'
+     */
     const handleSubmit = async ({ email, password, name, role} : FormValues) => {
       try {
+        // Register user
         const success = await auth.register(email, password, name, role);
 
+        // If registered successfully, redirect to login page and show success toast
         if (success) {
           toastSuccess('Your account has been created!', 'A confirmation email has been sent to ' + email);
           router.replace(route_names.login);
@@ -83,19 +94,23 @@ export default function RegisterPage() {
                     <View
                         style={form.container}
                     >
+                        {/* Email */}
                         <TextInput
                             name='email'
                             label='Email'
                         />
+                        {/* Display name */}
                         <TextInput
                             name='name'
                             label='Name'
                         />
+                        {/* Password */}
                         <TextInput
                             name='password'
                             label='Password'
                             secureTextEntry={true}
                         />
+                        {/* Role */}
                         <Dropdown
                           data={[
                             {
@@ -110,6 +125,7 @@ export default function RegisterPage() {
                           placeholder='I am a...'
                           name='role'
                         />
+                        {/* Register button */}
                         <Button
                             onPress={() => formik.handleSubmit()}
                             title='Register'
@@ -117,6 +133,7 @@ export default function RegisterPage() {
                     </View>
                 )}
             </Formik>
+            {/* Login button */}
             <Text>Already a member?</Text>
             <Link
                 style={button.secondary}
