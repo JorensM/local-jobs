@@ -9,13 +9,23 @@ import InputBase from './InputBase';
 import form from '#styles/form';
 
 type PhoneNumberInputProps = {
+    /**
+     * Formik name of phone number input
+     */
     name: string,
+    /**
+     * Formik name of country code input
+     */
     country_code_name: string,
+    /**
+     * Field's label
+     */
     label: string,
 }
 
 export default function PhoneNumberInput({ label, name, country_code_name }: PhoneNumberInputProps) {
 
+    // Hooks
     const [ ccField, ccMeta ] = useField(country_code_name);
     const [ numberField, numberMeta ] = useField(name)
 
@@ -32,6 +42,10 @@ export default function PhoneNumberInput({ label, name, country_code_name }: Pho
                     gap: 8
                 }}
             >
+                {/* 
+                    Country Code. Must be wrapped in an additional view to be able
+                    to show the prefix
+                */}
                 <View
                     style={{
                         ...form.input,
@@ -41,6 +55,7 @@ export default function PhoneNumberInput({ label, name, country_code_name }: Pho
                         gap: 4
                     }}
                 >
+                    {/* Prefix */}
                     <Text
                         style={{
                             fontWeight: 'bold',
@@ -52,6 +67,7 @@ export default function PhoneNumberInput({ label, name, country_code_name }: Pho
                     >
                         +
                     </Text>
+                    {/* Country Code input */}
                     <TextInput
                         style={{
                             height: '100%',
@@ -61,7 +77,7 @@ export default function PhoneNumberInput({ label, name, country_code_name }: Pho
                         onChangeText={(text: string) => ccField.onChange(country_code_name)(text)}
                     />
                 </View>
-                
+                {/* Phone number input */}
                 <TextInput
                     style={{
                         ...form.input,

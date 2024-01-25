@@ -34,17 +34,18 @@ const default_values: ListingFormValues = {
 }
 
 type ListingFormProps = {
+    /**
+     * called when the form is submitted.
+     */
     onSubmit?: (values: ListingFormValues) => void
+    /**
+     * Listing object to edit.
+     */
     listing?: Listing | null
 }
 
 /**
  * Listing edit/create form
- * 
- * ## Props
- * 
- * * `onSubmit` - called when the form is submitted.
- * * `listing` - Listing object to edit.
  */
 export default function ListingForm( { onSubmit = () => {}, listing = undefined }: ListingFormProps) {
 

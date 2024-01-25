@@ -8,26 +8,34 @@ type DropdownValue = {
 }
 
 type Props = {
+    /**
+     * Dropdown values.
+     */
     data: DropdownValue[],
+    /**
+     * The input name attribute
+     */
     name: string,
+    /**
+     * Placeholder text when no value is selected
+     */
     placeholder?: string
 }
 
 /**
  * Dropdown element
- * 
- * ## Props
- * 
- * * `data` - Dropdown values.
- * * `name` - The input name attribute
- * * `placeholder` - Placeholder text when no value is selected
- * @returns 
  */
 export default function Dropdown( { data, name, ...props }: Props ) {
 
+    // Hooks
     const [ field ] = useField(name);
 
+    /**
+     * On dropdown value change
+     * @param item new value
+     */
     const handleChange = (item: DropdownValue) => {
+        // Call Formik field's onChange
         field.onChange(name)(item.value)
     }
 
