@@ -9,7 +9,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Move to app directory
-      run: cd ./app
+      run:
+        working-directory: ./app
     - name: Install modules
       run: yarn
     - name: Run tests
