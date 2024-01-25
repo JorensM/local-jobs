@@ -145,12 +145,3 @@ export default function RegisterPage() {
         </Page>
     )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 8,
-    width: '100%',
-    height: '100%',
-    gap: 8
-  }
-});
