@@ -114,7 +114,6 @@ export default function RegisterPage() {
                             onPress={() => formik.handleSubmit()}
                             title='Register'
                         />
-                        {/* <Button onPress={handleSubmit} title="Submit" /> */}
                     </View>
                 )}
             </Formik>
