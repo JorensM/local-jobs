@@ -61,10 +61,8 @@ export default function MyListingsPage() {
     // Effects
 
     useFocusEffect(() => {
-        if (auth.user) {
-            fetchListings();
-        }
-    }, [auth.user])
+        fetchListings();
+    }, [], true)
 
     return (
         <SessionPage
