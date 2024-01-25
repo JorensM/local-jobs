@@ -37,12 +37,18 @@ import { STRIPE_PUBLISHABLE_KEY } from '#constants/env';
  */
 export default function Layout() {
 
-  // Auth context
+  // State
+  /**
+   * User state used in AuthContext. Holds data about the currently logged in user
+   * or null if not logged in
+   */
   const [ user, setUser ] = useState<User | null>(null);
 
   // hooks
   const auth = useAuth();
   const pathname = usePathname();
+
+  // Functions
 
   /**
    * Validates whether user/guest is allowed to be on a given route, and redirects
@@ -58,12 +64,14 @@ export default function Layout() {
       console.log('Your session has expired, please log in');
       router.replace('/');
       toastInfo('Your session has expired', 'Please log in');
-    } else if (user && isGuestRoute(_pathname)) {
+    } // If route is guest route but user is logged in, redirect to /feed
+    else if (user && isGuestRoute(_pathname)) {
       console.log('Already logged in, redirecting');
       router.replace('/feed');
     }
   }
   
+  // Effects
 
   useEffect(() => {
 
@@ -81,21 +89,26 @@ export default function Layout() {
     }
   }, [])
 
+  // Validate session each time route changes
   useEffect(() => {
     validateSession();
   }, [pathname])
 
   return (
+    // Auth Context
     <AuthContext.Provider 
         value={{
             user,
             setUser
         }}
     >
+        {/* Stripe provider */}
         <StripeProvider
             publishableKey={STRIPE_PUBLISHABLE_KEY}
         >
+            {/* Navigation Drawer */}
             <CustomDrawer />
+            {/* Toast component */}
             <Toast config={toast_config}/>
         </StripeProvider>
     </AuthContext.Provider>
