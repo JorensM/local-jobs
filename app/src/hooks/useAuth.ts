@@ -63,12 +63,15 @@ export default function useAuth(): AuthHook {
     // State
     const context = useContext(AuthContext)
 
+    // #TODO
     const updateUser = async (user: UserUpdate) => {
+        // Validate if user matches schema
         const valid = userSchemaPartial.validate(user);
         console.log(valid)
     }
 
     const login = async (email: string, password: string): Promise<true> => {
+        // Sign user in with Supabase
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -76,30 +79,31 @@ export default function useAuth(): AuthHook {
         if (error){
             throw error
         }
+        // Fetch user and set the user state to the logged in user
         fetchUser();
         
         return true;
     }
 
-    /**
-     * Test
-     * @returns 
-     */
     const logout = async (): Promise<true> => {
+
+        // Sign user our with Supabase
         const { error } = await supabase.auth.signOut();
 
         if (error) {
             throw error
         }
-        console.log('logged out')
+
+        // Fetch user and set user state to null
         fetchUser()
 
         return true;
     }
 
     const fetchUser = async () => {
-        const { data: { session }, error } = await supabase.auth.getSession()
 
+        //Retrieve user session and set user to null and return null if session not found
+        const { data: { session }, error } = await supabase.auth.getSession()
         if(!session) {
             context.setUser(null);
             return null
@@ -109,7 +113,7 @@ export default function useAuth(): AuthHook {
 
         const user = session.user;
         
-        
+        // Get user data from DB
         const { data: user_data, error: user_data_error } = await supabase
             .from('user_data')
             .select()
@@ -145,12 +149,15 @@ export default function useAuth(): AuthHook {
             }
         }
 
+        // Set user state to the retrieved user
         context.setUser(user_parsed);
 
         return user_parsed;
     }
 
     const getSession = async () => {
+
+        // Get session with Supabase and return it
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if(error) {
@@ -161,6 +168,7 @@ export default function useAuth(): AuthHook {
     }
 
     const register = async (email: string, password: string, name: string, role: UserRole): Promise<true> => {
+        // Sign up user using Supabase with provided credentials and signup information
         const { error } = await supabase.auth.signUp({
             email,
             password,
