@@ -222,11 +222,11 @@ export default function ListingPage() {
         fetchListing();
     }, [listing_id], true)
 
-    useEffect(() => {
+    useUnfocusEffect(() => {
         setLoading(true);
         setListing(null);
         setHeaderRight(null);
-    }, [pathname])
+    }, '/listings/' + listing_id)
 
     return (
         <SessionPage
