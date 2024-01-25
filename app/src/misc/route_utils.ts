@@ -2,12 +2,24 @@
 import { user_routes, guest_routes } from '#constants/routes'
 
 /**
+ * Sanitizes route name by removing slash at the beginning of name if there is one
+ * @param name name of route
+ * @returns sanitized route name
+ */
+const sanitizeRouteName = (name: string): string => {
+    if( name.startsWith('/') ) {
+        return name.substring(1)
+    }
+    return name;
+}
+
+/**
  * Check if a given route is a user route.
  * @param name name of route
  * @returns boolean indicating whether the route is a user route
  */
 export const isUserRoute = (name: string) => {
-    return Object.keys(user_routes).includes(name)
+    return Object.keys(user_routes).includes(sanitizeRouteName(name))
 }
 
 /**
@@ -16,7 +28,7 @@ export const isUserRoute = (name: string) => {
  * @returns boolean indicating whether the route is a guest route
  */
 export const isGuestRoute = (name: string) => {
-    return Object.keys(guest_routes).includes(name)
+    return Object.keys(guest_routes).includes(sanitizeRouteName(name))
 }
 
 /**

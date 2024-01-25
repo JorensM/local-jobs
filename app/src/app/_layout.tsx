@@ -50,8 +50,10 @@ export default function Layout() {
    */
   const validateSession = async () => {
     const user = await auth.fetchUser();
-    let _pathname = pathname.substring(1);
-    _pathname = _pathname == '' ? 'index' : _pathname;
+    // The pathname variable from expo returns '/' for index route instead of the string 'index'
+    // so must check for that and replace string with 'index' if the pathname is '/'
+    const _pathname = pathname == '/' ? 'index' : pathname;
+    // If route is user route and user is not logged in, redirect to login page and display toast
     if (!user && isUserRoute(_pathname)) {
       console.log('Your session has expired, please log in');
       router.replace('/');
