@@ -107,16 +107,21 @@ export default function ListingPage() {
             setShowContactModal(false);
             let interval_tries = 0;
             const MAX_INTERVAL_TRIES =  5;
-            const interval = setTimeout(async () => {
+            const interval = setInterval(async () => {
+                // Clear interval and throw error if timeout has occured
                 if(interval_tries > MAX_INTERVAL_TRIES) {
-                    clearTimeout(interval);
-                    return;
+                    clearInterval(interval);
+                    setLoading(false);
+                    throw new Error('Timeout has occured')
                 }
+                // If contact has been added, show success toast and redirect to the
+                // newly added contact's page
                 const contact = await contacts.fetchContact(listing.user_id);
                 if(contact) {
                     setLoading(false);
                     setIsContact(true);
-                    toastSuccess('Payment successful', 'User has been added to your contacts list')
+                    toastSuccess('Payment successful', 'User has been added to your contacts list');
+                    router.replace('contacts/' + contact.id)
                 }
                 interval_tries++;
             }, 2000)
