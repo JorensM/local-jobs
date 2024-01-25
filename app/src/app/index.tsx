@@ -41,16 +41,20 @@ export default function LoginPage() {
 
     // Handlers
 
+    /**
+     * On login button press. Logs user in and redirects to /feed page
+     * @param values form values
+     */
     const handleSubmit = async ({ email, password }: FormValues) => {
 
         try {
-            console.log('logging in with ' + email + " " + password)
+            // Login user with provided email and password
             await auth.login(email, password);
-            console.log('logged in')
+            //Redirect to /feed
             router.replace('/feed');
-            console.log('redirected')
         } catch (error: any) {
-            if(error.message.toLowerCase().includes('email')) {
+            // If error, display error toast with a message depending on type of error
+            if(error.message.toLowerCase().includes('email')) { // If error is due to email not being confirmed
                 toastError('Could not log in', 'please confirm your email');
             } else {
                 toastError('Could not log in');
@@ -62,7 +66,6 @@ export default function LoginPage() {
     return (
         <Page
             pageState={pageState}
-            // testID='LoginPage'
         >
             {/* Login form */}
             <Formik
@@ -73,15 +76,18 @@ export default function LoginPage() {
                     <View
                         style={form.container}
                     >
+                        {/* Email input */}
                         <TextInput
                             name='email'
                             label='Email'
                         />
+                        {/* Password input */}
                         <TextInput
                             name='password'
                             label='Password'
                             secureTextEntry={true}
                         />
+                        {/* Login button */}
                         <Button
                             testID='button-login'
                             onPress={() => formik.handleSubmit()}
