@@ -88,7 +88,7 @@ export default function MyListingsPage() {
         >
             {/* Listings list */}
             <FlatList
-                style={styles.listings_list}
+                style={list.list}
                 ItemSeparatorComponent={() => <ListSeparator />}
                 data={listingsData}
                 renderItem={({ item }) => (
@@ -106,10 +106,3 @@ export default function MyListingsPage() {
         </SessionPage>
     )
 }
-
-
-const styles = StyleSheet.create({
-    listings_list: {
-        gap: 8
-    }
-})}
