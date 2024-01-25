@@ -19,6 +19,9 @@ export type Listing = {
      * Description of the listing
      */
     description: string,
+    /**
+     * Date created
+     */
     created_at: string,
     // location_id?: string,
     // location_name?: string
@@ -34,4 +37,4 @@ export type ListingUpdate = Omit<Partial<Listing>, 'id'> & {
 /**
  * Type used in 'create' functions
  */
-export type ListingNew = Omit<Listing, 'id'>
+export type ListingNew = Omit<Listing, 'id' | 'created_at'>
