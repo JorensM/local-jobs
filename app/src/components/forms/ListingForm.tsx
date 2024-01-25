@@ -10,6 +10,9 @@ import TextInput from '#components/input/TextInput';
 // Types
 import { Listing } from '#types/Listing';
 
+// Styles
+import form from '#styles/form';
+
 
 export type ListingFormValues = {
     title: string,
