@@ -43,10 +43,16 @@ type ListingFormProps = {
  * 
  * ## Props
  * 
- * * `onSubmit` - called when the form is submitted. Validation i 
+ * * `onSubmit` - called when the form is submitted.
+ * * `listing` - Listing object to edit.
  */
 export default function ListingForm( { onSubmit = () => {}, listing = undefined }: ListingFormProps) {
 
+    // Memo
+
+    /**
+     * Initial values of the form. Should change whenever `listing` changes
+     */
     const initialValues = useMemo<ListingFormValues>(() => {
         if(listing) {
             return {
@@ -59,6 +65,7 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
     }, [listing])
 
     return (
+        // Form
         <Formik<ListingFormValues>
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -108,7 +115,6 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
                         title={listing ? 'Save' : 'Create'}
                         accessibilityLabel={listing ? 'Save listing' : 'Create listing'}
                     />
-                    {/* <Button onPress={handleSubmit} title="Submit" /> */}
                 </View>
             )}
         </Formik>
