@@ -35,16 +35,30 @@ export default function FeedPage() {
 
     // Handlers
 
+    /**
+     * On logout button press. Logs out user and redirects to login page
+     */
     const handleLogoutPress = async () => {
+        // Log user out
         auth.logout();
+        // Redirect to login page
         router.replace('/');
     }
 
+    /**
+     * On listing card press. Redirects to that listing's page
+     * @param id ID of the listing to redirect to
+     */
     const handleListingPress = (id: number) => {
+        // Redirect to appropriate listing page
         router.replace('/listings/' + id);
     }
 
     // Functions
+
+    /**
+     * Fetches all listings #TODO: fetch only the most recent listings
+     */
     const fetchListings = async () => {
         setLoading(true);
         const listings_data = await listings.fetchListings();
@@ -53,6 +67,7 @@ export default function FeedPage() {
     }
 
     // Effects
+
     useFocusEffect(() => {
         fetchListings();
     })
@@ -83,10 +98,3 @@ export default function FeedPage() {
         </Page>
     )
 }
-
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-})
