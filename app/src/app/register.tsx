@@ -69,7 +69,8 @@ export default function RegisterPage() {
           router.replace(route_names.login);
         }
       } catch (err: any) {
-        toastError('Could not register');
+        // On error, display error toast
+        toastError('Error', 'Could not register');
       }
     }
 
