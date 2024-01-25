@@ -23,7 +23,7 @@ export const route_names = {
     my_listings: 'listings/my',
     contact: 'contacts/[user_id]',
     my_contacts: 'contacts/my',
-    profile: 'profile',
+    profile: 'profile/my',
     edit_profile: 'profile/edit'
 
 }
