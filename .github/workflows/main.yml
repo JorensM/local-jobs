@@ -3,14 +3,16 @@ on:
   push:
     branches:
       - master
+
+defaults:
+ run:
+  working-directory: ./app
+  
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Move to app directory
-      run:
-        working-directory: ./app
     - name: Install modules
       run: yarn
     - name: Run tests
