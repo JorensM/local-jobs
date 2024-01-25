@@ -151,17 +151,11 @@ export default function ListingPage() {
                 if(is_own) {
                     // If this is user's own listing, add an 'edit' button to the header
                     setHeaderRight(
-                        // <View
-                        //     style={{
-                        //         paddingRight: 16
-                        //     }}
-                        // >
-                            <IconButton
-                                name='edit'
-                                size={ 24 }
-                                onPress={ handleEditPress }
-                            />
-                        // </View>
+                        <IconButton
+                            name='edit'
+                            size={ 24 }
+                            onPress={ handleEditPress }
+                        />
                     )
                 } else {
                     const contact = await contacts.fetchContact(_listing.user_id);
