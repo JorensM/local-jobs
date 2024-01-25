@@ -172,8 +172,8 @@ export default function ListingPage() {
             } catch (error: any) {
                 toastError('Error', error.message);
             }
-        } else {
-            setError('Id not specified for listing');
+        } else { // If listing ID was not specified, show error message
+            setError('ID not specified for listing');
         }
     }
 
