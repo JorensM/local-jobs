@@ -66,14 +66,18 @@ export default function Layout() {
   
 
   useEffect(() => {
+
+    // Validate session on mount and every 10 seconds after that
     validateSession();
 
-    const timeout = setTimeout(async () => {
+    const INTERVAL_FREQUENCY_SECONDS = 10; // Frequency of validation interval in second
+
+    const interval = setInterval(async () => {
       validateSession();
-    }, 10 * 1000);
+    }, INTERVAL_FREQUENCY_SECONDS * 1000);
 
     return () => {
-      clearTimeout(timeout);
+      clearInterval(interval);
     }
   }, [])
 
