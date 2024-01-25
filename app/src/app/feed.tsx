@@ -19,6 +19,7 @@ import { Listing } from '#types/Listing';
 // Styles
 import list from '#styles/list';
 import ListSeparator from '#components/layout/ListSeparator';
+import { getRouteName, route_names } from '#constants/routes';
 
 /**
  * Feed page where listings are displayed
@@ -42,7 +43,7 @@ export default function FeedPage() {
         // Log user out
         auth.logout();
         // Redirect to login page
-        router.replace('/');
+        router.replace(route_names.login);
     }
 
     /**
@@ -51,7 +52,7 @@ export default function FeedPage() {
      */
     const handleListingPress = (id: number) => {
         // Redirect to appropriate listing page
-        router.replace('/listings/' + id);
+        router.replace(getRouteName(route_names.listing, id));
     }
 
     // Functions

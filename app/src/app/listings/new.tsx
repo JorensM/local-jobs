@@ -12,6 +12,7 @@ import ListingForm, { ListingFormValues } from '#components/forms/ListingForm'
 
 // Misc
 import { toastError, toastSuccess } from '#misc/toast'
+import { getRouteName, route_names } from '#constants/routes'
 
 /**
  * Page for creating a new listing
@@ -42,7 +43,7 @@ export default function NewListingPage() {
             // If listing was created successfully, redirect to the new listing's page
             // and display a success toast
             if(id) {
-                router.replace('listings/' + id);
+                router.replace(getRouteName(route_names.listing, id));
                 toastSuccess('Success', 'Listing has been created');
             } else {
                 // Otherwise throw error

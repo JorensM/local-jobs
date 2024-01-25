@@ -24,6 +24,7 @@ import { isGuestRoute, isUserRoute } from '#misc/route_utils';
 import { StripeProvider } from '#misc/stripe';
 import { toastInfo } from '#misc/toast';
 import { STRIPE_PUBLISHABLE_KEY } from '#constants/env';
+import { route_names } from '#constants/routes';
 
 // import Layout from '#components/layout/Layout';
 
@@ -62,12 +63,12 @@ export default function Layout() {
     // If route is user route and user is not logged in, redirect to login page and display toast
     if (!user && isUserRoute(_pathname)) {
       console.log('Your session has expired, please log in');
-      router.replace('/');
+      router.replace(route_names.login);
       toastInfo('Your session has expired', 'Please log in');
     } // If route is guest route but user is logged in, redirect to /feed
     else if (user && isGuestRoute(_pathname)) {
       console.log('Already logged in, redirecting');
-      router.replace('/feed');
+      router.replace(route_names.feed);
     }
   }
   

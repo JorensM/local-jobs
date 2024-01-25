@@ -11,8 +11,8 @@ import { getListings, setListingID, setUser } from '#tests/mocks/state';
 
 // Pages
 import FeedPage from '#app/feed';
-import NewListingPage from '#app/new-listing';
-import ListingPage from '#app/listings/[listing_id]';
+import NewListingPage from '#app/listings/new';
+import ListingPage from '#app/listings/edit/[listing_id]';
 
 const AUTHOR_NAME = 'Custom author name';
 

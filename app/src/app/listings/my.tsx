@@ -19,6 +19,7 @@ import usePage from '#hooks/usePage'
 
 // Styles
 import list from '#styles/list'
+import { getRouteName, route_names } from '#constants/routes'
 
 /**
  * Page showing user's posted listings
@@ -44,7 +45,7 @@ export default function MyListingsPage() {
      */
     const handleListingPress = (id: number) => {
         // Redirect to appropriate listing's page
-        router.replace('/listings/' + id);
+        router.replace(getRouteName(route_names.listing, id));
     }
 
     /**
@@ -52,7 +53,7 @@ export default function MyListingsPage() {
      */
     const handleAddListingPress = () => {
         // Redirect to new-listing page
-        router.replace('/new-listing');
+        router.replace(route_names.new_listing);
     }
 
 

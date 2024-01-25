@@ -22,6 +22,7 @@ import { UserRole } from '#types/User'
 import { toastError, toastSuccess } from '#misc/toast'
 import usePage from '#hooks/usePage'
 import form from '#styles/form'
+import { route_names } from '#constants/routes'
 
 type FormValues = {
     email: string,
@@ -54,7 +55,7 @@ export default function RegisterPage() {
 
         if (success) {
           toastSuccess('Your account has been created!', 'A confirmation email has been sent to ' + email);
-          router.replace('/');
+          router.replace(route_names.login);
         }
       } catch (err: any) {
         toastError('Could not register');

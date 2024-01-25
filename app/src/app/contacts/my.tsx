@@ -21,6 +21,7 @@ import { User } from '#types/User';
 
 // Misc
 import { toastError } from '#misc/toast';
+import { getRouteName, route_names } from '#constants/routes';
 
 /**
  * Page showing all of users contacts
@@ -46,7 +47,7 @@ export default function MyContactsPage() {
      */
     const handleContactPress = (contact_id: string) => {
         // Redirect to respective contact's page
-        router.replace('/contacts/' + contact_id);
+        router.replace(getRouteName(route_names.contact, contact_id));
     }
 
     // Functions

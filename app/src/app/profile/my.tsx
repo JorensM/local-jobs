@@ -14,6 +14,7 @@ import useHeader from '#hooks/useHeader';
 import useUnfocusEffect from '#hooks/useUnfocusEffect';
 import IconButton from '#components/input/IconButton';
 import { router } from 'expo-router';
+import { route_names } from '#constants/routes';
 
 /**
  * Profile page that displays the information about the current user
@@ -29,7 +30,7 @@ export default function ProfilePage() {
 
     // Handlers
     const handleEditPress = () => {
-        router.replace('/profile-edit');
+        router.replace(route_names.edit_profile);
     }
 
     // Effects

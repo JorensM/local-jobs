@@ -60,10 +60,10 @@ export default function CustomDrawer() {
                             { back_route ? 
                                 <Pressable
                                     style={{
-                                    padding: 14
+                                        padding: 14
                                     }}
                                     onPress={() => {
-                                    router.replace(back_route)
+                                        router.replace(back_route)
                                     }}
                                 >
                                     <MaterialIcons

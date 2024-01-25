@@ -17,6 +17,7 @@ import { toastError, toastSuccess } from '#misc/toast'
 // Components
 import SessionPage from '#components/layout/SessionPage'
 import ListingForm, { ListingFormValues } from '#components/forms/ListingForm'
+import { getRouteName, route_names } from '#constants/routes'
 
 
 /**
@@ -30,7 +31,7 @@ export default function ListingEditPage() {
          * ID of the listing to be edited
          */
         listing_id
-    } = useLocalSearchParams();
+    } = useLocalSearchParams<{listing_id: string}>();
     const pathname = usePathname()
     const listings = useListings();
     const { setLoading, pageState } = usePage();
@@ -62,7 +63,7 @@ export default function ListingEditPage() {
         // If update was successful, redirect to the update listing's page, otherwise
         // show error message
         if(success) {
-            router.replace('listings/' + listing_id);
+            router.replace(getRouteName(route_names.listing, listing_id!));
             toastSuccess('Success', 'Your listing has been updated')
         } else {
             toastError("An error has occured', 'We couldn't update your listing'")

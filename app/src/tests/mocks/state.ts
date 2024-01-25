@@ -40,7 +40,8 @@ export function setListingID(id: number) {
 export function createListing(listing: ListingNew) {
     listings.push({
         ...listing,
-        id: listing_id
+        id: listing_id,
+        created_at: new Date().toDateString()
     })
 }
 

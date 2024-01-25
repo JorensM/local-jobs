@@ -45,6 +45,7 @@ import { useStripe } from '#misc/stripe'
 // Styles
 import text from '#styles/text'
 import useUnfocusEffect from '#hooks/useUnfocusEffect'
+import { getRouteName, route_names } from '#constants/routes'
 
 
 /**
@@ -62,7 +63,7 @@ export default function ListingPage() {
          * ID of the listing to display
          */
         listing_id 
-    } = useLocalSearchParams();
+    } = useLocalSearchParams<{listing_id: string}>();
     const listings = useListings();
     const auth = useAuth();
     const pathname = usePathname();
@@ -100,7 +101,7 @@ export default function ListingPage() {
     const handleEditPress = () => {
         // Only redirect to edit page if the listing is user's own listing
         if (isOwnListingRef.current) {
-            router.replace('edit-listing/' + listing_id);
+            router.replace(getRouteName(route_names.edit_listing, listing_id!));
         } else {
             console.warn(`Can't edit listing that isn't your own!`);
         }
@@ -153,7 +154,7 @@ export default function ListingPage() {
                     setLoading(false);
                     setIsContact(true);
                     toastSuccess('Payment successful', 'User has been added to your contacts list');
-                    router.replace('contacts/' + contact.id)
+                    router.replace(getRouteName(route_names.contact, contact.id))
                 }
                 interval_tries++;
             }, 2000)

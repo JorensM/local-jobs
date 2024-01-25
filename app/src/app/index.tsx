@@ -19,6 +19,7 @@ import { toastError } from '#misc/toast'
 // Styles
 import button from '#styles/button'
 import form from '#styles/form'
+import { route_names } from '#constants/routes'
 
 type FormValues = {
     email: string,
@@ -51,7 +52,7 @@ export default function LoginPage() {
             // Login user with provided email and password
             await auth.login(email, password);
             //Redirect to /feed
-            router.replace('/feed');
+            router.replace(route_names.feed);
         } catch (error: any) {
             // If error, display error toast with a message depending on type of error
             if(error.message.toLowerCase().includes('email')) { // If error is due to email not being confirmed
