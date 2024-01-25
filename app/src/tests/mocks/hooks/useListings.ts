@@ -3,7 +3,7 @@ import { Listing, ListingNew } from '#types/Listing';
 
 jest.mock('#hooks/useListings', () => {
     
-    const { getListingID, getListings, createListing } = jest.requireActual('#tests/mocks/hook_utils');
+    const { getListingID, getListings, createListing } = jest.requireActual('#tests/mocks/state');
     
     return {
         __esModule: true,
