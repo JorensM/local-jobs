@@ -1,19 +1,19 @@
 // Core
-import { View } from 'react-native';
+import { router } from 'expo-router';
 
 // Components
 import SessionPage from '#components/layout/SessionPage';
 import H1 from '#components/typography/H1';
 import Caption from '#components/typography/Caption';
+import IconButton from '#components/input/IconButton';
 
 // Hooks
 import useFocusEffect from '#hooks/useFocusEffect';
 import useAuth from '#hooks/useAuth';
 import usePage from '#hooks/usePage';
 import useHeader from '#hooks/useHeader';
-import useUnfocusEffect from '#hooks/useUnfocusEffect';
-import IconButton from '#components/input/IconButton';
-import { router } from 'expo-router';
+
+// Constants
 import { route_names } from '#constants/routes';
 
 /**
@@ -29,7 +29,12 @@ export default function ProfilePage() {
     const { pageState } = usePage();
 
     // Handlers
+
+    /**
+     * On edit button press. Redirects to profile edit page
+     */
     const handleEditPress = () => {
+        // Redirect to profile edit page
         router.replace(route_names.edit_profile);
     }
 
@@ -37,6 +42,7 @@ export default function ProfilePage() {
 
     useFocusEffect(() => {
         auth.fetchUser();
+        // Add edit button to header
         setHeaderRight(
             <IconButton
                 name='edit'
@@ -49,11 +55,14 @@ export default function ProfilePage() {
         <SessionPage
             pageState={pageState}
         >
+            {/* Render page if auth.user is set */}
             {auth.user ?
                 <>
+                    {/* Display name */}
                     <H1>
                     {auth.user!.name}
                     </H1>
+                    {/* Role */}
                     <Caption>
                         {auth.user!.role}
                     </Caption>
