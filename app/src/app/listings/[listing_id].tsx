@@ -272,23 +272,22 @@ export default function ListingPage() {
                 { listing?.description || '' }
             </Text>
             { !isOwnListingRef.current ?
-            <View
-                style={{
-                    marginTop: 'auto'
-                }}
-            >
-                {isContact ? 
-                    <Text>
-                        This user is in your contacts
-                    </Text>
-                :
-                    <Button
-                        onPress={handleContactPress}
-                        title='Contact'
-                    />
-                }
-            </View>
-                
+                <View
+                    style={{
+                        marginTop: 'auto'
+                    }}
+                >
+                    {isContact ? 
+                        <Text>
+                            This user is in your contacts
+                        </Text>
+                    :
+                        <Button
+                            onPress={handleContactPress}
+                            title='Contact'
+                        />
+                    }
+                </View>
             : null }
         </SessionPage>
     )
