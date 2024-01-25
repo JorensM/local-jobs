@@ -58,8 +58,13 @@ export default function ListingEditPage() {
             id: parseInt(listing_id as string)
         });
 
+        // If update was successful, redirect to the update listing's page, otherwise
+        // show error message
         if(success) {
             router.replace('listings/' + listing_id);
+            toastSuccess('Success', 'Your listing has been updated')
+        } else {
+            toastError("An error has occured', 'We couldn't update your listing'")
         }
     }
 
