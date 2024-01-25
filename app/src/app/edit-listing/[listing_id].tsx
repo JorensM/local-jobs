@@ -9,6 +9,7 @@ import { Listing } from '#types/Listing'
 import useFocusEffect from '#hooks/useFocusEffect'
 import usePage from '#hooks/usePage'
 import useListings from '#hooks/useListings'
+import useUnfocusEffect from '#hooks/useUnfocusEffect'
 
 // Misc
 import { toastError, toastSuccess } from '#misc/toast'
@@ -86,11 +87,11 @@ export default function ListingEditPage() {
         fetchListing();
     }, [ listing_id ], true)
 
-    // Set state to loading an unset listing when leaving page
-    useEffect(() => {
+    // Set state to loading and unset listing when leaving page
+    useUnfocusEffect(() => {
         setLoading(true)
         setListing(null)
-    }, [pathname])
+    }, '/edit-listing/' + listing_id)
 
     return (
         <SessionPage
