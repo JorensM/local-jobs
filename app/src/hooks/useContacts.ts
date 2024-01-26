@@ -31,10 +31,12 @@ export default function useContacts(): ContactsHook {
 
     const fetchUsersContacts = async () => {
 
+        // Check if user is logged in and throw error if not
         if(!auth.user) {
             throw new Error('User state not set')
         }
 
+        // Get user's contacts from Supabase
         const { data: contacts, error } = await supabase
             .from('contacts')
             .select()
@@ -44,10 +46,13 @@ export default function useContacts(): ContactsHook {
             throw error;
         }
         
+        // If there are any contacts
         if(contacts.length > 0) {
 
+            // Stored all contact ids in an array
             const contact_ids = contacts.map(entry => entry.contact_id);
 
+            // Get every contact's user data from Supabase by the IDs
             const { data: users, error } = await supabase
                 .from('user_data')
                 .select()
@@ -57,6 +62,7 @@ export default function useContacts(): ContactsHook {
                 throw error
             }
 
+            // Convert Supabase user schema to User type
             const users_parsed: User[] = users!.map(user => ({
                 id: user.user_id,
                 role: user.role,
@@ -72,6 +78,7 @@ export default function useContacts(): ContactsHook {
 
     const fetchContact = async (contact_id: string) => {
 
+        // Get contact's user data by ID
         const { data, error } = await supabase
             .from('user_data')
             .select()
@@ -84,6 +91,7 @@ export default function useContacts(): ContactsHook {
             return null;
         }
 
+        // Convert Supabase user schema to User type and return it
         return parseUserData(data[0]);
 
     }
