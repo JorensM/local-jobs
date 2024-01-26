@@ -23,6 +23,9 @@ type User = {
     phone_country_code?: string
 }
 
+/**
+ * Used in 'update' functions
+ */
 export type UserUpdate = Omit<Partial<User>, 'id'>
 
 export { User, UserRole }
