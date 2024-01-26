@@ -18,11 +18,14 @@ export default function useFocusEffect(callback: () => void, deps?: any[], use_a
     const auth_dep = use_auth ? [auth.user] : [] // If use_auth is true, add auth.user to dependencies
     const _deps = deps ? [...deps, ...auth_dep] : auth_dep
     
+
+    // Return Expo's useFocusEffect
     return ExpoUseFocusEffect(
         useCallback(() => {
+            // If using auth and user is authenticated, call callback.
             if(use_auth && auth.user) {
                 callback()
-            } else if (!use_auth) {
+            } else if (!use_auth) { // Otherwise only call callback if not using auth
                 callback()
             }
         }, _deps || []) 
