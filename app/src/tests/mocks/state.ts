@@ -9,7 +9,7 @@ import { USE_LISTINGS_COUNT } from '#tests/test_utils/constants';
 import { createTestListings } from '#tests/test_utils/createTestListing';
 
 // Types
-import { ListingNew } from '#types/Listing';
+import { Listing, ListingNew } from '#types/Listing';
 import { User } from '#types/User';
 
 let listing_id = 0; // This ID will be used when creating a listing
@@ -49,7 +49,7 @@ export function createListing(listing: ListingNew) {
  * Get listings from the `listings` variable
  * @returns array of Listing objects
  */
-export function getListings() {
+export function getListings(): Listing[] {
     return listings
 }
 
