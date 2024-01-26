@@ -36,11 +36,15 @@ export default function useContacts(): ContactsHook {
             throw new Error('User state not set')
         }
 
+        console.log('fetching contacts of ' + auth.user.id)
+
         // Get user's contacts from Supabase
         const { data: contacts, error } = await supabase
             .from('contacts')
             .select()
             .eq('user_id', auth.user.id)
+
+        console.log(contacts);
 
         if(error) {
             throw error;
@@ -77,6 +81,11 @@ export default function useContacts(): ContactsHook {
     }
 
     const fetchContact = async (contact_id: string) => {
+
+        // Check if user is logged in and throw error if not
+        if(!auth.user) {
+            throw new Error('User state not set')
+        }
 
         // Get contact's user data by ID
         const { data, error } = await supabase

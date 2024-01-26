@@ -1,5 +1,11 @@
+// Misc
 import supabase from '#misc/supabase'
+
+// Types
 import { Listing, ListingNew, ListingUpdate } from '#types/Listing'
+
+// Hooks
+import useAuth from './useAuth'
 
 type ListingFetchOptions = {
     /**
@@ -62,6 +68,10 @@ type ListingsHook = {
  * Hook for managing listings
  */
 export default function useListings(): ListingsHook {
+
+    // Hooks
+    const auth = useAuth();
+
     const fetchListings = async (options?: ListingFetchOptions) => {
 
         // Merge provided options with default options
@@ -71,7 +81,7 @@ export default function useListings(): ListingsHook {
         };
 
         const range_from = _options.page * _options.per_page; // Paginated results start index
-        const range_to = range_from + _options.per_page; // Paginated results end index
+        const range_to = range_from + _options.per_page - 1; // Paginated results end index
 
 
         // Build base query
@@ -126,6 +136,10 @@ export default function useListings(): ListingsHook {
 
     const createListing = async (listing: ListingNew) => {
 
+        if(!auth.user) {
+            throw new Error('User not logged in')
+        }
+
         // Create new listing in Supabase according to passed Listing
         const { data, error } = await supabase
             .from('listings')
@@ -140,6 +154,10 @@ export default function useListings(): ListingsHook {
     }
 
     const updateListing = async (listing: ListingUpdate): Promise<true> => {
+
+        if(!auth.user) {
+            throw new Error('User not logged in')
+        }
 
         // Update listing in Supabase according to passed listing
         const { error } = await supabase
