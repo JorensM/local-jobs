@@ -7,7 +7,7 @@ jest.mock('#hooks/useListings', () => {
     
     return {
         __esModule: true,
-        default: () => ({
+        default: () => ({//
             fetchListings: async (): Promise<Listing[]> => {
                 return getListings()
             },
