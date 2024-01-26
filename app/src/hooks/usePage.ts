@@ -32,7 +32,7 @@ type PageHook = {
 export default function usePage(initialLoading: boolean = false): PageHook {
 
     // Hooks
-    const pathname = usePathname()
+    const pathname = usePathname();
 
     // State
     const [error, setError] = useState<string | null>(null);
@@ -43,9 +43,12 @@ export default function usePage(initialLoading: boolean = false): PageHook {
         flickering when switching pages.
     */
     useEffect(() => {
-        setLoading(initialLoading)
+        setLoading(initialLoading);
     }, [pathname])
 
+    /**
+     * pageState object which consists of the error and loading states
+     */
     const pageState = useMemo(() => ({
         error,
         loading
