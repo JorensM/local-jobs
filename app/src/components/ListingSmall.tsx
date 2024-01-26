@@ -25,7 +25,7 @@ type Props = {
     /**
      * Listing object
      */
-    item: Listing
+    item: Listing | null
     /**
      * called when card is pressed
      */
@@ -65,35 +65,39 @@ export default function ListingSmall( { item, onPress }: Props ) {
 
     return (
         <Pressable
-            style={ list.item }
+            style={{
+                ...list.item,
+                minHeight: 64
+            }}
             onPress={ onPress }
         >
-            {/* Listing title */}
-            <Text
-                style={text.title}
-            >
+            {/* Render data about listing or 'loading' if item is set to null */}
+            {item ? (
+                <>
+                {/* <Text>Showing</Text> */}
+                    {/* Title */}
+                    <Text
+                        style={text.title}
+                    >
+                        
+                        { item.title }
+                    </Text>
+                    {/* Author */}
+                    <Caption>
+                        By { item.user_name }
+                    </Caption>
+                    {/* Age */}
+                    <Caption>
+                        { getAge(item.created_at, true) } ago
+                    </Caption>
+                    Description
+                    <Description>
+                        { item.description.slice(0, 100) }...
+                    </Description>
+                </>
                 
-                { item.title }
-            </Text>
-            {/* Listing author */}
-            <Caption>
-                By { item.user_name }
-            </Caption>
-            {/* { item.location_name ? 
-                <Caption>
-                    { item.location_name }
-                </Caption>
-            : null } */}
-            {/* Listing age */}
-            <Caption>
-                { getAge(item.created_at, true) } ago
-            </Caption>
-            {/* Listing description, only showing first 100 characters */}
-            <Description>
-                { item.description.slice(0, 100) }...
-            </Description>
-            
-            
+            )
+            : <Text style={text.warn}>Loading</Text> }
         </Pressable>
     )
 }

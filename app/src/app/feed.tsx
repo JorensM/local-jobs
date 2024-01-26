@@ -1,6 +1,6 @@
 // Core
-import { useState } from 'react';
-import { Button, FlatList, StyleSheet } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, FlatList, StyleSheet, ViewToken } from 'react-native';
 import { router } from 'expo-router';
 
 // Components
@@ -21,6 +21,8 @@ import list from '#styles/list';
 import ListSeparator from '#components/layout/ListSeparator';
 import { getRouteName, route_names } from '#constants/routes';
 
+const PER_PAGE = 8;
+
 /**
  * Feed page where listings are displayed
  */
@@ -29,10 +31,17 @@ export default function FeedPage() {
     // Hooks
     const listings = useListings();
     const auth = useAuth();
-    const { pageState, setLoading } = usePage(true);
+    const { pageState, setLoading } = usePage(false);
 
     // State
-    const [listingsData, setListingsData] = useState<Listing[]>([]);
+    /**
+     * Listings data. if an element is null, it means it is out of view so shouldn't
+     * be rendered. Once it becomes non-null, it gets fetched
+     */
+    const [listingsData, setListingsData] = useState<(Listing | null)[]>([]);
+
+    // Refs
+    const listingsDataRef = useRef(listingsData);
 
     // Handlers
 
@@ -55,16 +64,77 @@ export default function FeedPage() {
         router.replace(getRouteName(route_names.listing, id));
     }
 
+    // const handleViewableItemsChanged = ({ changed, viewableItems }: {changed: ViewToken[], viewableItems: ViewToken[]}) => {
+
+    //     if(listingsDataRef.current.length == 0 || viewableItems.length == 0) {
+    //         return;
+    //     }
+    //     //console.log('listing data');
+    //     //console.log(listingsDataRef.current)
+
+    //     const visible_pages = new Set<number>();
+
+    //     for(const viewableItem of viewableItems) {
+    //         const index = viewableItem.index!;
+
+    //         const page = Math.floor(index / PER_PAGE)
+
+    //         if(!viewableItem.item) {
+    //             visible_pages.add(page);
+    //         }
+            
+    //     }
+
+        
+
+    //     //console.log(current_page);
+        
+    //     const new_data = [...listingsDataRef.current];
+
+    //     // console.log(changed);
+    //     //console.log(viewableItems);
+
+    //     new_data.forEach((item, index) => {
+    //         //console.log(index);
+    //         // If data entry is visible on screen
+    //         if(item != null && viewableItems.every(viewable_item => viewable_item.index != index)) {
+    //             new_data[index] = null;
+    //             // new_data[index] = null;//.hidden = true;
+
+    //         } else if (item == null) {
+    //             //console.log('a')
+    //         }
+    //     })
+
+
+    //     visible_pages.forEach((page: number) => {
+    //         console.log('page: ' + page)
+    //         fetchListings(page);
+    //     })
+    //     //console.log('new data')
+    //     //console.log(new_data)
+
+    //     setListingsData((old_state) => new_data);
+
+       
+    // }
+
+    // const viewabilityConfig = useMemo(() => ({
+    //     minimumViewTime: 1 * 1000,
+    //     itemVisiblePercentThreshold: 1
+    // }), []);
+    // const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged: handleViewableItemsChanged }])
+
     // Functions
 
     /**
      * Fetches all listings #TODO: fetch only the most recent listings
      */
-    const fetchListings = async () => {
-        setLoading(true);
-        const listings_data = await listings.fetchListings();
-        setListingsData(listings_data);
-        setLoading(false);
+    const fetchListings = async (page?: number) => {
+        const new_listings = listings.fetchListings({
+            page: page,
+            per_page: PER_PAGE
+        }) 
     }
 
     // Effects
@@ -72,6 +142,10 @@ export default function FeedPage() {
     useFocusEffect(() => {
         fetchListings();
     })
+
+    useEffect(() => {
+        listingsDataRef.current = listingsData
+    }, [listingsData])
 
     return (
         <Page
@@ -83,12 +157,19 @@ export default function FeedPage() {
                 style={list.list}
                 ItemSeparatorComponent={() => <ListSeparator />}
                 data={listingsData}
-                renderItem={({ item }: { item: Listing} ) => (
+                keyExtractor={(item, index) => {
+                    return 'listing' + index
+                }}
+                renderItem={({ item, index }: { item: Listing | null, index: number} ) => (
                     <ListingSmall 
                         item={item}
-                        onPress={() => handleListingPress(item.id)}
+                        onPress={() => {
+                            item ? handleListingPress(item.id) : null
+                        }}
                     />
                 )}
+                // viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+                
             />
             {/* Logout button */}
             <Button
