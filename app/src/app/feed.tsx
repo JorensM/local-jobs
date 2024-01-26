@@ -21,7 +21,7 @@ import list from '#styles/list';
 import ListSeparator from '#components/layout/ListSeparator';
 import { getRouteName, route_names } from '#constants/routes';
 
-const PER_PAGE = 8;
+const PER_PAGE = 4;
 
 /**
  * Feed page where listings are displayed
@@ -131,10 +131,20 @@ export default function FeedPage() {
      * Fetches all listings #TODO: fetch only the most recent listings
      */
     const fetchListings = async (page?: number) => {
-        const new_listings = listings.fetchListings({
-            page: page,
+
+        let _page = page ? page : listingsData.length / PER_PAGE;
+
+        const new_listings = await listings.fetchListings({
+            page: _page,
             per_page: PER_PAGE
         }) 
+
+        setListingsData((old_state) => {
+            return [
+                ...old_state,
+                ...new_listings
+            ]
+        })
     }
 
     // Effects
@@ -161,16 +171,23 @@ export default function FeedPage() {
                     return 'listing' + index
                 }}
                 renderItem={({ item, index }: { item: Listing | null, index: number} ) => (
-                    <ListingSmall 
-                        item={item}
-                        onPress={() => {
-                            item ? handleListingPress(item.id) : null
-                        }}
-                    />
+                    index == listingsData.length - 1 ?
+                        <Button
+                            title="Load more"
+                            onPress={() => fetchListings()}
+                        />
+                    :
+                        <ListingSmall 
+                            item={item}
+                            onPress={() => {
+                                item ? handleListingPress(item.id) : null
+                            }}
+                        />
                 )}
                 // viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
                 
             />
+            
             {/* Logout button */}
             <Button
                 onPress={handleLogoutPress}
