@@ -1,4 +1,11 @@
+// Core
 import Toast from 'react-native-toast-message'
+
+// Styles
+import text from '#styles/text'
+
+// Style that is common across all secondary texts in toasts
+const text2Style = text.small
 
 /**
  * Displays a success toast. Use to affirm that some successful action has completed
@@ -10,9 +17,7 @@ export function toastSuccess(text: string, text2?: string) {
         type: 'success',
         text1: text,
         text2: text2,
-        text2Style: {
-            fontSize: 16,
-        },
+        text2Style,
         position: 'bottom'
     })
 }
@@ -27,9 +32,7 @@ export function toastError(text: string, text2?: string) {
         type: 'error',
         text1: text,
         text2: text2,
-        text2Style: {
-            fontSize: 14
-        },
+        text2Style,
         position: 'bottom'
     })
 }
@@ -44,9 +47,7 @@ export function toastInfo(text: string, text2?: string) {
         type: 'info',
         text1: text,
         text2: text2,
-        text2Style: {
-            fontSize: 14
-        },
+        text2Style,
         position: 'bottom'
     })
 }

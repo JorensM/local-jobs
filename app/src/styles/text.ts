@@ -9,6 +9,9 @@ const text = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold'
     },
+    small: {
+        fontSize: 14
+    }
 })
 
 export default text;
