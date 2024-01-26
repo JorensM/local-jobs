@@ -1,6 +1,6 @@
 jest.mock('#hooks/useAuth', () => {
     
-    const { getUser, setUser, getSession: _getSession } = jest.requireActual('../hook_utils');
+    const { getUser, setUser, getSession: _getSession } = jest.requireActual('#tests/mocks/state');
 
     return {
         __esModule: true,

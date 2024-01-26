@@ -17,20 +17,18 @@ import form from '#styles/form'
 
 
 type Props = TextInputProps & {
+    /**
+     * unique name to identify field in formik
+     */
     name: string,
+    /**
+     * label of the field
+     */
     label: string
 }
 
 /**
  * Text input component
- * 
- * # Props
- * 
- * * `label` - label of the field
- * * `name` - unique name to identify field in formik
- * 
- * And any native TextInput props
- * @returns 
  */
 export default function TextInput( { 
     label, 
@@ -39,6 +37,7 @@ export default function TextInput( {
     ...props
 }: Props ) {
 
+    // State
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
 
     const [field, meta ] = useField<any>(name);

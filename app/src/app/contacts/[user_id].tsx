@@ -26,11 +26,24 @@ import { toastError } from '#misc/toast';
 export default function ContactPage() {
 
     // Hooks
-    const { user_id } = useLocalSearchParams();
+    /**
+     * @function
+     * @property {string} user_id ID of the contact to display
+     */
+    const {
+        /**
+         * The user id of the contact to display
+         * @type {string}
+         */
+        user_id 
+    } = useLocalSearchParams();
     const contacts = useContacts();
     const { setError, setLoading, pageState } = usePage(true);
 
     // State
+    /**
+     * Contact data state
+     */
     const [ contact, setContact ] = useState<User | null>(null);
 
     // Functions
@@ -59,11 +72,14 @@ export default function ContactPage() {
         <SessionPage
             pageState={pageState}
         >
+            {/* Only render contact if it was found */}
             {contact ? 
                 <>
+                    {/* Contact name */}
                     <H1>
                         { contact.name }
                     </H1>
+                    {/* Contact role */}
                     <Caption>
                         { contact.role }
                     </Caption>

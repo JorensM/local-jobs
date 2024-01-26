@@ -16,9 +16,10 @@ const supabase = createBrowserClient(
     SUPABASE_KEY,
     {
         auth: {
-            storage: AsyncStorage, // Use test AsyncStorage if it's a test
+            storage: AsyncStorage,
             autoRefreshToken: true,
-            persistSession: process.env.NODE_ENV != 'test' ? true : false,
+            persistSession: true,//process.env.NODE_ENV != 'test' ? true : false; // This might be necessary 
+            // for the server auth to work. If server auth doesn't work try uncommenting
             detectSessionInUrl: false
         },
         cookies: { // This is not being used anywhere but is required by TS for some reason

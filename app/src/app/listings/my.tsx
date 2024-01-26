@@ -6,6 +6,7 @@ import { router } from 'expo-router'
 // Components
 import ListingSmall from '#components/ListingSmall'
 import SessionPage from '#components/layout/SessionPage'
+import ListSeparator from '#components/layout/ListSeparator'
 
 // Types
 import { Listing } from '#types/Listing'
@@ -15,7 +16,10 @@ import useFocusEffect from '#hooks/useFocusEffect'
 import useListings from '#hooks/useListings'
 import useAuth from '#hooks/useAuth'
 import usePage from '#hooks/usePage'
-import ListSeparator from '#components/layout/ListSeparator'
+
+// Styles
+import list from '#styles/list'
+import { getRouteName, route_names } from '#constants/routes'
 
 /**
  * Page showing user's posted listings
@@ -28,21 +32,36 @@ export default function MyListingsPage() {
     const { setLoading, pageState } = usePage(true);
 
     // State
+    /**
+     * Listings to display
+     */
     const [ listingsData, setListingsData ] = useState<Listing[]>([]);
     
     // Handlers
 
+    /**
+     * On listing card press. Redirects to that listing's page
+     * @param id ID of the listing
+     */
     const handleListingPress = (id: number) => {
-        router.replace('/listings/' + id);
+        // Redirect to appropriate listing's page
+        router.replace(getRouteName(route_names.listing, id));
     }
 
+    /**
+     * On 'add listing' button press. Redirects to new-listing page
+     */
     const handleAddListingPress = () => {
-        router.replace('/new-listing');
+        // Redirect to new-listing page
+        router.replace(route_names.new_listing);
     }
 
 
     // Functions
 
+    /**
+     * Fetches all user's own listings
+     */
     const fetchListings = async () => {
 
         setLoading(true);
@@ -61,17 +80,16 @@ export default function MyListingsPage() {
     // Effects
 
     useFocusEffect(() => {
-        if (auth.user) {
-            fetchListings();
-        }
-    }, [auth.user])
+        fetchListings();
+    }, [], true)
 
     return (
         <SessionPage
             pageState={pageState}
         >
+            {/* Listings list */}
             <FlatList
-                style={styles.listings_list}
+                style={list.list}
                 ItemSeparatorComponent={() => <ListSeparator />}
                 data={listingsData}
                 renderItem={({ item }) => (
@@ -81,24 +99,11 @@ export default function MyListingsPage() {
                     /> 
                 )}
             />
+            {/* 'Add listing' button */}
             <Button
                 onPress={() => handleAddListingPress()}
                 title='Add Listing'
             />
-            {/* <Link
-                to={{
-                    screen: 'ListingEdit'
-                }}
-            >
-                Add Listing
-            </Link> */}
         </SessionPage>
     )
 }
-
-
-const styles = StyleSheet.create({
-    listings_list: {
-        gap: 8
-    }
-})

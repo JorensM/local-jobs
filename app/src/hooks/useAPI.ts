@@ -41,21 +41,22 @@ export default function useAPI(): APIHookReturnValue {
      */
     const authGET = useCallback(async (endpoint: string, params?: { [name: string]: string }) => {
 
+        // Retrive session and throw error if session not found
         const session = await auth.getSession();
-
         if(!session) {
             throw new Error('Session not found')
         }
 
         try {
+            // Attach passed params to URL
             const url = new URL(`${API_URL}${endpoint}`);
-
             if(typeof params == 'object') {
                 for(const param_key in params) {
                     url.searchParams.set(param_key, params[param_key])
                 }
             }
             
+            // Make request to URL
             const response = await fetch(url, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,8 +65,8 @@ export default function useAPI(): APIHookReturnValue {
                 }
             })
     
+            // Return response as JSON
             const data = await response.json()
-    
             return data;
         } catch (error: any) {
             throw new Error(error)
@@ -73,11 +74,10 @@ export default function useAPI(): APIHookReturnValue {
         
     }, [auth.user])
 
-
     const getContactPaymentSheet = async (contact_id: string) => {
 
+        // Fetch and return payment sheet
         const payment_sheet = await authGET('contact-payment-sheet', {contact_id});
-
         return payment_sheet;
 
     }

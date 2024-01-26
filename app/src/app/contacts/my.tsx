@@ -21,6 +21,7 @@ import { User } from '#types/User';
 
 // Misc
 import { toastError } from '#misc/toast';
+import { getRouteName, route_names } from '#constants/routes';
 
 /**
  * Page showing all of users contacts
@@ -32,11 +33,24 @@ export default function MyContactsPage() {
     const { setError, setLoading, pageState } = usePage(true);
 
     // State
+    /**
+     * Data of all contacts
+     */
     const [contactsData, setContactsData] = useState<User[]>([]);
 
+    // Handlers
+
+    /**
+     * Called when contact card was pressed. Redirects to the page of the specified
+     * contact.
+     * @param contact_id ID of the contact on the card
+     */
     const handleContactPress = (contact_id: string) => {
-        router.replace('/contacts/' + contact_id);
+        // Redirect to respective contact's page
+        router.replace(getRouteName(route_names.contact, contact_id));
     }
+
+    // Functions
 
     const fetchContacts = async () => {
         setLoading(true);
@@ -52,6 +66,8 @@ export default function MyContactsPage() {
         
     }
 
+    // Effects
+
     useFocusEffect(() => {
         fetchContacts();
     })
@@ -60,6 +76,7 @@ export default function MyContactsPage() {
         <SessionPage
             pageState={pageState}
         >
+            {/* Contacts list */}
             <FlatList
                 style={list.list}
                 ItemSeparatorComponent={() => <ListSeparator />}

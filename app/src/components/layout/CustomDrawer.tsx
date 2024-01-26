@@ -21,23 +21,34 @@ import { guest_routes, user_routes } from '#constants/routes';
 */
 export default function CustomDrawer() {
 
+    // Hooks
     const auth = useAuth()
   
+    // Functions
+
+    /**
+     * Check and return whether drawer item should be hidden depending on whether
+     * The user is logged in or not
+     * @param name name of route
+     * @returns whether drawer item should be hiddem
+     */
+    const shouldHideItem = (name: string) => {  
+        if(
+          (isUserRoute(name) && auth.user) ||
+          (isGuestRoute(name) && !auth.user)
+        ) {
+          return false;
+        }
+        return true;
+      }
+
+    // Effects
+
     useEffect(() => {
       auth.fetchUser()
     }, [])
   
-    // Check if drawer item should be hidden depending on whether
-    // The user is logged in or not
-    const shouldHideItem = (name: string) => {  
-      if(
-        (isUserRoute(name) && auth.user) ||
-        (isGuestRoute(name) && !auth.user)
-      ) {
-        return false;
-      }
-      return true;
-    }
+    
   
     return (
         <Drawer
@@ -60,10 +71,10 @@ export default function CustomDrawer() {
                             { back_route ? 
                                 <Pressable
                                     style={{
-                                    padding: 14
+                                        padding: 14
                                     }}
                                     onPress={() => {
-                                    router.replace(back_route)
+                                        router.replace(back_route)
                                     }}
                                 >
                                     <MaterialIcons
@@ -122,8 +133,17 @@ export default function CustomDrawer() {
     )
   }
 
-// These must be non-component functions because for some reason otherwise the drawer
-// doesn't register these items
+/**
+ * Renders a Drawer item
+ * These must be non-component functions because otherwise due to how Expo
+ * Router works, the drawer doesn't register these items
+ * @param name route name
+ * @param label Drawer item label
+ * @param hide whether item should be hidden from nav
+ * @param title Title of the page in the header. If not specified, label is used
+ * 
+ * @returns a Drawer.Screen component
+ */
 const renderDrawerItem = (name: string, label: string, hide = false, title?: string) => {
 
     return (

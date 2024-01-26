@@ -9,55 +9,88 @@ type Routes = {
     }
 }
 
+/**
+ * Route pathnames. When refering to a route path in code, this constant should be
+ * used to do so
+ */
+export const route_names = {
+    login: 'index',
+    register: 'register',
+    feed: 'feed',
+    new_listing: 'listings/new',
+    listing: 'listings/[listing_id]',
+    edit_listing: 'listings/edit/[listing_id]',
+    my_listings: 'listings/my',
+    contact: 'contacts/[user_id]',
+    my_contacts: 'contacts/my',
+    profile: 'profile/my',
+    edit_profile: 'profile/edit'
+
+}
+
+/**
+ * Get route name and replace [] dynamic params with passed params
+ * @param name name of route, can include dynamic params like [listing_id]
+ * @param params Params to replace dynamic params with. first param will be replaced with first param in route name, etc.
+ * @returns Route name with params set to the passed params
+ */
+export const getRouteName = (name: string, ...params: (string | number)[]) => {
+    let _name = name;
+    for(const param of params) {
+        _name = _name.replace(/\[.*?\]/, String(param))
+    }
+    return _name;
+}
+
 // Routes that should be available when user is not signed in
 export const guest_routes: Routes = {
-    'index': {
-      label: 'Login',
+    [route_names.login]: {
+        label: 'Login',
     },
-    'register': {
-      label: 'Register'
+    [route_names.register]: {
+        label: 'Register'
     }
   }
   
 // Routes that should be available when user is signed in
 export const user_routes: Routes = {
-    'feed': {
+    [route_names.feed]: {
         label: 'Feed'
     },
-    'new-listing': {
+    [route_names.new_listing]: {
         label: 'New Listing',
-        backButton: '/feed',
+        backButton: route_names.feed,
     },
-    'listings/[listing_id]': {
+    [route_names.listing]: {
         label: 'View Listing',
         hide: true,
-        backButton: '/feed',
+        backButton: route_names.feed,
     },
-    'edit-listing/[listing_id]': {
+    [route_names.edit_listing]: {
         label: 'Edit Listing',
         hide: true,
-        backButton: '/feed'
+        backButton: route_names.feed
     },
-    'listings/my': {
+    [route_names.my_listings]: {
         label: 'My Listings',
-        backButton: '/feed'
+        backButton: route_names.feed
     },
-    'contacts/[user_id]': {
+    [route_names.contact]: {
         label: 'View Contact',
         hide: true,
-        backButton: '/contacts/my'
+        backButton: route_names.my_contacts
     },
-    'contacts/my': {
+    [route_names.my_contacts]: {
         label: 'My Contacts',
-        backButton: '/feed'
+        backButton: route_names.feed
     },
-    'profile': {
+    [route_names.profile]: {
         label: 'My Profile',
-        backButton: '/feed'
+        backButton: route_names.feed
     },
-    'profile-edit': {
+    [route_names.edit_profile]: {
         label: "Edit Profile",
         hide: true,
-        backButton: '/profile'
+        backButton: route_names.profile
     }
 }

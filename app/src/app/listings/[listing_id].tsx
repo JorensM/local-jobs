@@ -44,6 +44,8 @@ import { useStripe } from '#misc/stripe'
 
 // Styles
 import text from '#styles/text'
+import useUnfocusEffect from '#hooks/useUnfocusEffect'
+import { getRouteName, route_names } from '#constants/routes'
 
 
 /**
@@ -53,70 +55,106 @@ import text from '#styles/text'
 export default function ListingPage() {
 
     // Hooks
+    /**
+     * `listing_id` - 
+     */
+    const { 
+        /**
+         * ID of the listing to display
+         */
+        listing_id 
+    } = useLocalSearchParams<{listing_id: string}>();
     const listings = useListings();
     const auth = useAuth();
     const pathname = usePathname();
-    // const navigation = useNavigation();
     const { setHeaderRight } = useHeader();
-    const { listing_id } = useLocalSearchParams();
     const { setLoading, setError, pageState } = usePage(true);
     const api = useAPI();
-    const stripe = useStripe();
+    const stripe = useStripe(); // Stripe for payments
     const contacts = useContacts();
 
     // State
+    /**
+     * Data for the listing
+     */
     const [ listing, setListing ] = useState<Listing | null>(null);
+    /**
+     * Whether 'contact author of listing' modal should be shown
+     */
     const [ showContactModal, setShowContactModal ] = useState<boolean>(false);
+    /**
+     * Whether the author of the listing is in current user's contacts
+     */
     const [ isContact, setIsContact ] = useState<boolean>(false);
 
     // Refs
+    /**
+     * Whether the listing is current user's own listing
+     */
     const isOwnListingRef = useRef<boolean>(false);
 
     // Handlers
 
-    // On listing edit press
+    /**
+     * On listing edit press. Redirects to listing edit page
+     */
     const handleEditPress = () => {
         // Only redirect to edit page if the listing is user's own listing
         if (isOwnListingRef.current) {
-            router.replace('edit-listing/' + listing_id);
+            router.replace(getRouteName(route_names.edit_listing, listing_id!));
         } else {
             console.warn(`Can't edit listing that isn't your own!`);
         }
     }
 
-    // On contact button press
+    /**
+     * On contact button press. Shows the contact modal
+     */
     const handleContactPress = () => {
         setShowContactModal(true);
     }
 
-    // On contact payment button press
+    /** 
+     * On contact payment button press. Initializes and shows the Stripe payment sheet.
+     */
     const handlePayForContactPress = async () => {
         try {
+            // Check if listing is defined
             if (!listing) {
                 throw new Error('Listing not found');
             } else if (!stripe) { // Stripe doesn't work on web so check for that
                 throw new Error('Stripe not supported on web');
             }
+            // Initialize payment sheet
             await initializePaymentSheet();
             // Present the payment sheet
             const { error } = await stripe.presentPaymentSheet();
             if(error) {
                 throw error
             }
+            // After user has paid, set state to loading and hide contact modal
             setLoading(true);
             setShowContactModal(false);
+
+            // Set an interval to check whether the payment has been registered by
+            // Checking if contact has been added in the DB
             let interval_tries = 0;
             const MAX_INTERVAL_TRIES =  5;
-            const interval = setTimeout(async () => {
+            const interval = setInterval(async () => {
+                // Clear interval and throw error if timeout has occured
                 if(interval_tries > MAX_INTERVAL_TRIES) {
-                    clearTimeout(interval);
-                    return;
+                    clearInterval(interval);
+                    setLoading(false);
+                    throw new Error('Timeout has occured')
                 }
+                // If contact has been added, show success toast and redirect to the
+                // newly added contact's page
                 const contact = await contacts.fetchContact(listing.user_id);
                 if(contact) {
                     setLoading(false);
                     setIsContact(true);
-                    toastSuccess('Payment successful', 'User has been added to your contacts list')
+                    toastSuccess('Payment successful', 'User has been added to your contacts list');
+                    router.replace(getRouteName(route_names.contact, contact.id))
                 }
                 interval_tries++;
             }, 2000)
@@ -129,36 +167,36 @@ export default function ListingPage() {
 
     // Functions
 
+    /**
+     * Fetch the listing and set the listing state to it so it can be displayed
+     */
     const fetchListing = async () => {
+        // Reset the isOwnListing value and set it to false
         isOwnListingRef.current = false;
-        // setIsOwnListing(false)
         setLoading(true);
         if( listing_id ) {
             try {
                 const _listing: Listing | null = await listings.fetchListing(parseInt(listing_id as string));
+                // Throw error if listing wasn't found
                 if(!_listing) {
                     throw new Error("Listing not found");
                 }
-                // Check if this is user's own listing
+                // Check if this is user's own listing and set isOwnListingRef accordingly
                 const is_own = _listing.user_id == auth.user!.id;
                 isOwnListingRef.current = is_own;
 
                 if(is_own) {
                     // If this is user's own listing, add an 'edit' button to the header
                     setHeaderRight(
-                        // <View
-                        //     style={{
-                        //         paddingRight: 16
-                        //     }}
-                        // >
-                            <IconButton
-                                name='edit'
-                                size={ 24 }
-                                onPress={ handleEditPress }
-                            />
-                        // </View>
+                        <IconButton
+                            name='edit'
+                            size={ 24 }
+                            onPress={ handleEditPress }
+                        />
                     )
                 } else {
+                    // Check if listing's author is in user's contacts, and set
+                    // isContact accordingly
                     const contact = await contacts.fetchContact(_listing.user_id);
                     setIsContact(contact ? true : false);
                 }
@@ -167,12 +205,14 @@ export default function ListingPage() {
             } catch (error: any) {
                 toastError('Error', error.message);
             }
-        } else {
-            setError('Id not specified for listing');
+        } else { // If listing ID was not specified, show error message
+            setError('ID not specified for listing');
         }
     }
 
-    // Initialize payment sheet. Must be called before presenting the payment sheet
+    /**
+     * Initialize payment sheet. Must be called before presenting the payment sheet
+     */
     const initializePaymentSheet = async () => {
         // Stripe is not supported on web so check for that
         if(!stripe) {
@@ -217,16 +257,17 @@ export default function ListingPage() {
         fetchListing();
     }, [listing_id], true)
 
-    useEffect(() => {
+    useUnfocusEffect(() => {
         setLoading(true);
         setListing(null);
         setHeaderRight(null);
-    }, [pathname])
+    }, '/listings/' + listing_id)
 
     return (
         <SessionPage
             pageState={pageState}
         >
+            {/* Contact modal */}
             <Modal
                 visible={showContactModal}
             >
@@ -242,15 +283,18 @@ export default function ListingPage() {
                     </Pressable>
                 </Modal.Header>
                 <Modal.Content>
+                    {/* Pay for contact button */}
                     <Button
                         onPress={handlePayForContactPress}
                         title="Pay for contact"
                     />
                 </Modal.Content>
             </Modal>
+            {/* Listing title */}
             <H1>
                 { listing?.title || '' }
             </H1>
+            {/* Listing author */}
             <Caption>
                 By { listing?.user_name || '' }
             </Caption>
@@ -259,11 +303,13 @@ export default function ListingPage() {
                     { listing.location_name }
                 </Caption>
             : null } */}
+            {/* If is user's own listing, display message stating this */}
             { isOwnListingRef.current ? 
                 <Info>
                     This is your listing
                 </Info>
             : null }
+            {/* Listing description */}
             <Text
                 style={{
                     marginTop: 8
@@ -272,24 +318,27 @@ export default function ListingPage() {
             >
                 { listing?.description || '' }
             </Text>
+            {/* 
+                If this is not user's own listing and the listing's author is in user's
+                contacts, display message stating this
+            */}
             { !isOwnListingRef.current ?
-            <View
-                style={{
-                    marginTop: 'auto'
-                }}
-            >
-                {isContact ? 
-                    <Text>
-                        This user is in your contacts
-                    </Text>
-                :
-                    <Button
-                        onPress={handleContactPress}
-                        title='Contact'
-                    />
-                }
-            </View>
-                
+                <View
+                    style={{
+                        marginTop: 'auto'
+                    }}
+                >
+                    {isContact ? 
+                        <Text>
+                            This user is in your contacts
+                        </Text>
+                    :
+                        <Button
+                            onPress={handleContactPress}
+                            title='Contact'
+                        />
+                    }
+                </View>
             : null }
         </SessionPage>
     )

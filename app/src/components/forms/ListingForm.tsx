@@ -10,6 +10,9 @@ import TextInput from '#components/input/TextInput';
 // Types
 import { Listing } from '#types/Listing';
 
+// Styles
+import form from '#styles/form';
+
 
 export type ListingFormValues = {
     title: string,
@@ -31,19 +34,26 @@ const default_values: ListingFormValues = {
 }
 
 type ListingFormProps = {
+    /**
+     * called when the form is submitted.
+     */
     onSubmit?: (values: ListingFormValues) => void
+    /**
+     * Listing object to edit.
+     */
     listing?: Listing | null
 }
 
 /**
  * Listing edit/create form
- * 
- * ## Props
- * 
- * * `onSubmit` - called when the form is submitted. Validation i 
  */
 export default function ListingForm( { onSubmit = () => {}, listing = undefined }: ListingFormProps) {
 
+    // Memo
+
+    /**
+     * Initial values of the form. Should change whenever `listing` changes
+     */
     const initialValues = useMemo<ListingFormValues>(() => {
         if(listing) {
             return {
@@ -56,6 +66,7 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
     }, [listing])
 
     return (
+        // Form
         <Formik<ListingFormValues>
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -66,33 +77,45 @@ export default function ListingForm( { onSubmit = () => {}, listing = undefined 
         >
             {(formik) => (
                 <View
-                    style={styles.form}
+                    style={{
+                        ...form.container,
+                        height: '100%'
+                    }}
                 >
-                    <TextInput
-                        name='title'
-                        label='Listing Title'
-                    />
-                    <TextInput
-                        name='description'
-                        label='Description'
+                    <View
                         style={{
-                            height: 128
+                            flexGrow: 1
                         }}
-                        multiline
-                    />
-                    {/* <LocationInput
-                        id_name='location_id'
-                        name_name='location_name'
-                        formik={formik}
-                        // onChange={setLocationDetails}
-                        // value={locationValue}
-                    /> */}
+                    >
+                        {/* Title */}
+                        <TextInput
+                            name='title'
+                            label='Listing Title'
+                        />
+                        {/* Description */}
+                        <TextInput
+                            name='description'
+                            label='Description'
+                            style={{
+                                height: 128
+                            }}
+                            multiline
+                        />
+                        {/* <LocationInput
+                            id_name='location_id'
+                            name_name='location_name'
+                            formik={formik}
+                            // onChange={setLocationDetails}
+                            // value={locationValue}
+                        /> */}
+                    </View>
+                    
+                    {/* Submit button */}
                     <Button
                         onPress={() => formik.handleSubmit()}
                         title={listing ? 'Save' : 'Create'}
                         accessibilityLabel={listing ? 'Save listing' : 'Create listing'}
                     />
-                    {/* <Button onPress={handleSubmit} title="Submit" /> */}
                 </View>
             )}
         </Formik>

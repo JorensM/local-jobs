@@ -19,10 +19,13 @@ type User = {
     /**
      * Contact information
      */
-    phone_number: string
-    phone_country_code: string
+    phone_number?: string
+    phone_country_code?: string
 }
 
+/**
+ * Used in 'update' functions
+ */
 export type UserUpdate = Omit<Partial<User>, 'id'>
 
 export { User, UserRole }
