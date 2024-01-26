@@ -6,7 +6,7 @@ import { user_routes, guest_routes } from '#constants/routes'
  * @param name name of route
  * @returns sanitized route name
  */
-const sanitizeRouteName = (name: string): string => {
+export const sanitizeRouteName = (name: string): string => {
     // If route name starts with a slash, remove it
     if( name.startsWith('/') ) {
         return name.substring(1)
