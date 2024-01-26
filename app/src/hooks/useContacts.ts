@@ -43,8 +43,6 @@ export default function useContacts(): ContactsHook {
         if(error) {
             throw error;
         }
-
-        let users: User[] = [];
         
         if(contacts.length > 0) {
 
